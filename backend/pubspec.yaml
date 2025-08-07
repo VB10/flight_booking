@@ -1,0 +1,13 @@
+name: flight_booking_server
+description: A simple Dart server for flight booking app
+version: 1.0.0
+
+environment:
+  sdk: '>=2.17.0 <4.0.0'
+
+dependencies:
+  shelf: ^1.4.1
+  shelf_router: ^1.1.4
+  shelf_cors_headers: ^0.1.4
+
+dev_dependencies:
