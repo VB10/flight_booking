@@ -37,6 +37,12 @@ dependencies:
   dio: ^5.3.2
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
+  lottie: ^2.7.0
+  flutter_svg: ^2.0.9
+  firebase_core: ^2.24.2
+  firebase_remote_config: ^4.3.8
+  firebase_analytics: ^10.7.4
+  package_info_plus: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +65,31 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Assets
+  assets:
+    - assets/
+    - assets/Animation - 1716380534233.json
+    - assets/undraw_aircraft_usu4.svg
+    - assets/undraw_connected-world_anke.svg
+    - assets/undraw_fast-loading_ae60.svg
+    - assets/undraw_lighthouse_x9i6.svg
+
+  # Fonts
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/Roboto-Regular.ttf
+        - asset: assets/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/Roboto-Light.ttf
+          weight: 300
+        - asset: assets/Roboto-Thin.ttf
+          weight: 100
+        - asset: assets/Roboto-Black.ttf
+          weight: 900
 
   # To add assets to your application, add an assets section, like this:
   # assets:

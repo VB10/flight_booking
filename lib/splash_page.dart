@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:lottie/lottie.dart';
 import 'login_page.dart';
 import 'flight_list_page.dart';
 
@@ -52,10 +53,12 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.flight_takeoff,
-              size: 120,
-              color: Colors.white,
+            // Lottie animasyonu - kötü pratik: Hard coded path
+            Lottie.asset(
+              'assets/Animation - 1716380534233.json',
+              width: 200,
+              height: 200,
+              fit: BoxFit.contain,
             ),
             SizedBox(height: 30),
             Text(
@@ -64,6 +67,7 @@ class _SplashPageState extends State<SplashPage> {
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
+                fontFamily: 'Roboto', // Kötü pratik: Hard coded font
               ),
             ),
             SizedBox(height: 20),
@@ -72,18 +76,20 @@ class _SplashPageState extends State<SplashPage> {
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white70,
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w300,
               ),
             ),
             SizedBox(height: 50),
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-            SizedBox(height: 20),
+            // Loading indicator yerine boş alan - animasyon yeterli
+            SizedBox(height: 40),
             Text(
               'Yükleniyor...',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w300,
               ),
             ),
           ],

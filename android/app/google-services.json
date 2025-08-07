@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "1026966721942",
+    "firebase_url": "https://admob-app-id-4414975077.firebaseio.com",
+    "project_id": "admob-app-id-4414975077",
+    "storage_bucket": "admob-app-id-4414975077.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026966721942:android:2eab0f47afb44da243f9b7",
+        "android_client_info": {
+          "package_name": "com.example.flight_booking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026966721942-ee07qips821qi60tfhvqrpi4pv157eeq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmhyblABUjcRRsSHag2-WDDi1Gd3XibdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026966721942-ee07qips821qi60tfhvqrpi4pv157eeq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026966721942:android:de70a09b6bb4f9b6",
+        "android_client_info": {
+          "package_name": "com.example.vb.deneme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026966721942-ee07qips821qi60tfhvqrpi4pv157eeq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmhyblABUjcRRsSHag2-WDDi1Gd3XibdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026966721942-ee07qips821qi60tfhvqrpi4pv157eeq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026966721942:android:5ce55effc61da355",
+        "android_client_info": {
+          "package_name": "com.ilkuygulama.vb10.basla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026966721942-op0tdn279nevng5t4r23ikknm72ikmr5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ilkuygulama.vb10.basla",
+            "certificate_hash": "f743f25945e1f82ca013df88dc7b9e039fe9cafa"
+          }
+        },
+        {
+          "client_id": "1026966721942-ee07qips821qi60tfhvqrpi4pv157eeq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmhyblABUjcRRsSHag2-WDDi1Gd3XibdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026966721942-ee07qips821qi60tfhvqrpi4pv157eeq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

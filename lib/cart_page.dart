@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'checkout_response_model.dart';
+import 'main.dart'; // Global analytics için
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
-  
+
   CartPage({required this.cartItems});
 
   @override
@@ -12,6 +13,38 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Analytics - Cart sayfası görüntüleme
+    _logCartScreenView();
+  }
+
+  // Kötü pratik: Screen tracking method'u buraya gömülü
+  Future<void> _logCartScreenView() async {
+    try {
+      await analytics.logScreenView(
+        screenName: 'cart',
+        screenClass: 'CartPage',
+      );
+
+      // Cart view event with item count
+      await analytics.logEvent(
+        name: 'cart_view',
+        parameters: {
+          'cart_item_count': widget.cartItems.length,
+          'cart_total_value': getTotalPrice().toDouble(),
+          'currency': 'TRY',
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+        },
+      );
+
+      debugPrint('Analytics: Cart screen view logged');
+    } catch (e) {
+      debugPrint('Analytics cart screen view failed: $e');
+    }
+  }
+
   int getTotalPrice() {
     int total = 0;
     for (var item in widget.cartItems) {
@@ -21,6 +54,9 @@ class _CartPageState extends State<CartPage> {
   }
 
   void removeFromCart(int index) {
+    // Analytics - Sepetten çıkarma event'i
+    _logRemoveFromCart(widget.cartItems[index]);
+
     setState(() {
       widget.cartItems.removeAt(index);
     });
@@ -35,10 +71,7 @@ class _CartPageState extends State<CartPage> {
   void checkout() {
     if (widget.cartItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Sepetiniz boş!'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Sepetiniz boş!'), backgroundColor: Colors.red),
       );
       return;
     }
@@ -48,7 +81,9 @@ class _CartPageState extends State<CartPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Ödeme Onayı'),
-          content: Text('Toplam ${getTotalPrice()} ₺ ödeme yapmak istediğinizden emin misiniz?'),
+          content: Text(
+            'Toplam ${getTotalPrice()} ₺ ödeme yapmak istediğinizden emin misiniz?',
+          ),
           actions: [
             TextButton(
               child: Text('İptal'),
@@ -107,9 +142,14 @@ class _CartPageState extends State<CartPage> {
 
       // Status code kontrolü yine aynı
       if (response.statusCode == 200) {
-        CheckoutResponseModel checkoutResponse = CheckoutResponseModel.fromJson(response.data);
-        
+        CheckoutResponseModel checkoutResponse = CheckoutResponseModel.fromJson(
+          response.data,
+        );
+
         if (checkoutResponse.success) {
+          // Analytics - Checkout başarılı
+          await _logSuccessfulCheckout(requestBody['cartItems']);
+
           setState(() {
             widget.cartItems.clear();
           });
@@ -146,13 +186,88 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  // Kötü pratik: Analytics method'ları da buraya gömülü
+  Future<void> _logRemoveFromCart(Map<String, dynamic> item) async {
+    try {
+      await analytics.logEvent(
+        name: 'remove_from_cart',
+        parameters: {
+          'item_id': item['id']?.toString() ?? 'unknown',
+          'item_name': item['airline'] ?? 'unknown',
+          'item_category': 'flight_ticket',
+          'price': item['price'] ?? 0,
+          'currency': 'TRY',
+          'from': item['from'] ?? 'unknown',
+          'to': item['to'] ?? 'unknown',
+        },
+      );
+      debugPrint('Analytics: Remove from cart logged');
+    } catch (e) {
+      debugPrint('Analytics remove from cart failed: $e');
+    }
+  }
+
+  Future<void> _logSuccessfulCheckout(List<dynamic> cartItems) async {
+    try {
+      double totalValue = 0;
+      int itemCount = cartItems.length;
+
+      // Toplam değer hesapla
+      for (var item in cartItems) {
+        totalValue += (item['price'] ?? 0).toDouble();
+      }
+
+      // Purchase event - Firebase Analytics standard event
+      await analytics.logPurchase(
+        currency: 'TRY',
+        value: totalValue,
+        parameters: {
+          'transaction_id': DateTime.now().millisecondsSinceEpoch.toString(),
+          'item_count': itemCount,
+          'payment_method': 'credit_card', // Kötü pratik: Hard coded
+        },
+      );
+
+      // Her bir item için purchase detail
+      for (int i = 0; i < cartItems.length; i++) {
+        var item = cartItems[i];
+        await analytics.logEvent(
+          name: 'purchase_item_detail',
+          parameters: {
+            'item_id': item['id']?.toString() ?? 'unknown',
+            'item_name': item['airline'] ?? 'unknown',
+            'item_category': 'flight_ticket',
+            'price': item['price'] ?? 0,
+            'currency': 'TRY',
+            'from': item['from'] ?? 'unknown',
+            'to': item['to'] ?? 'unknown',
+            'departure_time': item['departureTime'] ?? 'unknown',
+            'item_position': i + 1,
+          },
+        );
+      }
+
+      // Custom checkout completion event
+      await analytics.logEvent(
+        name: 'checkout_completed',
+        parameters: {
+          'total_amount': totalValue,
+          'item_count': itemCount,
+          'checkout_timestamp': DateTime.now().millisecondsSinceEpoch,
+          'platform': 'mobile',
+        },
+      );
+
+      debugPrint('Analytics: Checkout events logged');
+    } catch (e) {
+      debugPrint('Analytics checkout logging failed: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Sepetim'),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: AppBar(title: Text('Sepetim'), backgroundColor: Colors.blue),
       body: widget.cartItems.isEmpty
           ? Center(
               child: Column(
@@ -166,10 +281,7 @@ class _CartPageState extends State<CartPage> {
                   SizedBox(height: 20),
                   Text(
                     'Sepetiniz boş',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -197,7 +309,9 @@ class _CartPageState extends State<CartPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(flight['airline']),
-                              Text('${flight['departureTime']} - ${flight['arrivalTime']}'),
+                              Text(
+                                '${flight['departureTime']} - ${flight['arrivalTime']}',
+                              ),
                               Text('Tarih: ${flight['date']}'),
                             ],
                           ),
@@ -227,9 +341,7 @@ class _CartPageState extends State<CartPage> {
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300]!),
-                    ),
+                    border: Border(top: BorderSide(color: Colors.grey[300]!)),
                   ),
                   child: Column(
                     children: [

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1026966721942-ksh6rd51n1lhqqsdfcatgr7q4ohbvedu.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1026966721942-ksh6rd51n1lhqqsdfcatgr7q4ohbvedu</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1026966721942-op0tdn279nevng5t4r23ikknm72ikmr5.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBM_mIzbZqiQuZOjvLfECe8musDqEYFY-8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1026966721942</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.flightBooking</string>
+	<key>PROJECT_ID</key>
+	<string>admob-app-id-4414975077</string>
+	<key>STORAGE_BUCKET</key>
+	<string>admob-app-id-4414975077.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1026966721942:ios:ee999a22d4324a2443f9b7</string>
+	<key>DATABASE_URL</key>
+	<string>https://admob-app-id-4414975077.firebaseio.com</string>
+</dict>
+</plist>
