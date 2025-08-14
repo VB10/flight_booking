@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -185,8 +187,9 @@ class _FlightListPageState extends State<FlightListPage> {
 
       // Status code kontrolü tekrarı
       if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.data);
         FlightsResponseModel flightsResponse = FlightsResponseModel.fromJson(
-          response.data,
+          jsonResponse,
         );
 
         if (flightsResponse.success) {

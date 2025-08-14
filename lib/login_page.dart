@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dio/dio.dart';
@@ -38,8 +40,9 @@ class _LoginPageState extends State<LoginPage> {
 
       // Status code kontrolü her yerde tekrar yazılıyor
       if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.data);
         LoginResponseModel loginResponse = LoginResponseModel.fromJson(
-          response.data,
+          jsonResponse,
         );
 
         if (loginResponse.success) {
