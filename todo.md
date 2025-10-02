@@ -1,6 +1,6 @@
-- pubpsec kontrol yapilacak
-- analysis option kontrol edilecek
-- vscode settings project etc
+- pubpsec kontrol yapilacak -
+- analysis option kontrol edilecek -
+- vscode settings project etc - 
 - flavor kontrol edilecek
 - paketler kontrol edilecek
 - main dart kontrol edilecek
