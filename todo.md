@@ -1,4 +1,4 @@
-- pubpsec kontrol yapilacak -
+- pubpsec kontrol yapilacak : ✅
 - analysis option kontrol edilecek -
 - vscode settings project etc - 
 - flavor kontrol edilecek
