@@ -1,8 +1,9 @@
-- pubpsec kontrol yapilacak
-- analysis option kontrol edilecek
-- vscode settings project etc
-- flavor kontrol edilecek
+- pubpsec kontrol yapilacak : ✅
+- analysis option kontrol edilecek -
+- lock, ignore dosyalari kontrol edilecek 
+- vscode settings project etc - 
 - paketler kontrol edilecek
+- code gen eklenecek
 - main dart kontrol edilecek
 - theme ve constant paddingler kontrol edilecek
 - view - mixin yapısı kontrol edilecek
@@ -11,8 +12,9 @@
 - generation kontrol edilecek asset vb.
 - servis katmanı, container yapısı kontrol edilecek
 - modeller kontrol edilecek
-= moduler yapi
-= test ui test
+- moduler yapi
+- test ui test
+- flavor kontrol edilecek
 - security kontrol edilecek
 - scriptler kontrol edilecek
 - publish süreçleri kontrol edilecek
