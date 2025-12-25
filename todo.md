@@ -1,7 +1,7 @@
 - pubpsec kontrol yapilacak : ✅- v1
-- analysis option kontrol edilecek - v2
-- lock, ignore dosyalari kontrol edilecek -v2
-- vscode settings project etc -
+- analysis option kontrol edilecek - v2✅
+- lock, ignore dosyalari kontrol edilecek -v2✅
+- vscode settings project etc -v2 ✅
 - paket mimarisi  
 - paketler kontrol edilecek
 - code gen eklenecek
