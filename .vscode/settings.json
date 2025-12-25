@@ -1,0 +1,26 @@
+{
+    "dart.lineLength": 80,
+    "editor.formatOnSave": false,
+    "dart.evaluateGettersInDebugViews": false,
+    "search.followSymlinks": false,
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "matchingDocuments",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit",
+            "dart.fixAll": "explicit"
+        },
+    },
+    "workbench.colorCustomizations": {
+        "tab.activeBorderTop": "#FFE81F"
+    },
+    "editor.inlineSuggest.enabled": true
+}
