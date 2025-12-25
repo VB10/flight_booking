@@ -16,7 +16,7 @@ List<Map<String, dynamic>> flights = [
     'arrivalTime': '09:30',
     'price': 299,
     'duration': '1h 30m',
-    'date': '2024-01-15'
+    'date': '2024-01-15',
   },
   {
     'id': 2,
@@ -27,7 +27,7 @@ List<Map<String, dynamic>> flights = [
     'arrivalTime': '11:45',
     'price': 199,
     'duration': '1h 15m',
-    'date': '2024-01-15'
+    'date': '2024-01-15',
   },
   {
     'id': 3,
@@ -38,7 +38,7 @@ List<Map<String, dynamic>> flights = [
     'arrivalTime': '15:30',
     'price': 349,
     'duration': '1h 30m',
-    'date': '2024-01-16'
+    'date': '2024-01-16',
   },
   {
     'id': 4,
@@ -49,7 +49,7 @@ List<Map<String, dynamic>> flights = [
     'arrivalTime': '18:15',
     'price': 399,
     'duration': '1h 30m',
-    'date': '2024-01-16'
+    'date': '2024-01-16',
   },
 ];
 
@@ -66,19 +66,21 @@ class FlightServer {
   void _setupRoutes() {
     // Login endpoint
     _router.post('/login', _loginHandler);
-    
+
     // Flights endpoint
     _router.get('/flights', _flightsHandler);
-    
+
     // Cart/Checkout endpoint
     _router.post('/checkout', _checkoutHandler);
-    
+
     // Profile endpoint - fake
     _router.get('/profile', _profileHandler);
-    
+
     // Health check
     _router.get('/health', (Request request) {
-      return Response.ok(jsonEncode({'status': 'OK', 'message': 'Server is running'}));
+      return Response.ok(
+        jsonEncode({'status': 'OK', 'message': 'Server is running'}),
+      );
     });
   }
 
@@ -87,10 +89,10 @@ class FlightServer {
     try {
       final bodyString = await request.readAsString();
       final Map<String, dynamic> body = jsonDecode(bodyString);
-      
+
       String email = body['email'] ?? '';
       String password = body['password'] ?? '';
-      
+
       // Hard coded credentials - kötü praktik!
       if (email == 'user@test.com' && password == '123456') {
         return Response.ok(
@@ -98,27 +100,22 @@ class FlightServer {
             'success': true,
             'message': 'Login successful',
             'token': 'fake_token_12345', // Fake token
-            'user': {
-              'id': 1,
-              'email': email,
-              'name': 'Test User'
-            }
+            'user': {'id': 1, 'email': email, 'name': 'Test User'},
           }),
         );
       } else {
-        return Response(400, 
+        return Response(
+          400,
           body: jsonEncode({
             'success': false,
-            'message': 'Email veya şifre hatalı!'
+            'message': 'Email veya şifre hatalı!',
           }),
         );
       }
     } catch (e) {
-      return Response(500,
-        body: jsonEncode({
-          'success': false,
-          'message': 'Server error: $e'
-        }),
+      return Response(
+        500,
+        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
       );
     }
   }
@@ -130,15 +127,13 @@ class FlightServer {
         jsonEncode({
           'success': true,
           'data': flights,
-          'message': 'Flights retrieved successfully'
+          'message': 'Flights retrieved successfully',
         }),
       );
     } catch (e) {
-      return Response(500,
-        body: jsonEncode({
-          'success': false,
-          'message': 'Server error: $e'
-        }),
+      return Response(
+        500,
+        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
       );
     }
   }
@@ -147,16 +142,16 @@ class FlightServer {
     try {
       final bodyString = await request.readAsString();
       final Map<String, dynamic> body = jsonDecode(bodyString);
-      
+
       List<dynamic> cartItems = body['cartItems'] ?? [];
       String userEmail = body['userEmail'] ?? 'unknown@test.com';
-      
+
       // Basit toplam hesaplama
       int totalPrice = 0;
       for (var item in cartItems) {
         totalPrice += (item['price'] as int);
       }
-      
+
       // Fake order oluştur
       Map<String, dynamic> order = {
         'id': orders.length + 1,
@@ -164,28 +159,27 @@ class FlightServer {
         'items': cartItems,
         'totalPrice': totalPrice,
         'orderDate': DateTime.now().toIso8601String(),
-        'status': 'confirmed'
+        'status': 'confirmed',
       };
-      
+
       orders.add(order);
-      
+
       // Fake delay
       await Future.delayed(Duration(seconds: 1));
-      
+
       return Response.ok(
         jsonEncode({
           'success': true,
-          'message': 'Ödeme başarılı! Biletleriniz e-posta adresinize gönderildi.',
+          'message':
+              'Ödeme başarılı! Biletleriniz e-posta adresinize gönderildi.',
           'orderId': order['id'],
-          'totalPrice': totalPrice
+          'totalPrice': totalPrice,
         }),
       );
     } catch (e) {
-      return Response(500,
-        body: jsonEncode({
-          'success': false,
-          'message': 'Server error: $e'
-        }),
+      return Response(
+        500,
+        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
       );
     }
   }
@@ -204,17 +198,15 @@ class FlightServer {
             'name': 'Test User',
             'joinDate': '2024-01-01',
             'totalBookings': 5,
-            'membershipLevel': 'Silver'
+            'membershipLevel': 'Silver',
           },
-          'message': 'Profile retrieved successfully'
+          'message': 'Profile retrieved successfully',
         }),
       );
     } catch (e) {
-      return Response(500,
-        body: jsonEncode({
-          'success': false,
-          'message': 'Server error: $e'
-        }),
+      return Response(
+        500,
+        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
       );
     }
   }

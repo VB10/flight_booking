@@ -12,11 +12,11 @@ class FlightsResponseModel {
   factory FlightsResponseModel.fromJson(Map<String, dynamic> json) {
     List<FlightModel> flightList = [];
     if (json['data'] != null) {
-      for (var item in json['data']) {
+      for (var item in json['data'] as List<dynamic>) {
         flightList.add(FlightModel.fromJson(item));
       }
     }
-    
+
     return FlightsResponseModel(
       success: json['success'] ?? false,
       data: flightList,

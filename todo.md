@@ -1,9 +1,11 @@
-- pubpsec kontrol yapilacak : ✅
-- analysis option kontrol edilecek -
-- lock, ignore dosyalari kontrol edilecek 
-- vscode settings project etc - 
+- pubpsec kontrol yapilacak : ✅- v1
+- analysis option kontrol edilecek - v2
+- lock, ignore dosyalari kontrol edilecek -v2
+- vscode settings project etc -
+- paket mimarisi  
 - paketler kontrol edilecek
 - code gen eklenecek
+- fix the linter rules
 - main dart kontrol edilecek
 - theme ve constant paddingler kontrol edilecek
 - view - mixin yapısı kontrol edilecek

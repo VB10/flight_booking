@@ -139,16 +139,18 @@ class _CartPageState extends State<CartPage> {
       );
 
       Navigator.pop(context); // Loading dialog'u kapat
-
+      final responseData = response.data as Map<String, dynamic>?;
       // Status code kontrolü yine aynı
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && responseData != null) {
         CheckoutResponseModel checkoutResponse = CheckoutResponseModel.fromJson(
-          response.data,
+          responseData,
         );
 
         if (checkoutResponse.success) {
           // Analytics - Checkout başarılı
-          await _logSuccessfulCheckout(requestBody['cartItems']);
+          await _logSuccessfulCheckout(
+            requestBody['cartItems'] as List<dynamic>,
+          );
 
           setState(() {
             widget.cartItems.clear();
