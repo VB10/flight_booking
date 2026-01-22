@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:lottie/lottie.dart';
-import 'login_page.dart';
-import 'flight_list_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../auth/flight/flight_list_page.dart';
+import '../login/login_page.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -19,16 +20,16 @@ class _SplashPageState extends State<SplashPage> {
   // Kötü pratik: Tüm cache logic burada sayfaya gömülü
   void checkUserLogin() async {
     await Future.delayed(Duration(seconds: 2)); // Fake splash delay
-    
+
     // SharedPreferences'i her seferinde al - kötü pratik
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    
+
     // Hard coded key'ler - kötü praktik
     String? token = prefs.getString('user_token');
     String? userEmail = prefs.getString('user_email');
     String? userName = prefs.getString('user_name');
     int? userId = prefs.getInt('user_id');
-    
+
     // Basit kontrol - proper validation yok
     if (token != null && token.isNotEmpty && userEmail != null) {
       // User logged in
@@ -55,7 +56,7 @@ class _SplashPageState extends State<SplashPage> {
           children: [
             // Lottie animasyonu - kötü pratik: Hard coded path
             Lottie.asset(
-              'assets/Animation - 1716380534233.json',
+              'assets/animation/lottie/lottie_loading.json',
               width: 200,
               height: 200,
               fit: BoxFit.contain,

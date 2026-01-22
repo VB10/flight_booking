@@ -1,7 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
-import 'login_page.dart';
+
+import '../../unauth/login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

@@ -3,8 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
-import 'firebase_options.dart';
-import 'splash_page.dart';
+import '../../feature/unauth/splash/splash_page.dart';
+import '../package/firebase/firebase_options.dart';
 
 // Firebase services - Kötü pratik: Global değişkenler
 late FirebaseRemoteConfig remoteConfig;

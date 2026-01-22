@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'flight_list_page.dart';
+
+import '../../../product/initialze/main.dart'; // Global analytics için
+import '../../auth/flight/flight_list_page.dart';
 import 'login_response_model.dart';
-import 'main.dart'; // Global analytics için
 
 class LoginPage extends StatefulWidget {
   @override
