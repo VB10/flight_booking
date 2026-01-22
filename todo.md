@@ -4,13 +4,9 @@
 - ✅ v1: Pubspec.yaml kontrolü ve düzenlemesi
 - ✅ v2: Analysis options ve linter rules
 - ✅ v3: Lock files, .gitignore, VSCode settings
+- ✅ v4: Paket mimarisi ve klasör yapısı
 
 ## 📋 Planlanan Bölümler
-
-### Proje Yapısı & Mimari (v4)
-- [ ] Paket mimarisi ve klasör yapısı
-- [ ] Feature-based modüler yapı organizasyonu
-- [ ] Core, feature, product klasör düzeni
 
 ### Temel Konfigürasyon (v5)
 - [ ] Main.dart düzenlemesi ve yapılandırması
@@ -22,12 +18,14 @@
 - [ ] Custom color schemes
 - [ ] Typography ve text styles
 - [ ] Padding/margin constants (AppPadding, AppRadius vb.)
+
+### Package Management (v6.1)
 - [ ] Custom widget library
+- [ ] Custom package management
 
 ### Navigation & Routing (v7)
 - [ ] Navigation yapısı (GoRouter / AutoRoute)
 - [ ] Route management
-- [ ] Deep linking configuration
 - [ ] Navigation guards
 
 ### State Management (v8)
@@ -45,8 +43,12 @@
 ### Service Layer & Dependency Injection (v10)
 - [ ] Network manager ve HTTP client setup
 - [ ] Service layer mimarisi
+
+### Dependency Injection (v10.1)
 - [ ] Dependency injection (GetIt / Riverpod)
 - [ ] Repository pattern implementation
+
+### Cache Manager (v10.2)
 - [ ] Cache manager
 
 ### Model & Entity Layer (v11)
@@ -56,11 +58,14 @@
 - [ ] Type-safe model definitions
 
 ### Code Generation (v12)
+- [ ] Build runner configuration
 - [ ] Asset generation (flutter_gen)
 - [ ] Localization generation (easy_localization / intl)
+
+### Route Generation (v12.1)
 - [ ] Route generation
+- [ ] Freezed implementation
 - [ ] JSON serialization (json_serializable)
-- [ ] Build runner configuration
 
 ### Paket Yönetimi (v13)
 - [ ] Core paketlerin incelenmesi ve seçimi
@@ -68,6 +73,14 @@
 - [ ] Network ve data paketleri
 - [ ] Developer tools paketleri
 - [ ] Gereksiz paketlerin temizlenmesi
+
+## Refactor Login & Splash Page
+- [ ] Login Page
+- [ ] Splash Page
+
+### Refactor Flight List & Detail Page\
+- [ ] Flight List Page
+- [ ] Flight Detail Page
 
 ### Testing (v14)
 - [ ] Unit test yapısı ve coverage
@@ -88,6 +101,9 @@
 - [ ] Certificate pinning
 - [ ] Obfuscation settings
 - [ ] Sensitive data handling
+
+### Prompt Engineering (v16.1)
+- [ ] Helpful prompt engineering
 
 ### Multi-Flavor Setup (v17)
 - [ ] Development, staging, production flavors
