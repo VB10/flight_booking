@@ -51,20 +51,20 @@ flutter:
   assets:
     - assets/animation/lottie/
     - assets/icon/svg/
-    - assets/icon/png
+  #   - assets/icon/png
 
   # Fonts
   fonts:
     - family: Roboto
       fonts:
-        - asset: assets/font/Roboto-Regular.ttf
-        - asset: assets/font/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
           weight: 700
-        - asset: assets/Roboto-Medium.ttf
+        - asset: assets/fonts/Roboto-Medium.ttf
           weight: 500
-        - asset: assets/Roboto-Light.ttf
+        - asset: assets/fonts/Roboto-Light.ttf
           weight: 300
-        - asset: assets/Roboto-Thin.ttf
+        - asset: assets/fonts/Roboto-Thin.ttf
           weight: 100
-        - asset: assets/Roboto-Black.ttf
+        - asset: assets/fonts/Roboto-Black.ttf
           weight: 900

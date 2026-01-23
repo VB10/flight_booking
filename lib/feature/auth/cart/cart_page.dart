@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+
+import '../../../product/initialze/main.dart'; // Global analytics için
 import 'checkout_response_model.dart';
-import 'main.dart'; // Global analytics için
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
