@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +9,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../product/initialze/main.dart'; // Global firebase services için
 import '../../unauth/login/login_page.dart';
 import '../cart/cart_page.dart';
 import '../flight_detail/flight_detail_page.dart';
@@ -39,13 +39,13 @@ class _FlightListPageState extends State<FlightListPage> {
   // Kötü pratik: Screen tracking her sayfada tekrar
   Future<void> _logScreenView() async {
     try {
-      await analytics.logScreenView(
+      await CustomRemoteConfig.instance.analytics.logScreenView(
         screenName: 'flight_list',
         screenClass: 'FlightListPage',
       );
 
       // Custom screen event
-      await analytics.logEvent(
+      await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'screen_view_flight_list',
         parameters: {
           'screen_name': 'flight_list',
@@ -67,9 +67,14 @@ class _FlightListPageState extends State<FlightListPage> {
       String currentVersion = packageInfo.version;
 
       // Remote config'den minimum version al
-      String minimumVersion = remoteConfig.getString('minimum_app_version');
-      bool forceUpdate = remoteConfig.getBool('force_update_required');
-      String updateMessage = remoteConfig.getString('update_message_tr');
+      String minimumVersion = CustomRemoteConfig.instance.remoteConfig
+          .getString('minimum_app_version');
+      bool forceUpdate = CustomRemoteConfig.instance.remoteConfig.getBool(
+        'force_update_required',
+      );
+      String updateMessage = CustomRemoteConfig.instance.remoteConfig.getString(
+        'update_message_tr',
+      );
 
       // Kötü pratik: Basit string karşılaştırması
       if (_isVersionOlder(currentVersion, minimumVersion)) {
@@ -243,7 +248,7 @@ class _FlightListPageState extends State<FlightListPage> {
   Future<void> _logAddToCart(FlightModel flight) async {
     try {
       // Add to cart event - Firebase Analytics standard event
-      await analytics.logAddToCart(
+      await CustomRemoteConfig.instance.analytics.logAddToCart(
         currency: 'TRY',
         value: flight.price.toDouble(),
         parameters: {
@@ -261,7 +266,7 @@ class _FlightListPageState extends State<FlightListPage> {
       );
 
       // Custom event - sepete ekleme detayı
-      await analytics.logEvent(
+      await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'flight_added_to_cart',
         parameters: {
           'flight_id': flight.id,
