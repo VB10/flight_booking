@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flight_booking/core/theme/app_page_padding.dart';
-import 'package:flight_booking/core/theme/app_sizes.dart';
-import 'package:flight_booking/core/theme/app_theme_extension.dart';
-import 'package:flight_booking/core/theme/product_text.dart';
+import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -148,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: context.colorScheme.primary,
       ),
       body: Padding(
-        padding: const AppPagePadding.all20(),
+        padding: AppPagePadding.all20(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

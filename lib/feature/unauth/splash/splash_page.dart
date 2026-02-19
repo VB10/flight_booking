@@ -1,3 +1,4 @@
+import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,49 +49,43 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: colorScheme.primary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Lottie animasyonu - kötü pratik: Hard coded path
             Lottie.asset(
               'assets/animation/lottie/lottie_loading.json',
               width: 200,
               height: 200,
               fit: BoxFit.contain,
             ),
-            SizedBox(height: 30),
-            Text(
+            const SizedBox(height: AppSizes.spacingXl),
+            ProductText.h2(
+              context,
               'Flight Booking',
-              style: TextStyle(
-                fontSize: 32,
+              style: context.appTextTheme.headlineLarge?.copyWith(
+                color: colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontFamily: 'Roboto', // Kötü pratik: Hard coded font
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: AppSizes.spacingL),
+            ProductText.bodyLarge(
+              context,
               'Uçak Bileti Rezervasyon Uygulaması',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white70,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w300,
+              style: context.appTextTheme.bodyLarge?.copyWith(
+                color: colorScheme.onPrimary.withOpacity(0.9),
               ),
             ),
-            SizedBox(height: 50),
-            // Loading indicator yerine boş alan - animasyon yeterli
-            SizedBox(height: 40),
-            Text(
+            const SizedBox(height: 50),
+            const SizedBox(height: 40),
+            ProductText.bodyLarge(
+              context,
               'Yükleniyor...',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w300,
+              style: context.appTextTheme.bodyLarge?.copyWith(
+                color: colorScheme.onPrimary,
               ),
             ),
           ],

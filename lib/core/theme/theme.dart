@@ -1,5 +1,6 @@
 export 'package:flight_booking/core/theme/app_color_scheme.dart';
 export 'package:flight_booking/core/theme/app_colors.dart';
+export 'package:flight_booking/core/theme/app_padding.dart';
 export 'package:flight_booking/core/theme/app_page_padding.dart';
 export 'package:flight_booking/core/theme/app_radius.dart';
 export 'package:flight_booking/core/theme/app_sizes.dart';

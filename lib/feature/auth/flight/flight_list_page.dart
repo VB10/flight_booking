@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,15 +109,9 @@ class _FlightListPageState extends State<FlightListPage> {
         return AlertDialog(
           title: Row(
             children: [
-              Icon(Icons.system_update, color: Colors.orange),
-              SizedBox(width: 10),
-              Text(
-                'Güncelleme Gerekli',
-                style: TextStyle(
-                  fontFamily: 'Roboto', // Kötü pratik: Hard coded font
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Icon(Icons.system_update, color: context.appTheme.warning),
+              const SizedBox(width: AppSizes.spacingS),
+              ProductText.titleLarge(context, 'Güncelleme Gerekli'),
             ],
           ),
           content: Column(
@@ -128,12 +123,12 @@ class _FlightListPageState extends State<FlightListPage> {
                 width: 100,
                 height: 100,
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: AppSizes.spacingL),
+              ProductText.bodyLarge(
+                context,
                 message.isEmpty
                     ? 'Yeni versiyon mevcut! Lütfen uygulamayı güncelleyin.'
                     : message,
-                style: TextStyle(fontFamily: 'Roboto', fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -141,36 +136,31 @@ class _FlightListPageState extends State<FlightListPage> {
           actions: [
             if (!forceUpdate)
               TextButton(
-                child: Text(
+                onPressed: () => Navigator.of(context).pop(),
+                child: ProductText.bodyMedium(
+                  context,
                   'Daha Sonra',
-                  style: TextStyle(fontFamily: 'Roboto', color: Colors.grey),
+                  color: context.colorScheme.onSurfaceVariant,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
               ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-              ),
-              child: Text(
-                'Güncelle',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.bold,
-                ),
+                backgroundColor: context.appTheme.warning,
+                foregroundColor: context.colorScheme.onPrimary,
               ),
               onPressed: () {
-                // Kötü pratik: URL hard coded ve platform check yok
-                // Production'da store URL'leri farklı olmalı
                 debugPrint(
                   'Store\'a yönlendir - URL: https://play.google.com/store/apps/details?id=com.example.flight_booking',
                 );
-                if (!forceUpdate) {
-                  Navigator.of(context).pop();
-                }
+                if (!forceUpdate) Navigator.of(context).pop();
               },
+              child: ProductText.labelLarge(
+                context,
+                'Güncelle',
+                style: context.appTextTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         );
@@ -238,8 +228,8 @@ class _FlightListPageState extends State<FlightListPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Bilet sepete eklendi!'),
-        backgroundColor: Colors.green,
+        content: ProductText.bodyMedium(context, 'Bilet sepete eklendi!'),
+        backgroundColor: context.appTheme.success,
       ),
     );
   }
@@ -288,11 +278,8 @@ class _FlightListPageState extends State<FlightListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Uçak Biletleri',
-          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w500),
-        ),
-        backgroundColor: Colors.blue,
+        title: ProductText.titleMedium(context, 'Uçak Biletleri'),
+        backgroundColor: context.colorScheme.primary,
         actions: [
           // Profile butonu eklendi
           IconButton(
@@ -312,21 +299,22 @@ class _FlightListPageState extends State<FlightListPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Çıkış Yap'),
-                    content: Text('Çıkış yapmak istediğinizden emin misiniz?'),
+                    title: ProductText.titleLarge(context, 'Çıkış Yap'),
+                    content: ProductText.bodyMedium(
+                      context,
+                      'Çıkış yapmak istediğinizden emin misiniz?',
+                    ),
                     actions: [
                       TextButton(
-                        child: Text('İptal'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: ProductText.labelLarge(context, 'İptal'),
                       ),
                       TextButton(
-                        child: Text('Çıkış Yap'),
                         onPressed: () {
                           Navigator.of(context).pop();
                           logout();
                         },
+                        child: ProductText.labelLarge(context, 'Çıkış Yap'),
                       ),
                     ],
                   );
@@ -349,18 +337,24 @@ class _FlightListPageState extends State<FlightListPage> {
               ),
               if (cart.isNotEmpty)
                 Positioned(
-                  right: 8,
-                  top: 8,
+                  right: AppSizes.spacingXs,
+                  top: AppSizes.spacingXs,
                   child: Container(
-                    padding: EdgeInsets.all(2),
+                    padding: AppPadding.p4,
                     decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
+                      color: context.colorScheme.error,
+                      borderRadius: AppRadius.circular8,
                     ),
-                    constraints: BoxConstraints(minWidth: 16, minHeight: 16),
-                    child: Text(
+                    constraints: const BoxConstraints(
+                      minWidth: AppSizes.iconSmall,
+                      minHeight: AppSizes.iconSmall,
+                    ),
+                    child: ProductText.labelSmall(
+                      context,
                       cart.length.toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: context.appTextTheme.labelSmall?.copyWith(
+                        color: context.colorScheme.onError,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -370,178 +364,178 @@ class _FlightListPageState extends State<FlightListPage> {
         ],
       ),
       body: isLoading
-          ? buildShimmerLoading()
+          ? buildShimmerLoading(context)
           : errorMessage.isNotEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // SVG ikonu - kötü pratik: Hard coded path
                   SvgPicture.asset(
                     'assets/undraw_fast-loading_ae60.svg',
                     width: 150,
                     height: 150,
                   ),
-                  SizedBox(height: 30),
-                  Text(
+                  const SizedBox(height: AppSizes.spacingXl),
+                  ProductText.bodyLarge(
+                    context,
                     'Hata: $errorMessage',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontFamily: 'Roboto', // Kötü pratik: Hard coded font
-                      fontSize: 16,
+                    style: context.appTextTheme.bodyLarge?.copyWith(
+                      color: context.colorScheme.error,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.spacingL),
                   ElevatedButton(
                     onPressed: fetchFlights,
-                    child: Text(
-                      'Tekrar Dene',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w500,
-                      ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colorScheme.primary,
+                      foregroundColor: context.colorScheme.onPrimary,
                     ),
+                    child: ProductText.labelLarge(context, 'Tekrar Dene'),
                   ),
                 ],
               ),
             )
           : ListView.builder(
-              padding: EdgeInsets.all(10),
+              padding: AppPagePadding.all10(),
               itemCount: flights.length,
               itemBuilder: (context, index) {
                 final flight = flights[index];
+                final scheme = context.colorScheme;
+                final appTheme = context.appTheme;
                 return Card(
-                  margin: EdgeInsets.only(bottom: 15),
+                  margin: AppPagePadding.marginBottom15(),
                   elevation: 3,
                   child: Padding(
-                    padding: EdgeInsets.all(15),
+                    padding: AppPagePadding.all15(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            ProductText.titleMedium(
+                              context,
                               flight.airline,
-                              style: TextStyle(
-                                fontSize: 16,
+                              style: context.appTextTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontFamily:
-                                    'Roboto', // Kötü pratik: Her yerde tekrar
+                                color: scheme.primary,
                               ),
                             ),
-                            Text(
+                            ProductText.titleLarge(
+                              context,
                               '${flight.price} ₺',
-                              style: TextStyle(
-                                fontSize: 18,
+                              style: context.appTextTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green,
+                                color: appTheme.success,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: AppSizes.spacingS),
                         Row(
                           children: [
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  ProductText.titleMedium(
+                                    context,
                                     flight.from,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context
+                                        .appTextTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
+                                  ProductText.bodyMedium(
+                                    context,
                                     flight.departureTime,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
+                                    color: scheme.onSurfaceVariant,
                                   ),
                                 ],
                               ),
                             ),
-                            Icon(Icons.arrow_forward, color: Colors.grey),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: scheme.onSurfaceVariant,
+                              size: AppSizes.iconMedium,
+                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(
+                                  ProductText.titleMedium(
+                                    context,
                                     flight.to,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: context
+                                        .appTextTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
+                                  ProductText.bodyMedium(
+                                    context,
                                     flight.arrivalTime,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
+                                    color: scheme.onSurfaceVariant,
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: AppSizes.spacingS),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            ProductText.labelSmall(
+                              context,
                               'Süre: ${flight.duration}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
+                              style: context.appTextTheme.labelSmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
                               ),
                             ),
-                            Text(
+                            ProductText.labelSmall(
+                              context,
                               'Tarih: ${flight.date}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
+                              style: context.appTextTheme.labelSmall?.copyWith(
+                                color: scheme.onSurfaceVariant,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: AppSizes.spacingM),
                         Row(
                           children: [
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // FlightModel'i Map'e çevir - kötü pratik
-                                  Map<String, dynamic> flightMap = flight
-                                      .toJson();
+                                  final flightMap = flight.toJson();
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    MaterialPageRoute<Widget>(
                                       builder: (context) =>
                                           FlightDetailPage(flight: flightMap),
                                     ),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey,
-                                  foregroundColor: Colors.white,
+                                  backgroundColor: scheme.surfaceContainerHighest,
+                                  foregroundColor: scheme.onSurface,
                                 ),
-                                child: Text('Detaylar'),
+                                child: ProductText.labelLarge(
+                                  context,
+                                  'Detaylar',
+                                ),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: AppSizes.spacingS),
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () => addToCart(flight),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  foregroundColor: Colors.white,
+                                  backgroundColor: appTheme.brandPrimary,
+                                  foregroundColor: scheme.onPrimary,
                                 ),
-                                child: Text('Sepete Ekle'),
+                                child: ProductText.labelLarge(
+                                  context,
+                                  'Sepete Ekle',
+                                ),
                               ),
                             ),
                           ],
@@ -576,24 +570,24 @@ class _FlightListPageState extends State<FlightListPage> {
     );
   }
 
-  // Kötü pratik: Shimmer widget burada sayfaya gömülü
-  Widget buildShimmerLoading() {
+  Widget buildShimmerLoading(BuildContext context) {
+    final appTheme = context.appTheme;
+    final surfaceColor = context.colorScheme.surface;
     return ListView.builder(
-      padding: EdgeInsets.all(10),
-      itemCount: 6, // Fake 6 item göster
+      padding: AppPagePadding.all10(),
+      itemCount: 6,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
+          baseColor: appTheme.shimmerBase,
+          highlightColor: appTheme.shimmerHighlight,
           child: Card(
-            margin: EdgeInsets.only(bottom: 15),
+            margin: AppPagePadding.marginBottom15(),
             elevation: 3,
             child: Padding(
-              padding: EdgeInsets.all(15),
+              padding: AppPagePadding.all15(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Havayolu ve fiyat placeholder
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -601,23 +595,21 @@ class _FlightListPageState extends State<FlightListPage> {
                         width: 120,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
+                          color: surfaceColor,
+                          borderRadius: AppRadius.circular4,
                         ),
                       ),
                       Container(
                         width: 80,
                         height: 18,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
+                          color: surfaceColor,
+                          borderRadius: AppRadius.circular4,
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
-
-                  // Şehir bilgileri placeholder
+                  const SizedBox(height: AppSizes.spacingS),
                   Row(
                     children: [
                       Expanded(
@@ -628,17 +620,17 @@ class _FlightListPageState extends State<FlightListPage> {
                               width: 80,
                               height: 16,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
+                                color: surfaceColor,
+                                borderRadius: AppRadius.circular4,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Container(
                               width: 50,
                               height: 14,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
+                                color: surfaceColor,
+                                borderRadius: AppRadius.circular4,
                               ),
                             ),
                           ],
@@ -648,8 +640,8 @@ class _FlightListPageState extends State<FlightListPage> {
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
+                          color: surfaceColor,
+                          borderRadius: AppRadius.circular4,
                         ),
                       ),
                       Expanded(
@@ -660,17 +652,17 @@ class _FlightListPageState extends State<FlightListPage> {
                               width: 80,
                               height: 16,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
+                                color: surfaceColor,
+                                borderRadius: AppRadius.circular4,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Container(
                               width: 50,
                               height: 14,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
+                                color: surfaceColor,
+                                borderRadius: AppRadius.circular4,
                               ),
                             ),
                           ],
@@ -678,10 +670,7 @@ class _FlightListPageState extends State<FlightListPage> {
                       ),
                     ],
                   ),
-
-                  SizedBox(height: 10),
-
-                  // Süre ve tarih placeholder
+                  const SizedBox(height: AppSizes.spacingS),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -689,42 +678,39 @@ class _FlightListPageState extends State<FlightListPage> {
                         width: 70,
                         height: 12,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
+                          color: surfaceColor,
+                          borderRadius: AppRadius.circular4,
                         ),
                       ),
                       Container(
                         width: 90,
                         height: 12,
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
+                          color: surfaceColor,
+                          borderRadius: AppRadius.circular4,
                         ),
                       ),
                     ],
                   ),
-
-                  SizedBox(height: 15),
-
-                  // Buton placeholders
+                  const SizedBox(height: AppSizes.spacingM),
                   Row(
                     children: [
                       Expanded(
                         child: Container(
-                          height: 36,
+                          height: AppSizes.buttonHeightSmall,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
+                            color: surfaceColor,
+                            borderRadius: AppRadius.circular4,
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: AppSizes.spacingS),
                       Expanded(
                         child: Container(
-                          height: 36,
+                          height: AppSizes.buttonHeightSmall,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
+                            color: surfaceColor,
+                            borderRadius: AppRadius.circular4,
                           ),
                         ),
                       ),

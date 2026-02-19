@@ -63,14 +63,16 @@ final class ProductText extends Text {
     BuildContext context,
     super.data, {
     super.key,
+    TextStyle? style,
     super.textAlign,
     super.maxLines,
     super.overflow,
     Color? color,
   }) : super(
-         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-           color: color ?? context.colorScheme.onPrimary,
-         ),
+         style: style ??
+             Theme.of(context).textTheme.headlineMedium?.copyWith(
+               color: color ?? context.colorScheme.onPrimary,
+             ),
        );
 
   /// Headline Small

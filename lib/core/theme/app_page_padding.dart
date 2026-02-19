@@ -37,9 +37,12 @@ final class AppPagePadding extends EdgeInsets {
   const AppPagePadding.verticalSymmetric()
     : super.symmetric(vertical: _spacingL);
 
-  /// [8] vertical symmetric
+  /// [8] vertical symmetric (alias: page vertical 8)
   const AppPagePadding.verticalSymmetricSmall()
     : super.symmetric(vertical: _spacingXs);
+
+  /// [8] page vertical (same as verticalSymmetricSmall)
+  const AppPagePadding.pageVertical8() : super.symmetric(vertical: _spacingXs);
 
   /// [16] vertical symmetric
   const AppPagePadding.verticalSymmetricMedium()
@@ -57,6 +60,9 @@ final class AppPagePadding extends EdgeInsets {
 
   /// [12] margin bottom
   const AppPagePadding.marginBottom12() : super.only(bottom: 12);
+
+  /// [15] margin bottom
+  const AppPagePadding.marginBottom15() : super.only(bottom: 15);
 
   /// [16] margin bottom
   const AppPagePadding.marginBottom16() : super.only(bottom: _spacingM);
