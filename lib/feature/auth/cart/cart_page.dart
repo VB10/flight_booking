@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 
-import '../../../product/initialze/main.dart'; // Global analytics için
 import 'checkout_response_model.dart';
 
 class CartPage extends StatefulWidget {
@@ -24,13 +24,13 @@ class _CartPageState extends State<CartPage> {
   // Kötü pratik: Screen tracking method'u buraya gömülü
   Future<void> _logCartScreenView() async {
     try {
-      await analytics.logScreenView(
+      await CustomRemoteConfig.instance.analytics.logScreenView(
         screenName: 'cart',
         screenClass: 'CartPage',
       );
 
       // Cart view event with item count
-      await analytics.logEvent(
+      await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'cart_view',
         parameters: {
           'cart_item_count': widget.cartItems.length,
@@ -192,7 +192,7 @@ class _CartPageState extends State<CartPage> {
   // Kötü pratik: Analytics method'ları da buraya gömülü
   Future<void> _logRemoveFromCart(Map<String, dynamic> item) async {
     try {
-      await analytics.logEvent(
+      await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'remove_from_cart',
         parameters: {
           'item_id': item['id']?.toString() ?? 'unknown',
@@ -221,7 +221,7 @@ class _CartPageState extends State<CartPage> {
       }
 
       // Purchase event - Firebase Analytics standard event
-      await analytics.logPurchase(
+      await CustomRemoteConfig.instance.analytics.logPurchase(
         currency: 'TRY',
         value: totalValue,
         parameters: {
@@ -234,7 +234,7 @@ class _CartPageState extends State<CartPage> {
       // Her bir item için purchase detail
       for (int i = 0; i < cartItems.length; i++) {
         var item = cartItems[i];
-        await analytics.logEvent(
+        await CustomRemoteConfig.instance.analytics.logEvent(
           name: 'purchase_item_detail',
           parameters: {
             'item_id': item['id']?.toString() ?? 'unknown',
@@ -251,7 +251,7 @@ class _CartPageState extends State<CartPage> {
       }
 
       // Custom checkout completion event
-      await analytics.logEvent(
+      await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'checkout_completed',
         parameters: {
           'total_amount': totalValue,

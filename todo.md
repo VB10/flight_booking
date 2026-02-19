@@ -5,13 +5,9 @@
 - ✅ v2: Analysis options ve linter rules
 - ✅ v3: Lock files, .gitignore, VSCode settings
 - ✅ v4: Paket mimarisi ve klasör yapısı
+- ✅ v5: Main.dart düzenlemesi ve yapılandırması
 
 ## 📋 Planlanan Bölümler
-
-### Temel Konfigürasyon (v5)
-- [ ] Main.dart düzenlemesi ve yapılandırması
-- [ ] App initialization ve setup
-- [ ] Environment configuration
 
 ### Theme & Design System (v6)
 - [ ] Theme yapısı (light/dark theme)

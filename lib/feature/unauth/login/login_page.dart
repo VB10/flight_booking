@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../product/initialze/main.dart'; // Global analytics için
 import '../../auth/flight/flight_list_page.dart';
 import 'login_response_model.dart';
 
@@ -98,23 +98,25 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _logSuccessfulLogin(LoginResponseModel loginResponse) async {
     try {
       // Analytics - Login event'i logla
-      await analytics.logLogin(
+      await CustomRemoteConfig.instance.analytics.logLogin(
         loginMethod: 'email', // Kötü pratik: Hard coded method
       );
 
       // User properties set et - kötü pratik: PII data
-      await analytics.setUserId(id: loginResponse.user.id.toString());
-      await analytics.setUserProperty(
+      await CustomRemoteConfig.instance.analytics.setUserId(
+        id: loginResponse.user.id.toString(),
+      );
+      await CustomRemoteConfig.instance.analytics.setUserProperty(
         name: 'user_email', // Kötü pratik: Email saklamak
         value: loginResponse.user.email,
       );
-      await analytics.setUserProperty(
+      await CustomRemoteConfig.instance.analytics.setUserProperty(
         name: 'user_name',
         value: loginResponse.user.name,
       );
 
       // Custom event - kötü pratik: Hard coded parameters
-      await analytics.logEvent(
+      await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'successful_login',
         parameters: {
           'login_timestamp': DateTime.now().millisecondsSinceEpoch,
