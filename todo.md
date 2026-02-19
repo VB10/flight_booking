@@ -6,14 +6,15 @@
 - ✅ v3: Lock files, .gitignore, VSCode settings
 - ✅ v4: Paket mimarisi ve klasör yapısı
 - ✅ v5: Main.dart düzenlemesi ve yapılandırması
+- ✅ v6: Theme yapısı (light/dark theme)
 
 ## 📋 Planlanan Bölümler
 
-### Theme & Design System (v6)
-- [ ] Theme yapısı (light/dark theme)
-- [ ] Custom color schemes
-- [ ] Typography ve text styles
-- [ ] Padding/margin constants (AppPadding, AppRadius vb.)
+### View Layer (v9 - Priority: High)
+- [ ] View - ViewModel - Mixin yapısı
+- [ ] Base view ve base view model
+- [ ] Custom mixin'ler (network, theme, navigation vb.)
+- [ ] Widget composition patterns
 
 ### Package Management (v6.1)
 - [ ] Custom widget library
@@ -29,12 +30,6 @@
 - [ ] Global state yapısı
 - [ ] Feature-level state organization
 - [ ] State persistence
-
-### View Layer (v9)
-- [ ] View - ViewModel - Mixin yapısı
-- [ ] Base view ve base view model
-- [ ] Custom mixin'ler (network, theme, navigation vb.)
-- [ ] Widget composition patterns
 
 ### Service Layer & Dependency Injection (v10)
 - [ ] Network manager ve HTTP client setup
