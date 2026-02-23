@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 
-import 'checkout_response_model.dart';
+import 'package:flight_booking/feature/auth/cart/checkout_response_model.dart';
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
@@ -63,8 +64,8 @@ class _CartPageState extends State<CartPage> {
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Bilet sepetten çıkarıldı!'),
-        backgroundColor: Colors.orange,
+        content: ProductText.bodyMedium(context, 'Bilet sepetten çıkarıldı!'),
+        backgroundColor: context.appTheme.warning,
       ),
     );
   }
@@ -72,7 +73,10 @@ class _CartPageState extends State<CartPage> {
   void checkout() {
     if (widget.cartItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sepetiniz boş!'), backgroundColor: Colors.red),
+        SnackBar(
+          content: ProductText.bodyMedium(context, 'Sepetiniz boş!'),
+          backgroundColor: context.colorScheme.error,
+        ),
       );
       return;
     }
@@ -81,23 +85,22 @@ class _CartPageState extends State<CartPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Ödeme Onayı'),
-          content: Text(
+          title: ProductText.titleLarge(context, 'Ödeme Onayı'),
+          content: ProductText.bodyMedium(
+            context,
             'Toplam ${getTotalPrice()} ₺ ödeme yapmak istediğinizden emin misiniz?',
           ),
           actions: [
             TextButton(
-              child: Text('İptal'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
+              child: ProductText.labelLarge(context, 'İptal'),
             ),
             TextButton(
-              child: Text('Onayla'),
               onPressed: () {
                 Navigator.of(context).pop();
                 _processCheckout();
               },
+              child: ProductText.labelLarge(context, 'Onayla'),
             ),
           ],
         );
@@ -115,9 +118,9 @@ class _CartPageState extends State<CartPage> {
         return AlertDialog(
           content: Row(
             children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 20),
-              Text('Ödeme işlemi yapılıyor...'),
+              const CircularProgressIndicator(),
+              const SizedBox(width: AppSizes.spacingL),
+              ProductText.bodyMedium(context, 'Ödeme işlemi yapılıyor...'),
             ],
           ),
         );
@@ -158,34 +161,39 @@ class _CartPageState extends State<CartPage> {
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(checkoutResponse.message),
-              backgroundColor: Colors.green,
+              content: ProductText.bodyMedium(context, checkoutResponse.message),
+              backgroundColor: context.appTheme.success,
             ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(checkoutResponse.message),
-              backgroundColor: Colors.red,
+              content: ProductText.bodyMedium(context, checkoutResponse.message),
+              backgroundColor: context.colorScheme.error,
             ),
           );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Server hatası: ${response.statusCode}'),
-            backgroundColor: Colors.red,
+            content: ProductText.bodyMedium(
+              context,
+              'Server hatası: ${response.statusCode}',
+            ),
+            backgroundColor: context.colorScheme.error,
           ),
         );
       }
     } catch (e) {
-      Navigator.pop(context); // Loading dialog'u kapat
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Bağlantı hatası: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      Navigator.pop(context);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: ProductText.bodyMedium(context, 'Bağlantı hatası: $e'),
+            backgroundColor: context.colorScheme.error,
+          ),
+        );
+      }
     }
   }
 
@@ -270,7 +278,10 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sepetim'), backgroundColor: Colors.blue),
+      appBar: AppBar(
+        title: ProductText.titleLarge(context, 'Sepetim'),
+        backgroundColor: context.colorScheme.primary,
+      ),
       body: widget.cartItems.isEmpty
           ? Center(
               child: Column(
@@ -279,12 +290,15 @@ class _CartPageState extends State<CartPage> {
                   Icon(
                     Icons.shopping_cart_outlined,
                     size: 100,
-                    color: Colors.grey,
+                    color: context.colorScheme.onSurfaceVariant,
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: AppSizes.spacingL),
+                  ProductText.titleMedium(
+                    context,
                     'Sepetiniz boş',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: context.appTextTheme.titleMedium?.copyWith(
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -293,44 +307,61 @@ class _CartPageState extends State<CartPage> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.all(10),
+                    padding: AppPagePadding.all10(),
                     itemCount: widget.cartItems.length,
                     itemBuilder: (context, index) {
                       final flight = widget.cartItems[index];
+                      final scheme = context.colorScheme;
+                      final appTheme = context.appTheme;
                       return Card(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: AppPagePadding.marginBottom10(),
                         child: ListTile(
                           leading: Icon(
                             Icons.flight_takeoff,
-                            color: Colors.blue,
+                            color: scheme.primary,
+                            size: AppSizes.iconMedium,
                           ),
-                          title: Text(
+                          title: ProductText.titleMedium(
+                            context,
                             '${flight['from']} - ${flight['to']}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: context.appTextTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(flight['airline']),
-                              Text(
+                              ProductText.bodySmall(
+                                context,
+                                flight['airline'] as String? ?? '',
+                              ),
+                              ProductText.bodySmall(
+                                context,
                                 '${flight['departureTime']} - ${flight['arrivalTime']}',
                               ),
-                              Text('Tarih: ${flight['date']}'),
+                              ProductText.labelSmall(
+                                context,
+                                'Tarih: ${flight['date']}',
+                              ),
                             ],
                           ),
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              ProductText.titleMedium(
+                                context,
                                 '${flight['price']} ₺',
-                                style: TextStyle(
-                                  fontSize: 16,
+                                style: context.appTextTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: appTheme.success,
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: scheme.error,
+                                  size: AppSizes.iconMedium,
+                                ),
                                 onPressed: () => removeFromCart(index),
                               ),
                             ],
@@ -341,42 +372,47 @@ class _CartPageState extends State<CartPage> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: AppPagePadding.all20(),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    border: Border(top: BorderSide(color: Colors.grey[300]!)),
+                    color: context.colorScheme.surfaceContainerHighest,
+                    border: Border(
+                      top: BorderSide(color: context.appTheme.divider),
+                    ),
                   ),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          ProductText.titleLarge(
+                            context,
                             'Toplam:',
-                            style: TextStyle(
-                              fontSize: 20,
+                            style: context.appTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
+                          ProductText.titleLarge(
+                            context,
                             '${getTotalPrice()} ₺',
-                            style: TextStyle(
-                              fontSize: 20,
+                            style: context.appTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green,
+                              color: context.appTheme.success,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: AppSizes.spacingM),
                       ElevatedButton(
                         onPressed: checkout,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          minimumSize: Size(double.infinity, 50),
+                          backgroundColor: context.appTheme.success,
+                          foregroundColor: context.colorScheme.onPrimary,
+                          minimumSize: const Size(
+                            double.infinity,
+                            AppSizes.buttonHeightMedium,
+                          ),
                         ),
-                        child: Text('Ödeme Yap'),
+                        child: ProductText.labelLarge(context, 'Ödeme Yap'),
                       ),
                     ],
                   ),

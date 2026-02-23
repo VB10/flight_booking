@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../unauth/login/login_page.dart';
+import 'package:flight_booking/feature/unauth/login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -67,21 +68,22 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Çıkış Yap'),
-          content: Text('Çıkış yapmak istediğinizden emin misiniz?'),
+          title: ProductText.titleLarge(context, 'Çıkış Yap'),
+          content: ProductText.bodyMedium(
+            context,
+            'Çıkış yapmak istediğinizden emin misiniz?',
+          ),
           actions: [
             TextButton(
-              child: Text('İptal'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
+              child: ProductText.labelLarge(context, 'İptal'),
             ),
             TextButton(
-              child: Text('Çıkış Yap'),
               onPressed: () {
                 Navigator.of(context).pop();
                 performLogout();
               },
+              child: ProductText.labelLarge(context, 'Çıkış Yap'),
             ),
           ],
         );
@@ -135,166 +137,173 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profil'),
-        backgroundColor: Colors.blue,
+        title: ProductText.titleLarge(context, 'Profil'),
+        backgroundColor: context.colorScheme.primary,
         actions: [
-          IconButton(icon: Icon(Icons.refresh), onPressed: refreshProfile),
-          IconButton(icon: Icon(Icons.logout), onPressed: logout),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: refreshProfile,
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: logout,
+          ),
         ],
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : errorMessage.isNotEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  SizedBox(height: 16),
-                  Text(
-                    errorMessage,
-                    style: TextStyle(fontSize: 16, color: Colors.red),
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: context.colorScheme.error,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.spacingM),
+                  ProductText.bodyLarge(
+                    context,
+                    errorMessage,
+                    style: context.appTextTheme.bodyLarge?.copyWith(
+                      color: context.colorScheme.error,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spacingL),
                   ElevatedButton(
                     onPressed: loadUserProfile,
-                    child: Text('Tekrar Dene'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colorScheme.primary,
+                      foregroundColor: context.colorScheme.onPrimary,
+                    ),
+                    child: ProductText.labelLarge(context, 'Tekrar Dene'),
                   ),
                 ],
               ),
             )
           : SingleChildScrollView(
-              padding: EdgeInsets.all(20),
+              padding: AppPagePadding.all20(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profil header
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(20),
+                    padding: AppPagePadding.all20(),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.blue.shade200),
+                      color: context.colorScheme.primaryContainer,
+                      borderRadius: AppRadius.circular12,
+                      border: Border.all(
+                        color: context.colorScheme.primary.withOpacity(0.5),
+                      ),
                     ),
                     child: Column(
                       children: [
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: Colors.blue,
-                          child: Text(
+                          backgroundColor: context.colorScheme.primary,
+                          child: ProductText.h2(
+                            context,
                             userName.isNotEmpty
                                 ? userName[0].toUpperCase()
                                 : 'U',
-                            style: TextStyle(
-                              fontSize: 36,
+                            style: context.appTextTheme.headlineLarge?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: context.colorScheme.onPrimary,
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
-                        Text(
+                        const SizedBox(height: AppSizes.spacingM),
+                        ProductText.h3(
+                          context,
                           userName,
-                          style: TextStyle(
-                            fontSize: 24,
+                          style: context.appTextTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade800,
+                            color: context.colorScheme.primary,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        Text(
+                        const SizedBox(height: AppSizes.spacingXs),
+                        ProductText.bodyLarge(
+                          context,
                           userEmail,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.shade600,
+                          style: context.appTextTheme.bodyLarge?.copyWith(
+                            color: context.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 30),
-
-                  // Kullanıcı Bilgileri
-                  Text(
+                  const SizedBox(height: AppSizes.spacingXl),
+                  ProductText.titleLarge(
+                    context,
                     'Kullanıcı Bilgileri',
-                    style: TextStyle(
-                      fontSize: 20,
+                    style: context.appTextTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: context.colorScheme.onSurface,
                     ),
                   ),
-
-                  SizedBox(height: 16),
-
-                  buildInfoCard('Kullanıcı ID', userId.toString()),
-                  buildInfoCard('İsim', userName),
-                  buildInfoCard('Email', userEmail),
+                  const SizedBox(height: AppSizes.spacingM),
+                  buildInfoCard(context, 'Kullanıcı ID', userId.toString()),
+                  buildInfoCard(context, 'İsim', userName),
+                  buildInfoCard(context, 'Email', userEmail),
                   buildInfoCard(
+                    context,
                     'Token',
-                    '${userToken.substring(0, 10)}...', // Güvenlik için kısalt
+                    '${userToken.substring(0, 10)}...',
                   ),
-
-                  SizedBox(height: 30),
-
-                  // Hesap Ayarları
-                  Text(
+                  const SizedBox(height: AppSizes.spacingXl),
+                  ProductText.titleLarge(
+                    context,
                     'Hesap Ayarları',
-                    style: TextStyle(
-                      fontSize: 20,
+                    style: context.appTextTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: context.colorScheme.onSurface,
                     ),
                   ),
-
-                  SizedBox(height: 16),
-
+                  const SizedBox(height: AppSizes.spacingM),
                   buildActionCard(
+                    context,
                     'Profili Yenile',
                     'Profil bilgilerini sunucudan yeniden yükle',
                     Icons.refresh,
-                    Colors.blue,
+                    context.colorScheme.primary,
                     refreshProfile,
                   ),
-
                   buildActionCard(
+                    context,
                     'Çıkış Yap',
                     'Hesaptan çıkış yap ve giriş ekranına dön',
                     Icons.logout,
-                    Colors.red,
+                    context.colorScheme.error,
                     logout,
                   ),
-
-                  SizedBox(height: 30),
-
-                  // Debug bilgileri - production'da olmaması gereken
+                  const SizedBox(height: AppSizes.spacingXl),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(16),
+                    padding: AppPagePadding.all16(),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
+                      color: context.colorScheme.surfaceContainerHighest,
+                      borderRadius: AppRadius.circular8,
+                      border: Border.all(color: context.appTheme.divider),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        ProductText.labelLarge(
+                          context,
                           'Debug Bilgileri',
-                          style: TextStyle(
-                            fontSize: 14,
+                          style: context.appTextTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade700,
+                            color: context.colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        Text(
+                        const SizedBox(height: AppSizes.spacingXs),
+                        ProductText.labelSmall(
+                          context,
                           'Token: $userToken',
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: context.appTextTheme.labelSmall?.copyWith(
                             fontFamily: 'monospace',
-                            color: Colors.grey.shade600,
+                            color: context.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -306,49 +315,44 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget buildInfoCard(String title, String value) {
+  Widget buildInfoCard(BuildContext context, String title, String value) {
+    final scheme = context.colorScheme;
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(16),
+      margin: AppPagePadding.marginBottom12(),
+      padding: AppPagePadding.all16(),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        color: scheme.surface,
+        borderRadius: AppRadius.circular8,
+        border: Border.all(color: context.appTheme.divider),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade200,
+            color: scheme.shadow.withOpacity(0.1),
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          ProductText.labelLarge(
+            context,
             title,
-            style: TextStyle(
-              fontSize: 14,
+            style: context.appTextTheme.labelLarge?.copyWith(
               fontWeight: FontWeight.w500,
-              color: Colors.grey.shade600,
+              color: scheme.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: Colors.black87,
-            ),
-          ),
+          const SizedBox(height: 4),
+          ProductText.bodyLarge(context, value),
         ],
       ),
     );
   }
 
   Widget buildActionCard(
+    BuildContext context,
     String title,
     String subtitle,
     IconData icon,
@@ -357,14 +361,24 @@ class _ProfilePageState extends State<ProfilePage> {
   ) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 12),
+      margin: AppPagePadding.marginBottom12(),
       child: Card(
         elevation: 2,
         child: ListTile(
-          leading: Icon(icon, color: color),
-          title: Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: Text(subtitle),
-          trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          leading: Icon(icon, color: color, size: AppSizes.iconMedium),
+          title: ProductText.titleMedium(
+            context,
+            title,
+            style: context.appTextTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          subtitle: ProductText.bodySmall(context, subtitle),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: AppSizes.iconSmall,
+            color: context.colorScheme.onSurfaceVariant,
+          ),
           onTap: onTap,
         ),
       ),

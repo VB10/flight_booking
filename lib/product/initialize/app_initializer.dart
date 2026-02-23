@@ -24,7 +24,7 @@ final class AppInitializer {
       Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
-      CustomRemoteConfig.instance.initialize(),
     ]);
+    await CustomRemoteConfig.instance.initialize();
   }
 }

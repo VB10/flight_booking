@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -136,17 +137,15 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.colorScheme.surface,
       appBar: AppBar(
-        title: Text(
-          'Flight Booking',
-          style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w500),
-        ),
+        /// TODO: locaizaiton
+        title: ProductText.h3(context, 'Flight Booking'),
         centerTitle: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: context.colorScheme.primary,
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: AppPagePadding.all20(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -156,44 +155,54 @@ class _LoginPageState extends State<LoginPage> {
               width: 120,
               height: 120,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: AppSizes.spacingL),
             TextField(
               controller: emailController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.email),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: AppSizes.spacingL),
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.lock),
               ),
               obscureText: true,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: AppSizes.spacingS),
             if (errorMessage.isNotEmpty)
-              Text(errorMessage, style: TextStyle(color: Colors.red)),
-            SizedBox(height: 30),
-            isLoading
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: login,
-                    child: Text('Login'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      minimumSize: Size(double.infinity, 50),
-                    ),
+              ProductText.bodySmall(
+                context,
+                errorMessage,
+                color: context.colorScheme.error,
+              ),
+            const SizedBox(height: AppSizes.spacingL),
+            if (isLoading)
+              const CircularProgressIndicator()
+            else
+              ElevatedButton(
+                onPressed: login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.appTheme.brandPrimary,
+                ),
+                child: Center(
+                  child: ProductText.bodyMedium(
+                    context,
+                    'Login',
+                    color: context.colorScheme.onPrimary,
                   ),
-            SizedBox(height: 20),
-            Text(
+                ),
+              ),
+            const SizedBox(height: 20),
+            ProductText.bodySmall(
+              context,
               'Test hesabı: user@test.com / 123456',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              color: context.colorScheme.onSurface,
             ),
           ],
         ),
