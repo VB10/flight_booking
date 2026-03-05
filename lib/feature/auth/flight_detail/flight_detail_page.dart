@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class FlightDetailPage extends StatefulWidget {
   final Map<String, dynamic> flight;
-  
+
   FlightDetailPage({required this.flight});
 
   @override
@@ -41,13 +41,41 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                       ),
                     ),
                     const SizedBox(height: AppSizes.spacingL),
-                    buildDetailRow(context, 'Kalkış Şehri:', widget.flight['from'] as String),
-                    buildDetailRow(context, 'Varış Şehri:', widget.flight['to'] as String),
-                    buildDetailRow(context, 'Kalkış Saati:', widget.flight['departureTime'] as String),
-                    buildDetailRow(context, 'Varış Saati:', widget.flight['arrivalTime'] as String),
-                    buildDetailRow(context, 'Uçuş Süresi:', widget.flight['duration'] as String),
-                    buildDetailRow(context, 'Tarih:', widget.flight['date'] as String),
-                    buildDetailRow(context, 'Fiyat:', '${widget.flight['price']} ₺'),
+                    buildDetailRow(
+                      context,
+                      'Kalkış Şehri:',
+                      widget.flight['from'] as String,
+                    ),
+                    buildDetailRow(
+                      context,
+                      'Varış Şehri:',
+                      widget.flight['to'] as String,
+                    ),
+                    buildDetailRow(
+                      context,
+                      'Kalkış Saati:',
+                      widget.flight['departureTime'] as String,
+                    ),
+                    buildDetailRow(
+                      context,
+                      'Varış Saati:',
+                      widget.flight['arrivalTime'] as String,
+                    ),
+                    buildDetailRow(
+                      context,
+                      'Uçuş Süresi:',
+                      widget.flight['duration'] as String,
+                    ),
+                    buildDetailRow(
+                      context,
+                      'Tarih:',
+                      widget.flight['date'] as String,
+                    ),
+                    buildDetailRow(
+                      context,
+                      'Fiyat:',
+                      '${widget.flight['price']} ₺',
+                    ),
                   ],
                 ),
               ),
@@ -56,7 +84,7 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
             Card(
               elevation: 3,
               child: Padding(
-                padding: AppPagePadding.all15(),
+                padding: AppPagePadding.all20(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,7 +108,10 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: ProductText.bodyMedium(context, 'Bilet rezerve edildi!'),
+                    content: ProductText.bodyMedium(
+                      context,
+                      'Bilet rezerve edildi!',
+                    ),
                     backgroundColor: context.appTheme.success,
                   ),
                 );
@@ -89,7 +120,10 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.appTheme.success,
                 foregroundColor: context.colorScheme.onPrimary,
-                minimumSize: const Size(double.infinity, AppSizes.buttonHeightMedium),
+                minimumSize: const Size(
+                  double.infinity,
+                  AppSizes.buttonHeightMedium,
+                ),
               ),
               child: ProductText.labelLarge(context, 'Rezervasyon Yap'),
             ),

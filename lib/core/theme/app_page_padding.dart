@@ -6,9 +6,6 @@ final class AppPagePadding extends EdgeInsets {
   /// [10] padding all
   const AppPagePadding.all10() : super.all(_spacingS);
 
-  /// [15] padding all
-  const AppPagePadding.all15() : super.all(15);
-
   /// [16] padding all
   const AppPagePadding.all16() : super.all(_spacingM);
 

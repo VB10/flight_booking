@@ -340,7 +340,7 @@ class _FlightListPageState extends State<FlightListPage> {
                   right: AppSizes.spacingXs,
                   top: AppSizes.spacingXs,
                   child: Container(
-                    padding: AppPadding.p4,
+                    padding: AppPagePadding.all10(),
                     decoration: BoxDecoration(
                       color: context.colorScheme.error,
                       borderRadius: AppRadius.circular8,
@@ -406,7 +406,7 @@ class _FlightListPageState extends State<FlightListPage> {
                   margin: AppPagePadding.marginBottom15(),
                   elevation: 3,
                   child: Padding(
-                    padding: AppPagePadding.all15(),
+                    padding: AppPagePadding.all20(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -441,8 +441,7 @@ class _FlightListPageState extends State<FlightListPage> {
                                   ProductText.titleMedium(
                                     context,
                                     flight.from,
-                                    style: context
-                                        .appTextTheme.titleMedium
+                                    style: context.appTextTheme.titleMedium
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   ProductText.bodyMedium(
@@ -465,8 +464,7 @@ class _FlightListPageState extends State<FlightListPage> {
                                   ProductText.titleMedium(
                                     context,
                                     flight.to,
-                                    style: context
-                                        .appTextTheme.titleMedium
+                                    style: context.appTextTheme.titleMedium
                                         ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                   ProductText.bodyMedium(
@@ -515,7 +513,8 @@ class _FlightListPageState extends State<FlightListPage> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: scheme.surfaceContainerHighest,
+                                  backgroundColor:
+                                      scheme.surfaceContainerHighest,
                                   foregroundColor: scheme.onSurface,
                                 ),
                                 child: ProductText.labelLarge(
@@ -584,7 +583,7 @@ class _FlightListPageState extends State<FlightListPage> {
             margin: AppPagePadding.marginBottom15(),
             elevation: 3,
             child: Padding(
-              padding: AppPagePadding.all15(),
+              padding: AppPagePadding.all20(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
