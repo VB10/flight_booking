@@ -2,6 +2,15 @@
 
 Flutter ile geliştirilmiş uçak bileti rezervasyon uygulaması. Bu proje refactor videosu için kasıtlı olarak kötü kodlama pratikleri içerir.
 
+## 📺 Video Serisi - Flutter Refactoring Masterclass
+
+|   |   |   |
+|---|---|---|
+| [![Flutter Refactoring Masterclass: 1- Proje inceleme, analiz ve yapılacaklar](https://img.youtube.com/vi/Lz9TJJPqi1o/hqdefault.jpg) <br> 1- Proje inceleme, analiz ve yapılacaklar](https://youtu.be/Lz9TJJPqi1o) | [![Flutter Refactoring Masterclass: 2 - Pubspec.yaml](https://img.youtube.com/vi/A8RQupxiv5A/hqdefault.jpg) <br> 2- Pubspec.yaml](https://youtu.be/A8RQupxiv5A) | [![Flutter Refactoring Masterclass: 3- Kod Standartları, Linter, Editor ayarları](https://img.youtube.com/vi/fMlJAy3pr0k/hqdefault.jpg) <br> 3- Kod Standartları, Linter, Editor ayarları](https://youtu.be/fMlJAy3pr0k) |
+| [![Flutter Refactoring Masterclass: 4- Paket mimarisi ve klasör yapısı](https://img.youtube.com/vi/fSDYS5Lr59g/hqdefault.jpg) <br> 4- Paket mimarisi ve klasör yapısı](https://youtu.be/fSDYS5Lr59g) | [![Flutter Refactoring Masterclass: 5- Paket mimarisi ve klasör yapısı](https://img.youtube.com/vi/JAzdG1_MKWw/hqdefault.jpg) <br> 5- Paket mimarisi ve klasör yapısı](https://youtu.be/JAzdG1_MKWw) | [![Flutter Refactoring Masterclass: 6- Theme & Design System](https://img.youtube.com/vi/2-Q91EDSiTg/hqdefault.jpg) <br> 6- Theme & Design System](https://youtu.be/2-Q91EDSiTg) |
+
+> 🎬 [Tüm Playlist'i İzle](https://www.youtube.com/playlist?list=PL1k5oWAuBhgUh7_hMrTDxZHsGOPGSP9La)
+
 ## 🚀 Hızlı Başlangıç
 
 ### 1. Backend Server'ı Başlat
