@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 /// Login page UI state
+@immutable
 final class LoginPageState extends Equatable {
   const LoginPageState({
     this.errorMessage = '',
