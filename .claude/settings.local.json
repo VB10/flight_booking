@@ -3,7 +3,11 @@
     "allow": [
       "Bash(xargs ls:*)",
       "Bash(flutter analyze:*)",
-      "Bash(flutter pub add:*)"
+      "Bash(flutter pub add:*)",
+      "Bash(tree:*)",
+      "Bash(gh pr view:*)",
+      "Bash(brew list:*)",
+      "Bash(yt-dlp:*)"
     ]
   }
 }
