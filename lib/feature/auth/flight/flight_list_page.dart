@@ -1,7 +1,5 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flight_booking/core/theme/theme.dart';
+import 'package:flight_booking/product/service/impl/flight_service_impl.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -168,49 +166,36 @@ class _FlightListPageState extends State<FlightListPage> {
     );
   }
 
-  // Kötü pratik: Aynı kod tekrarı
   void fetchFlights() async {
     setState(() {
       isLoading = true;
       errorMessage = '';
     });
 
-    Dio dio = Dio(); // Her seferinde yeni Dio instance
-    String baseUrl = 'http://localhost:8080'; // Hard coded URL tekrarı
+    final flightService = FlightServiceImpl();
+    final result = await flightService.getFlights();
 
-    try {
-      Response response = await dio.get('$baseUrl/flights');
-
-      // Status code kontrolü tekrarı
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.data);
-        FlightsResponseModel flightsResponse = FlightsResponseModel.fromJson(
-          jsonResponse,
-        );
-
-        if (flightsResponse.success) {
+    result.fold(
+      onSuccess: (response) {
+        if (response.success) {
           setState(() {
-            flights = flightsResponse.data;
+            flights = response.data;
             isLoading = false;
           });
         } else {
           setState(() {
             isLoading = false;
-            errorMessage = flightsResponse.message;
+            errorMessage = response.message;
           });
         }
-      } else {
+      },
+      onError: (error) {
         setState(() {
           isLoading = false;
-          errorMessage = 'Server hatası: ${response.statusCode}';
+          errorMessage = error.description ?? 'Bağlantı hatası';
         });
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Bağlantı hatası: $e';
-      });
-    }
+      },
+    );
   }
 
   void addToCart(FlightModel flight) {

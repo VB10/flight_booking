@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flight_booking/core/theme/theme.dart';
+import 'package:flight_booking/feature/unauth/login/login_page.dart';
+import 'package:flight_booking/product/service/impl/auth_service_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:flight_booking/feature/unauth/login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -109,28 +108,38 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // Fake API call - gereksiz
   void refreshProfile() async {
     setState(() {
       isLoading = true;
+      errorMessage = '';
     });
 
-    // Kötü pratik: Fake API call
-    Dio dio = Dio();
-    String baseUrl = 'http://localhost:8080'; // Hard coded URL tekrarı
+    final authService = AuthServiceImpl();
+    final result = await authService.getProfile();
 
-    try {
-      // Fake profile endpoint çağrısı
-      await Future.delayed(Duration(seconds: 1)); // Fake delay
-
-      // Sadece cache'den tekrar yükle - anlamsız
-      loadUserProfile();
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Profil yenilenemedi: $e';
-      });
-    }
+    result.fold(
+      onSuccess: (response) {
+        if (response.success) {
+          setState(() {
+            userName = response.data.name;
+            userEmail = response.data.email;
+            userId = response.data.id;
+            isLoading = false;
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+            errorMessage = response.message;
+          });
+        }
+      },
+      onError: (error) {
+        setState(() {
+          isLoading = false;
+          errorMessage = error.model?.message ?? 'Profil yenilenemedi';
+        });
+      },
+    );
   }
 
   @override

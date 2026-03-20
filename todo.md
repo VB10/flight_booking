@@ -8,18 +8,11 @@
 - ✅ v5: Main.dart düzenlemesi ve yapılandırması
 - ✅ v6: Theme yapısı (light/dark theme)
 - ✅ v7: View - ViewModel - Mixin yapısı
+- ✅ v8: Network layer ve service layer ve model layer
 
 ## 📋 Planlanan Bölümler
 
-### View Layer (v7.3 - Priority: High)
-- [ ] Service Layer
-- [ ] Model Layer
-
-### View Layer (v7.2 - Priority: High)
-- [ ] Service Layer
-- [ ] Model Layer
-
-### Network Layer (v7.3 - Priority: High)
+### State (v7.3 - Priority: High)
 - [ ] State Management start 
 
 
