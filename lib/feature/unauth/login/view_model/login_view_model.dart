@@ -1,33 +1,39 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flight_booking/feature/unauth/login/model/login_response_model.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/network/product_network_manager.dart';
+import 'package:flight_booking/product/service/impl/auth_service_impl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final class LoginViewModel {
   LoginViewModel();
 
-  // TODO: Code gen ile baseUrl yönetimi
-  static const String _baseUrl = 'http://localhost:8080';
+  final _authService = AuthServiceImpl();
 
   Future<LoginResponseModel> login({
     required String email,
     required String password,
   }) async {
-    final dio = Dio();
-    final response = await dio.post<String>(
-      '$_baseUrl/login',
-      data: {'email': email, 'password': password},
+    final result = await _authService.login(email: email, password: password);
+
+    LoginResponseModel? response;
+    String? errorMessage;
+
+    result.fold(
+      onSuccess: (data) {
+        // Set auth token for subsequent requests
+        ProductNetworkManager.instance.setAuthToken(data.token);
+        response = data;
+      },
+      onError: (error) {
+        errorMessage = error.model?.message ?? 'Giriş başarısız';
+      },
     );
 
-    if (response.statusCode == 200) {
-      final jsonResponse =
-          jsonDecode(response.data!) as Map<String, dynamic>;
-      return LoginResponseModel.fromJson(jsonResponse);
+    if (response != null) {
+      return response!;
     }
-    throw Exception('Server hatası: ${response.statusCode}');
+    throw Exception(errorMessage);
   }
 
   Future<void> saveUserToCache(LoginResponseModel loginResponse) async {

@@ -3,7 +3,14 @@
     "allow": [
       "Bash(xargs ls:*)",
       "Bash(flutter analyze:*)",
-      "Bash(flutter pub add:*)"
+      "Bash(flutter pub add:*)",
+      "Bash(flutter pub get:*)",
+      "Bash(dart run:*)",
+      "Bash(flutter test:*)",
+      "Skill(sc:implement)",
+      "Skill(sc:implement:*)",
+      "Bash(chmod:*)",
+      "Bash(flutter pub run build_runner build:*)"
     ]
   }
 }

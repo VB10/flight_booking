@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        generate_for:
+          include:
+            - lib/feature/**/model/*.dart
+            - lib/feature/**/*_model.dart
+            - lib/feature/**/*_response_model.dart
+            - lib/product/network/error_model.dart
+        options:
+          explicit_to_json: true
+          include_if_null: false
+          field_rename: none
