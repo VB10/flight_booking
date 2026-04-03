@@ -1,13 +1,9 @@
 part of '../login_page.dart';
 
-/// Login ekranı: controller / notifier yaşam döngüsü ve aksiyonlar.
+/// Login ekranı: controller yaşam döngüsü ve aksiyonlar.
 mixin LoginPageMixin on State<LoginPage> {
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
-  late final ValueNotifier<bool> obscurePasswordNotifier;
-
-  /// Valuenotifer state
-  late final ValueNotifier<bool> testAccountExpandedNotifier;
 
   late final LoginCubit loginCubit = LoginCubit(
     ProductContainer.instance.get<IAuthService>(),
@@ -26,16 +22,12 @@ mixin LoginPageMixin on State<LoginPage> {
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    obscurePasswordNotifier = ValueNotifier(true);
-    testAccountExpandedNotifier = ValueNotifier(false);
   }
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    obscurePasswordNotifier.dispose();
-    testAccountExpandedNotifier.dispose();
     super.dispose();
   }
 
@@ -46,9 +38,5 @@ mixin LoginPageMixin on State<LoginPage> {
         password: passwordController.text,
       ),
     );
-  }
-
-  void toggleTestAccountSection() {
-    testAccountExpandedNotifier.value = !testAccountExpandedNotifier.value;
   }
 }

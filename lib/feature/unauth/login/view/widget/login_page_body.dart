@@ -5,18 +5,12 @@ final class _LoginPageBody extends StatelessWidget {
   const _LoginPageBody({
     required this.emailController,
     required this.passwordController,
-    required this.obscurePassword,
-    required this.testAccountExpanded,
     required this.onLogin,
-    required this.onToggleTestAccount,
   });
 
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  final ValueNotifier<bool> obscurePassword;
-  final ValueNotifier<bool> testAccountExpanded;
   final VoidCallback onLogin;
-  final VoidCallback onToggleTestAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -29,42 +23,51 @@ final class _LoginPageBody extends StatelessWidget {
           const SizedBox(height: AppSizes.spacingL),
           _LoginEmailField(controller: emailController),
           const SizedBox(height: AppSizes.spacingL),
-          _LoginPasswordField(
-            controller: passwordController,
-            obscurePassword: obscurePassword,
-          ),
+          _LoginPasswordField(controller: passwordController),
           const SizedBox(height: AppSizes.spacingS),
           _LoginStateSection(onLogin: onLogin),
           const SizedBox(height: AppSizes.spacingM),
-          _LoginTestAccountButtonSection(
-            testAccountExpanded: testAccountExpanded,
-            onToggle: onToggleTestAccount,
-          ),
+          const _LoginTestAccountButtonSection(),
         ],
       ),
     );
   }
 }
 
-/// İç buton + test bilgisi: tek ValueListenableBuilder (setState yok)
-final class _LoginTestAccountButtonSection extends StatelessWidget {
-  const _LoginTestAccountButtonSection({
-    required this.testAccountExpanded,
-    required this.onToggle,
-  });
+/// İç buton + test bilgisi: kendi ValueNotifier'ını yönetir
+final class _LoginTestAccountButtonSection extends StatefulWidget {
+  const _LoginTestAccountButtonSection();
 
-  final ValueNotifier<bool> testAccountExpanded;
-  final VoidCallback onToggle;
+  @override
+  State<_LoginTestAccountButtonSection> createState() =>
+      _LoginTestAccountButtonSectionState();
+}
+
+class _LoginTestAccountButtonSectionState
+    extends State<_LoginTestAccountButtonSection> {
+  late final ValueNotifier<bool> expandedNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    expandedNotifier = ValueNotifier(false);
+  }
+
+  @override
+  void dispose() {
+    expandedNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: testAccountExpanded,
+      valueListenable: expandedNotifier,
       builder: (context, expanded, _) {
         return Column(
           children: [
             OutlinedButton.icon(
-              onPressed: onToggle,
+              onPressed: () => expandedNotifier.value = !expandedNotifier.value,
               icon: Icon(
                 expanded ? Icons.expand_less : Icons.expand_more,
                 color: context.colorScheme.primary,
@@ -73,8 +76,8 @@ final class _LoginTestAccountButtonSection extends StatelessWidget {
                 context,
                 expanded ? 'Test bilgisini gizle' : 'Test hesabını göster',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: context.colorScheme.primary,
-                ),
+                      color: context.colorScheme.primary,
+                    ),
               ),
             ),
             if (expanded) ...[
@@ -146,23 +149,38 @@ final class _LoginEmailField extends StatelessWidget {
   }
 }
 
-/// Password field — şifre görünürlüğü ValueListenable ile (setState yok)
-final class _LoginPasswordField extends StatelessWidget {
-  const _LoginPasswordField({
-    required this.controller,
-    required this.obscurePassword,
-  });
+/// Password field — kendi ValueNotifier'ını yönetir (setState yok)
+final class _LoginPasswordField extends StatefulWidget {
+  const _LoginPasswordField({required this.controller});
 
   final TextEditingController controller;
-  final ValueNotifier<bool> obscurePassword;
+
+  @override
+  State<_LoginPasswordField> createState() => _LoginPasswordFieldState();
+}
+
+class _LoginPasswordFieldState extends State<_LoginPasswordField> {
+  late final ValueNotifier<bool> obscureNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    obscureNotifier = ValueNotifier(true);
+  }
+
+  @override
+  void dispose() {
+    obscureNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
-      valueListenable: obscurePassword,
+      valueListenable: obscureNotifier,
       builder: (context, obscure, _) {
         return TextField(
-          controller: controller,
+          controller: widget.controller,
           obscureText: obscure,
           decoration: InputDecoration(
             labelText: 'Password',
@@ -179,7 +197,7 @@ final class _LoginPasswordField extends StatelessWidget {
                     : Icons.visibility_off_outlined,
                 color: context.colorScheme.primary,
               ),
-              onPressed: () => obscurePassword.value = !obscurePassword.value,
+              onPressed: () => obscureNotifier.value = !obscureNotifier.value,
             ),
           ),
         );
@@ -188,7 +206,7 @@ final class _LoginPasswordField extends StatelessWidget {
   }
 }
 
-/// Error text widget
+/// Error text widget — BlocSelector ile sadece errorMessage dinler
 final class _LoginErrorText extends StatelessWidget {
   const _LoginErrorText();
 
@@ -210,7 +228,7 @@ final class _LoginErrorText extends StatelessWidget {
   }
 }
 
-/// Login button widget
+/// Login button widget — BlocSelector ile sadece isLoading dinler
 final class _LoginButton extends StatelessWidget {
   const _LoginButton({
     required this.onPressed,

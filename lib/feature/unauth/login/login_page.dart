@@ -43,10 +43,7 @@ final class _LoginPageState extends State<LoginPage> with LoginPageMixin {
           body: _LoginPageBody(
             emailController: emailController,
             passwordController: passwordController,
-            obscurePassword: obscurePasswordNotifier,
-            testAccountExpanded: testAccountExpandedNotifier,
             onLogin: () => onLoginPressed(context),
-            onToggleTestAccount: toggleTestAccountSection,
           ),
         ),
       ),
