@@ -5,13 +5,11 @@ final class _LoginPageBody extends StatelessWidget {
   const _LoginPageBody({
     required this.emailController,
     required this.passwordController,
-    required this.state,
     required this.onLogin,
   });
 
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  final ValueNotifier<LoginPageState> state;
   final VoidCallback onLogin;
 
   @override
@@ -27,42 +25,88 @@ final class _LoginPageBody extends StatelessWidget {
           const SizedBox(height: AppSizes.spacingL),
           _LoginPasswordField(controller: passwordController),
           const SizedBox(height: AppSizes.spacingS),
-          _LoginStateSection(state: state, onLogin: onLogin),
-          const SizedBox(height: AppSizes.spacingL),
-          const _LoginTestAccountInfo(),
+          _LoginStateSection(onLogin: onLogin),
+          const SizedBox(height: AppSizes.spacingM),
+          const _LoginTestAccountButtonSection(),
         ],
       ),
     );
   }
 }
 
-/// State dependent section with ValueListenableBuilder
-final class _LoginStateSection extends StatelessWidget {
-  const _LoginStateSection({
-    required this.state,
-    required this.onLogin,
-  });
+/// İç buton + test bilgisi: kendi ValueNotifier'ını yönetir
+final class _LoginTestAccountButtonSection extends StatefulWidget {
+  const _LoginTestAccountButtonSection();
 
-  final ValueNotifier<LoginPageState> state;
+  @override
+  State<_LoginTestAccountButtonSection> createState() =>
+      _LoginTestAccountButtonSectionState();
+}
+
+class _LoginTestAccountButtonSectionState
+    extends State<_LoginTestAccountButtonSection> {
+  late final ValueNotifier<bool> expandedNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    expandedNotifier = ValueNotifier(false);
+  }
+
+  @override
+  void dispose() {
+    expandedNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: expandedNotifier,
+      builder: (context, expanded, _) {
+        return Column(
+          children: [
+            OutlinedButton.icon(
+              onPressed: () => expandedNotifier.value = !expandedNotifier.value,
+              icon: Icon(
+                expanded ? Icons.expand_less : Icons.expand_more,
+                color: context.colorScheme.primary,
+              ),
+              label: ProductText.labelLarge(
+                context,
+                expanded ? 'Test bilgisini gizle' : 'Test hesabını göster',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      color: context.colorScheme.primary,
+                    ),
+              ),
+            ),
+            if (expanded) ...[
+              const SizedBox(height: AppSizes.spacingS),
+              const _LoginTestAccountInfo(),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Cubit state: hata + yükleme + buton
+final class _LoginStateSection extends StatelessWidget {
+  const _LoginStateSection({required this.onLogin});
+
   final VoidCallback onLogin;
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<LoginPageState>(
-      valueListenable: state,
-      builder: (context, currentState, _) {
-        return Column(
-          children: [
-            if (currentState.errorMessage.isNotEmpty)
-              _LoginErrorText(message: currentState.errorMessage),
-            const SizedBox(height: AppSizes.spacingL),
-            _LoginButton(
-              isLoading: currentState.isLoading,
-              onPressed: onLogin,
-            ),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        const _LoginErrorText(),
+        const SizedBox(height: AppSizes.spacingL),
+        _LoginButton(
+          onPressed: onLogin,
+        ),
+      ],
     );
   }
 }
@@ -71,12 +115,10 @@ final class _LoginStateSection extends StatelessWidget {
 final class _LoginLogo extends StatelessWidget {
   const _LoginLogo();
 
-  // TODO: AppSizes'a logo boyutu eklenecek
   static const double _logoSize = 120;
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Code gen ile asset path
     return SvgPicture.asset(
       'assets/undraw_aircraft_usu4.svg',
       width: _logoSize,
@@ -93,7 +135,6 @@ final class _LoginEmailField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Code gen ile localization
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -108,75 +149,115 @@ final class _LoginEmailField extends StatelessWidget {
   }
 }
 
-/// Password field widget
-final class _LoginPasswordField extends StatelessWidget {
+/// Password field — kendi ValueNotifier'ını yönetir (setState yok)
+final class _LoginPasswordField extends StatefulWidget {
   const _LoginPasswordField({required this.controller});
 
   final TextEditingController controller;
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: Code gen ile localization
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        border: const OutlineInputBorder(),
-        prefixIcon: Icon(
-          Icons.lock,
-          color: context.colorScheme.primary,
-        ),
-      ),
-      obscureText: true,
-    );
-  }
+  State<_LoginPasswordField> createState() => _LoginPasswordFieldState();
 }
 
-/// Error text widget
-final class _LoginErrorText extends StatelessWidget {
-  const _LoginErrorText({required this.message});
+class _LoginPasswordFieldState extends State<_LoginPasswordField> {
+  late final ValueNotifier<bool> obscureNotifier;
 
-  final String message;
+  @override
+  void initState() {
+    super.initState();
+    obscureNotifier = ValueNotifier(true);
+  }
+
+  @override
+  void dispose() {
+    obscureNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ProductText.bodySmall(
-      context,
-      message,
-      color: context.colorScheme.error,
+    return ValueListenableBuilder<bool>(
+      valueListenable: obscureNotifier,
+      builder: (context, obscure, _) {
+        return TextField(
+          controller: widget.controller,
+          obscureText: obscure,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            border: const OutlineInputBorder(),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: context.colorScheme.primary,
+            ),
+            suffixIcon: IconButton(
+              tooltip: obscure ? 'Göster' : 'Gizle',
+              icon: Icon(
+                obscure
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: context.colorScheme.primary,
+              ),
+              onPressed: () => obscureNotifier.value = !obscureNotifier.value,
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-/// Login button widget
+/// Error text widget — BlocSelector ile sadece errorMessage dinler
+final class _LoginErrorText extends StatelessWidget {
+  const _LoginErrorText();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<LoginCubit, LoginState, String>(
+      selector: (state) {
+        return state.errorMessage;
+      },
+      builder: (context, state) {
+        if (state.isEmpty) return const SizedBox.shrink();
+        return ProductText.bodySmall(
+          context,
+          state,
+          color: context.colorScheme.error,
+        );
+      },
+    );
+  }
+}
+
+/// Login button widget — BlocSelector ile sadece isLoading dinler
 final class _LoginButton extends StatelessWidget {
   const _LoginButton({
-    required this.isLoading,
     required this.onPressed,
   });
 
-  final bool isLoading;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const CircularProgressIndicator();
-    }
-
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: context.appTheme.brandPrimary,
-      ),
-      // TODO: Code gen ile localization
-      child: Center(
-        child: ProductText.bodyMedium(
-          context,
-          'Login',
-          color: context.colorScheme.onPrimary,
-        ),
-      ),
+    return BlocSelector<LoginCubit, LoginState, bool>(
+      selector: (state) {
+        return state.isLoading;
+      },
+      builder: (context, state) {
+        if (state) return const CircularProgressIndicator();
+        return ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: context.appTheme.brandPrimary,
+          ),
+          child: Center(
+            child: ProductText.bodyMedium(
+              context,
+              'Login',
+              color: context.colorScheme.onPrimary,
+            ),
+          ),
+        );
+      },
     );
   }
 }

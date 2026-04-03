@@ -1,41 +1,66 @@
+import 'dart:async';
+
 import 'package:flight_booking/core/theme/theme.dart';
-import 'package:flight_booking/product/service/impl/flight_service_impl.dart';
+import 'package:flight_booking/feature/auth/cart/cart_page.dart';
+import 'package:flight_booking/feature/auth/flight/cubit/flight_list_cubit.dart';
+import 'package:flight_booking/feature/auth/flight/cubit/flight_list_state.dart';
+import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
+import 'package:flight_booking/feature/auth/flight_detail/flight_detail_page.dart';
+import 'package:flight_booking/feature/auth/profile/profile_page.dart';
+import 'package:flight_booking/feature/unauth/login/login_page.dart';
+import 'package:flight_booking/product/application/application_cubit.dart';
+import 'package:flight_booking/product/container/product_container.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../unauth/login/login_page.dart';
-import '../cart/cart_page.dart';
-import '../flight_detail/flight_detail_page.dart';
-import '../profile/profile_page.dart';
-import 'flights_response_model.dart';
+final class FlightListPage extends StatelessWidget {
+  const FlightListPage({super.key});
 
-class FlightListPage extends StatefulWidget {
   @override
-  _FlightListPageState createState() => _FlightListPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) {
+        final cubit =
+            FlightListCubit(ProductContainer.instance.get<IFlightService>());
+        unawaited(cubit.loadFlights());
+        return cubit;
+      },
+      child: const _FlightListBody(),
+    );
+  }
 }
 
-class _FlightListPageState extends State<FlightListPage> {
-  List<FlightModel> flights = [];
-  List<Map<String, dynamic>> cart = [];
-  bool isLoading = true;
-  String errorMessage = '';
+final class _FlightListBody extends StatefulWidget {
+  const _FlightListBody();
+
+  @override
+  State<_FlightListBody> createState() => _FlightListBodyState();
+}
+
+final class _FlightListBodyState extends State<_FlightListBody> {
+  late final ValueNotifier<List<Map<String, dynamic>>> _cartNotifier;
 
   @override
   void initState() {
     super.initState();
-    fetchFlights();
-    // Kötü pratik: Version check'i sayfada yapmak
-    _checkAppVersion();
-    // Analytics - Sayfa görüntüleme
-    _logScreenView();
+    _cartNotifier = ValueNotifier([]);
+    unawaited(_logScreenView());
+    unawaited(_checkAppVersion());
   }
 
-  // Kötü pratik: Screen tracking her sayfada tekrar
+  @override
+  void dispose() {
+    _cartNotifier.dispose();
+    super.dispose();
+  }
+
   Future<void> _logScreenView() async {
     try {
       await CustomRemoteConfig.instance.analytics.logScreenView(
@@ -43,13 +68,12 @@ class _FlightListPageState extends State<FlightListPage> {
         screenClass: 'FlightListPage',
       );
 
-      // Custom screen event
       await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'screen_view_flight_list',
         parameters: {
           'screen_name': 'flight_list',
           'timestamp': DateTime.now().millisecondsSinceEpoch,
-          'previous_screen': 'login', // Kötü pratik: Hard coded
+          'previous_screen': 'login',
         },
       );
 
@@ -59,63 +83,56 @@ class _FlightListPageState extends State<FlightListPage> {
     }
   }
 
-  // Kötü pratik: Version kontrolü burada hardcoded
   Future<void> _checkAppVersion() async {
     try {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      String currentVersion = packageInfo.version;
+      final packageInfo = await PackageInfo.fromPlatform();
+      final currentVersion = packageInfo.version;
 
-      // Remote config'den minimum version al
-      String minimumVersion = CustomRemoteConfig.instance.remoteConfig
+      final minimumVersion = CustomRemoteConfig.instance.remoteConfig
           .getString('minimum_app_version');
-      bool forceUpdate = CustomRemoteConfig.instance.remoteConfig.getBool(
+      final forceUpdate = CustomRemoteConfig.instance.remoteConfig.getBool(
         'force_update_required',
       );
-      String updateMessage = CustomRemoteConfig.instance.remoteConfig.getString(
+      final updateMessage = CustomRemoteConfig.instance.remoteConfig.getString(
         'update_message_tr',
       );
 
-      // Kötü pratik: Basit string karşılaştırması
       if (_isVersionOlder(currentVersion, minimumVersion)) {
+        if (!mounted) return;
         _showUpdateDialog(forceUpdate, updateMessage);
       }
     } catch (e) {
-      // Kötü pratik: Silent error
       debugPrint('Version check failed: $e');
     }
   }
 
-  // Kötü pratik: Version karşılaştırması çok basit
   bool _isVersionOlder(String current, String minimum) {
-    // Bu çok basit bir implementasyon - production'da semantic versioning kullanılmalı
-    List<int> currentParts = current.split('.').map(int.parse).toList();
-    List<int> minimumParts = minimum.split('.').map(int.parse).toList();
+    final currentParts = current.split('.').map(int.parse).toList();
+    final minimumParts = minimum.split('.').map(int.parse).toList();
 
-    for (int i = 0; i < 3; i++) {
+    for (var i = 0; i < 3; i++) {
       if (currentParts[i] < minimumParts[i]) return true;
       if (currentParts[i] > minimumParts[i]) return false;
     }
     return false;
   }
 
-  // Kötü pratik: Update dialog'u burada inline
   void _showUpdateDialog(bool forceUpdate, String message) {
-    showDialog(
+    showDialog<void>(
       context: context,
-      barrierDismissible: !forceUpdate, // Force update varsa kapatılamaz
-      builder: (BuildContext context) {
+      barrierDismissible: !forceUpdate,
+      builder: (dialogContext) {
         return AlertDialog(
           title: Row(
             children: [
-              Icon(Icons.system_update, color: context.appTheme.warning),
+              Icon(Icons.system_update, color: dialogContext.appTheme.warning),
               const SizedBox(width: AppSizes.spacingS),
-              ProductText.titleLarge(context, 'Güncelleme Gerekli'),
+              ProductText.titleLarge(dialogContext, 'Güncelleme Gerekli'),
             ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // SVG ikonu ekle - kötü pratik: Hard coded path
               SvgPicture.asset(
                 'assets/undraw_connected-world_anke.svg',
                 width: 100,
@@ -123,7 +140,7 @@ class _FlightListPageState extends State<FlightListPage> {
               ),
               const SizedBox(height: AppSizes.spacingL),
               ProductText.bodyLarge(
-                context,
+                dialogContext,
                 message.isEmpty
                     ? 'Yeni versiyon mevcut! Lütfen uygulamayı güncelleyin.'
                     : message,
@@ -134,28 +151,28 @@ class _FlightListPageState extends State<FlightListPage> {
           actions: [
             if (!forceUpdate)
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(dialogContext).pop(),
                 child: ProductText.bodyMedium(
-                  context,
+                  dialogContext,
                   'Daha Sonra',
-                  color: context.colorScheme.onSurfaceVariant,
+                  color: dialogContext.colorScheme.onSurfaceVariant,
                 ),
               ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: context.appTheme.warning,
-                foregroundColor: context.colorScheme.onPrimary,
+                backgroundColor: dialogContext.appTheme.warning,
+                foregroundColor: dialogContext.colorScheme.onPrimary,
               ),
               onPressed: () {
                 debugPrint(
-                  'Store\'a yönlendir - URL: https://play.google.com/store/apps/details?id=com.example.flight_booking',
+                  "Store'a yönlendir - URL: https://play.google.com/store/apps/details?id=com.example.flight_booking",
                 );
-                if (!forceUpdate) Navigator.of(context).pop();
+                if (!forceUpdate) Navigator.of(dialogContext).pop();
               },
               child: ProductText.labelLarge(
-                context,
+                dialogContext,
                 'Güncelle',
-                style: context.appTextTheme.labelLarge?.copyWith(
+                style: dialogContext.appTextTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -166,51 +183,15 @@ class _FlightListPageState extends State<FlightListPage> {
     );
   }
 
-  void fetchFlights() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = '';
-    });
+  void _addToCart(FlightModel flight) {
+    HapticFeedback.mediumImpact();
 
-    final flightService = FlightServiceImpl();
-    final result = await flightService.getFlights();
+    final flightMap = flight.toJson();
+    _cartNotifier.value = [..._cartNotifier.value, flightMap];
 
-    result.fold(
-      onSuccess: (response) {
-        if (response.success) {
-          setState(() {
-            flights = response.data;
-            isLoading = false;
-          });
-        } else {
-          setState(() {
-            isLoading = false;
-            errorMessage = response.message;
-          });
-        }
-      },
-      onError: (error) {
-        setState(() {
-          isLoading = false;
-          errorMessage = error.description ?? 'Bağlantı hatası';
-        });
-      },
-    );
-  }
+    unawaited(_logAddToCart(flight));
 
-  void addToCart(FlightModel flight) {
-    // Kötü pratik: Haptic feedback burada doğrudan kullanılmış
-    HapticFeedback.mediumImpact(); // Titreşim ekle
-
-    // Analytics - Sepete ekleme event'i
-    _logAddToCart(flight);
-
-    // FlightModel'i Map'e çevir - kötü pratik
-    Map<String, dynamic> flightMap = flight.toJson();
-    setState(() {
-      cart.add(flightMap);
-    });
-
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: ProductText.bodyMedium(context, 'Bilet sepete eklendi!'),
@@ -219,10 +200,10 @@ class _FlightListPageState extends State<FlightListPage> {
     );
   }
 
-  // Kötü pratik: Analytics method'u burada gömülü
   Future<void> _logAddToCart(FlightModel flight) async {
     try {
-      // Add to cart event - Firebase Analytics standard event
+      final cartSize = _cartNotifier.value.length;
+
       await CustomRemoteConfig.instance.analytics.logAddToCart(
         currency: 'TRY',
         value: flight.price.toDouble(),
@@ -240,7 +221,6 @@ class _FlightListPageState extends State<FlightListPage> {
         },
       );
 
-      // Custom event - sepete ekleme detayı
       await CustomRemoteConfig.instance.analytics.logEvent(
         name: 'flight_added_to_cart',
         parameters: {
@@ -248,7 +228,7 @@ class _FlightListPageState extends State<FlightListPage> {
           'airline': flight.airline,
           'price': flight.price,
           'route': '${flight.from}-${flight.to}',
-          'cart_size': cart.length + 1, // Yeni eklendikten sonraki boyut
+          'cart_size': cartSize,
           'add_timestamp': DateTime.now().millisecondsSinceEpoch,
         },
       );
@@ -259,302 +239,24 @@ class _FlightListPageState extends State<FlightListPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: ProductText.titleMedium(context, 'Uçak Biletleri'),
-        backgroundColor: context.colorScheme.primary,
-        actions: [
-          // Profile butonu eklendi
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
-            },
-          ),
-          // Kötü pratik: Logout burada basit yapılmış
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: ProductText.titleLarge(context, 'Çıkış Yap'),
-                    content: ProductText.bodyMedium(
-                      context,
-                      'Çıkış yapmak istediğinizden emin misiniz?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: ProductText.labelLarge(context, 'İptal'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          logout();
-                        },
-                        child: ProductText.labelLarge(context, 'Çıkış Yap'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
-          Stack(
-            children: [
-              IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CartPage(cartItems: cart),
-                    ),
-                  );
-                },
-              ),
-              if (cart.isNotEmpty)
-                Positioned(
-                  right: AppSizes.spacingXs,
-                  top: AppSizes.spacingXs,
-                  child: Container(
-                    padding: AppPagePadding.all10(),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.error,
-                      borderRadius: AppRadius.circular8,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: AppSizes.iconSmall,
-                      minHeight: AppSizes.iconSmall,
-                    ),
-                    child: ProductText.labelSmall(
-                      context,
-                      cart.length.toString(),
-                      style: context.appTextTheme.labelSmall?.copyWith(
-                        color: context.colorScheme.onError,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-      body: isLoading
-          ? buildShimmerLoading(context)
-          : errorMessage.isNotEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/undraw_fast-loading_ae60.svg',
-                    width: 150,
-                    height: 150,
-                  ),
-                  const SizedBox(height: AppSizes.spacingXl),
-                  ProductText.bodyLarge(
-                    context,
-                    'Hata: $errorMessage',
-                    style: context.appTextTheme.bodyLarge?.copyWith(
-                      color: context.colorScheme.error,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.spacingL),
-                  ElevatedButton(
-                    onPressed: fetchFlights,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: context.colorScheme.primary,
-                      foregroundColor: context.colorScheme.onPrimary,
-                    ),
-                    child: ProductText.labelLarge(context, 'Tekrar Dene'),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              padding: AppPagePadding.all10(),
-              itemCount: flights.length,
-              itemBuilder: (context, index) {
-                final flight = flights[index];
-                final scheme = context.colorScheme;
-                final appTheme = context.appTheme;
-                return Card(
-                  margin: AppPagePadding.marginBottom15(),
-                  elevation: 3,
-                  child: Padding(
-                    padding: AppPagePadding.all20(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ProductText.titleMedium(
-                              context,
-                              flight.airline,
-                              style: context.appTextTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: scheme.primary,
-                              ),
-                            ),
-                            ProductText.titleLarge(
-                              context,
-                              '${flight.price} ₺',
-                              style: context.appTextTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: appTheme.success,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSizes.spacingS),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ProductText.titleMedium(
-                                    context,
-                                    flight.from,
-                                    style: context.appTextTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  ProductText.bodyMedium(
-                                    context,
-                                    flight.departureTime,
-                                    color: scheme.onSurfaceVariant,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: scheme.onSurfaceVariant,
-                              size: AppSizes.iconMedium,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  ProductText.titleMedium(
-                                    context,
-                                    flight.to,
-                                    style: context.appTextTheme.titleMedium
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  ProductText.bodyMedium(
-                                    context,
-                                    flight.arrivalTime,
-                                    color: scheme.onSurfaceVariant,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSizes.spacingS),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ProductText.labelSmall(
-                              context,
-                              'Süre: ${flight.duration}',
-                              style: context.appTextTheme.labelSmall?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
-                            ),
-                            ProductText.labelSmall(
-                              context,
-                              'Tarih: ${flight.date}',
-                              style: context.appTextTheme.labelSmall?.copyWith(
-                                color: scheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSizes.spacingM),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  final flightMap = flight.toJson();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute<Widget>(
-                                      builder: (context) =>
-                                          FlightDetailPage(flight: flightMap),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      scheme.surfaceContainerHighest,
-                                  foregroundColor: scheme.onSurface,
-                                ),
-                                child: ProductText.labelLarge(
-                                  context,
-                                  'Detaylar',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: AppSizes.spacingS),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => addToCart(flight),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: appTheme.brandPrimary,
-                                  foregroundColor: scheme.onPrimary,
-                                ),
-                                child: ProductText.labelLarge(
-                                  context,
-                                  'Sepete Ekle',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-    );
-  }
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
 
-  // Kötü pratik: Logout logic sayfaya gömülü
-  void logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Hard coded key'leri temizle - kötü praktik
     await prefs.remove('user_token');
     await prefs.remove('user_email');
     await prefs.remove('user_name');
     await prefs.remove('user_id');
     await prefs.setBool('is_logged_in', false);
 
-    // Tüm cache'i temizle - agresif yaklaşım
-    // await prefs.clear(); // Bu da kötü pratik
-
+    if (!mounted) return;
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-      (Route<dynamic> route) => false,
+      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
+      (route) => false,
     );
   }
 
-  Widget buildShimmerLoading(BuildContext context) {
+  Widget _buildShimmerLoading(BuildContext context) {
     final appTheme = context.appTheme;
     final surfaceColor = context.colorScheme.surface;
     return ListView.builder(
@@ -706,6 +408,302 @@ class _FlightListPageState extends State<FlightListPage> {
           ),
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: ProductText.titleMedium(context, 'Uçak Biletleri'),
+        backgroundColor: context.colorScheme.primary,
+        actions: [
+          IconButton(
+            tooltip: 'Tema',
+            icon: Icon(
+              Theme.of(context).brightness == Brightness.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            onPressed: () =>
+                context.read<ApplicationCubit>().toggleTheme(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(builder: (_) => ProfilePage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              showDialog<void>(
+                context: context,
+                builder: (dialogContext) {
+                  return AlertDialog(
+                    title: ProductText.titleLarge(dialogContext, 'Çıkış Yap'),
+                    content: ProductText.bodyMedium(
+                      dialogContext,
+                      'Çıkış yapmak istediğinizden emin misiniz?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        child: ProductText.labelLarge(dialogContext, 'İptal'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop();
+                          unawaited(_logout());
+                        },
+                        child: ProductText.labelLarge(dialogContext, 'Çıkış Yap'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          ValueListenableBuilder<List<Map<String, dynamic>>>(
+            valueListenable: _cartNotifier,
+            builder: (context, cart, _) {
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.shopping_cart),
+                    onPressed: () {
+                      Navigator.push<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (_) => CartPage(cartItems: List.of(cart)),
+                        ),
+                      );
+                    },
+                  ),
+                  if (cart.isNotEmpty)
+                    Positioned(
+                      right: AppSizes.spacingXs,
+                      top: AppSizes.spacingXs,
+                      child: Container(
+                        padding: AppPagePadding.all10(),
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.error,
+                          borderRadius: AppRadius.circular8,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: AppSizes.iconSmall,
+                          minHeight: AppSizes.iconSmall,
+                        ),
+                        child: ProductText.labelSmall(
+                          context,
+                          cart.length.toString(),
+                          style: context.appTextTheme.labelSmall?.copyWith(
+                            color: context.colorScheme.onError,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+      body: BlocBuilder<FlightListCubit, FlightListState>(
+        builder: (context, listState) {
+          if (listState.isLoading) {
+            return _buildShimmerLoading(context);
+          }
+          if (listState.errorMessage.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/undraw_fast-loading_ae60.svg',
+                    width: 150,
+                    height: 150,
+                  ),
+                  const SizedBox(height: AppSizes.spacingXl),
+                  ProductText.bodyLarge(
+                    context,
+                    'Hata: ${listState.errorMessage}',
+                    style: context.appTextTheme.bodyLarge?.copyWith(
+                      color: context.colorScheme.error,
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.spacingL),
+                  ElevatedButton(
+                    onPressed: () =>
+                        context.read<FlightListCubit>().loadFlights(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colorScheme.primary,
+                      foregroundColor: context.colorScheme.onPrimary,
+                    ),
+                    child: ProductText.labelLarge(context, 'Tekrar Dene'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final flights = listState.flights;
+          return ListView.builder(
+            padding: AppPagePadding.all10(),
+            itemCount: flights.length,
+            itemBuilder: (context, index) {
+              final flight = flights[index];
+              final scheme = context.colorScheme;
+              final appTheme = context.appTheme;
+              return Card(
+                margin: AppPagePadding.marginBottom15(),
+                elevation: 3,
+                child: Padding(
+                  padding: AppPagePadding.all20(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ProductText.titleMedium(
+                            context,
+                            flight.airline,
+                            style: context.appTextTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: scheme.primary,
+                            ),
+                          ),
+                          ProductText.titleLarge(
+                            context,
+                            '${flight.price} ₺',
+                            style: context.appTextTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: appTheme.success,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSizes.spacingS),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ProductText.titleMedium(
+                                  context,
+                                  flight.from,
+                                  style: context.appTextTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                ProductText.bodyMedium(
+                                  context,
+                                  flight.departureTime,
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: scheme.onSurfaceVariant,
+                            size: AppSizes.iconMedium,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                ProductText.titleMedium(
+                                  context,
+                                  flight.to,
+                                  style: context.appTextTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                ProductText.bodyMedium(
+                                  context,
+                                  flight.arrivalTime,
+                                  color: scheme.onSurfaceVariant,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSizes.spacingS),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ProductText.labelSmall(
+                            context,
+                            'Süre: ${flight.duration}',
+                            style: context.appTextTheme.labelSmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                          ProductText.labelSmall(
+                            context,
+                            'Tarih: ${flight.date}',
+                            style: context.appTextTheme.labelSmall?.copyWith(
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSizes.spacingM),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                final flightMap = flight.toJson();
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (_) =>
+                                        FlightDetailPage(flight: flightMap),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    scheme.surfaceContainerHighest,
+                                foregroundColor: scheme.onSurface,
+                              ),
+                              child: ProductText.labelLarge(
+                                context,
+                                'Detaylar',
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSizes.spacingS),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => _addToCart(flight),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: appTheme.brandPrimary,
+                                foregroundColor: scheme.onPrimary,
+                              ),
+                              child: ProductText.labelLarge(
+                                context,
+                                'Sepete Ekle',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
