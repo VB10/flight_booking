@@ -1,8 +1,14 @@
+import 'dart:async';
+
 import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/feature/auth/flight/flight_list_page.dart';
-import 'package:flight_booking/feature/unauth/login/view/login_page_state.dart';
-import 'package:flight_booking/feature/unauth/login/view_model/login_view_model.dart';
+import 'package:flight_booking/feature/unauth/login/cubit/login_cubit.dart';
+import 'package:flight_booking/feature/unauth/login/cubit/login_state.dart';
+import 'package:flight_booking/product/container/product_container.dart';
+import 'package:flight_booking/product/network/network_manager.dart';
+import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 part 'view/login_page_mixin.dart';
@@ -19,19 +25,30 @@ final class LoginPage extends StatefulWidget {
 final class _LoginPageState extends State<LoginPage> with LoginPageMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colorScheme.surface,
-      appBar: AppBar(
-        // TODO: Code gen ile localization
-        title: ProductText.h3(context, 'Flight Booking'),
-        centerTitle: true,
-        backgroundColor: context.colorScheme.primary,
-      ),
-      body: _LoginPageBody(
-        emailController: emailController,
-        passwordController: passwordController,
-        state: state,
-        onLogin: onLoginPressed,
+    return BlocProvider(
+      create: (_) => loginCubit,
+      child: BlocListener<LoginCubit, LoginState>(
+        listenWhen: (previous, current) =>
+            current.isSuccess && !previous.isSuccess,
+        listener: (context, state) {
+          if (state.isSuccess) navigateToFlightList();
+        },
+        child: Scaffold(
+          backgroundColor: context.colorScheme.surface,
+          appBar: AppBar(
+            title: ProductText.h3(context, 'Flight Booking'),
+            centerTitle: true,
+            backgroundColor: context.colorScheme.primary,
+          ),
+          body: _LoginPageBody(
+            emailController: emailController,
+            passwordController: passwordController,
+            obscurePassword: obscurePasswordNotifier,
+            testAccountExpanded: testAccountExpandedNotifier,
+            onLogin: () => onLoginPressed(context),
+            onToggleTestAccount: toggleTestAccountSection,
+          ),
+        ),
       ),
     );
   }

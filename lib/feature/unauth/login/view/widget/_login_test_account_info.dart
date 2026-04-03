@@ -6,11 +6,11 @@ final class _LoginTestAccountInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Code gen ile localization
-    return ProductText.bodySmall(
-      context,
+    return SelectableText(
       'Test hesabı: user@test.com / 123456',
-      color: context.colorScheme.onSurface,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: context.colorScheme.onSurface,
+          ),
     );
   }
 }

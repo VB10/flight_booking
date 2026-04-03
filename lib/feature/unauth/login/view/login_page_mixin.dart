@@ -1,67 +1,54 @@
 part of '../login_page.dart';
 
+/// Login ekranı: controller / notifier yaşam döngüsü ve aksiyonlar.
 mixin LoginPageMixin on State<LoginPage> {
-  // ViewModel
-  late final LoginViewModel _viewModel;
-
-  // Controllers
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
+  late final ValueNotifier<bool> obscurePasswordNotifier;
 
-  // UI State with ValueNotifier
-  late final ValueNotifier<LoginPageState> state;
+  /// Valuenotifer state
+  late final ValueNotifier<bool> testAccountExpandedNotifier;
+
+  late final LoginCubit loginCubit = LoginCubit(
+    ProductContainer.instance.get<IAuthService>(),
+    ProductContainer.instance.get<IProductNetworkManager>(),
+  );
+
+  void navigateToFlightList() {
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(builder: (_) => const FlightListPage()),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _viewModel = LoginViewModel();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    state = ValueNotifier(const LoginPageState());
+    obscurePasswordNotifier = ValueNotifier(true);
+    testAccountExpandedNotifier = ValueNotifier(false);
   }
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    state.dispose();
+    obscurePasswordNotifier.dispose();
+    testAccountExpandedNotifier.dispose();
     super.dispose();
   }
 
-  Future<void> onLoginPressed() async {
-    state.value = state.value.copyWith(
-      isLoading: true,
-      errorMessage: '',
-    );
-
-    try {
-      final response = await _viewModel.login(
+  void onLoginPressed(BuildContext context) {
+    unawaited(
+      loginCubit.login(
         email: emailController.text,
         password: passwordController.text,
-      );
+      ),
+    );
+  }
 
-      if (response.success) {
-        await _viewModel.saveUserToCache(response);
-        await _viewModel.logSuccessfulLogin(response);
-
-        if (!mounted) return;
-        state.value = state.value.copyWith(isLoading: false);
-
-        await Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(builder: (_) => FlightListPage()),
-        );
-      } else {
-        state.value = state.value.copyWith(
-          isLoading: false,
-          errorMessage: response.message,
-        );
-      }
-    } on Exception catch (e) {
-      state.value = state.value.copyWith(
-        isLoading: false,
-        errorMessage: 'Bağlantı hatası: $e',
-      );
-    }
+  void toggleTestAccountSection() {
+    testAccountExpandedNotifier.value = !testAccountExpandedNotifier.value;
   }
 }

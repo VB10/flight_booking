@@ -1,44 +1,64 @@
+import 'package:flight_booking/feature/unauth/login/cubit/login_state.dart';
 import 'package:flight_booking/feature/unauth/login/model/login_response_model.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
-import 'package:flight_booking/product/network/product_network_manager.dart';
-import 'package:flight_booking/product/service/impl/auth_service_impl.dart';
+import 'package:flight_booking/product/network/network_manager.dart';
+import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final class LoginViewModel {
-  LoginViewModel();
+final class LoginCubit extends Cubit<LoginState> {
+  LoginCubit(this._authService, this._networkManager)
+    : super(const LoginState());
 
-  final _authService = AuthServiceImpl();
+  final IAuthService _authService;
+  final IProductNetworkManager _networkManager;
 
-  Future<LoginResponseModel> login({
+  Future<void> login({
     required String email,
     required String password,
   }) async {
+    emit(state.copyWith(isLoading: true, errorMessage: '', isSuccess: false));
+
     final result = await _authService.login(email: email, password: password);
 
-    LoginResponseModel? response;
-    String? errorMessage;
+    LoginResponseModel? successResponse;
+    String? failureMessage;
 
     result.fold(
-      onSuccess: (data) {
-        // Set auth token for subsequent requests
-        ProductNetworkManager.instance.setAuthToken(data.token);
-        response = data;
+      onSuccess: (LoginResponseModel data) {
+        if (data.success) {
+          _networkManager.setAuthToken(data.token);
+          successResponse = data;
+        } else {
+          failureMessage = data.message;
+        }
       },
       onError: (error) {
-        errorMessage = error.model?.message ?? 'Giriş başarısız';
+        failureMessage =
+            error.model?.message ?? error.description ?? 'Giriş başarısız';
       },
     );
 
-    if (response != null) {
-      return response!;
+    if (successResponse != null) {
+      await _saveUserToCache(successResponse!);
+      await _logSuccessfulLogin(successResponse!);
+      emit(state.copyWith(isLoading: false, isSuccess: true));
+    } else {
+      emit(
+        state.copyWith(
+          isLoading: false,
+
+          ///TODO: Localization
+          errorMessage: failureMessage ?? 'Giriş başarısız',
+        ),
+      );
     }
-    throw Exception(errorMessage);
   }
 
-  Future<void> saveUserToCache(LoginResponseModel loginResponse) async {
+  Future<void> _saveUserToCache(LoginResponseModel loginResponse) async {
+    /// TODO: Database
     final prefs = await SharedPreferences.getInstance();
-    // TODO: Code gen ile cache key'leri
     await prefs.setString('user_token', loginResponse.token);
     await prefs.setString('user_email', loginResponse.user.email);
     await prefs.setString('user_name', loginResponse.user.name);
@@ -46,7 +66,7 @@ final class LoginViewModel {
     await prefs.setBool('is_logged_in', true);
   }
 
-  Future<void> logSuccessfulLogin(LoginResponseModel loginResponse) async {
+  Future<void> _logSuccessfulLogin(LoginResponseModel loginResponse) async {
     try {
       await CustomRemoteConfig.instance.analytics.logLogin(
         loginMethod: 'email',

@@ -36,7 +36,7 @@ class _SplashPageState extends State<SplashPage> {
       // User logged in
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => FlightListPage()),
+        MaterialPageRoute(builder: (context) => const FlightListPage()),
       );
     } else {
       // User not logged in
