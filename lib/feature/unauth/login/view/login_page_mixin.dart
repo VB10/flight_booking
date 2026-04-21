@@ -7,15 +7,8 @@ mixin LoginPageMixin on State<LoginPage> {
 
   late final LoginCubit loginCubit = LoginCubit(
     ProductContainer.instance.get<IAuthService>(),
-    ProductContainer.instance.get<IProductNetworkManager>(),
+    ProductContainer.instance.get<AuthCubit>(),
   );
-
-  void navigateToFlightList() {
-    Navigator.pushReplacement<void, void>(
-      context,
-      MaterialPageRoute<void>(builder: (_) => const FlightListPage()),
-    );
-  }
 
   @override
   void initState() {

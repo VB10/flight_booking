@@ -1,23 +1,20 @@
 import 'dart:async';
 
 import 'package:flight_booking/core/theme/theme.dart';
-import 'package:flight_booking/feature/auth/cart/cart_page.dart';
 import 'package:flight_booking/feature/auth/flight/cubit/flight_list_cubit.dart';
 import 'package:flight_booking/feature/auth/flight/cubit/flight_list_state.dart';
 import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
-import 'package:flight_booking/feature/auth/flight_detail/flight_detail_page.dart';
-import 'package:flight_booking/feature/auth/profile/profile_page.dart';
-import 'package:flight_booking/feature/unauth/login/login_page.dart';
 import 'package:flight_booking/product/application/application_cubit.dart';
+import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/container/product_container.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/navigation/app_routes.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 final class FlightListPage extends StatelessWidget {
@@ -27,8 +24,9 @@ final class FlightListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) {
-        final cubit =
-            FlightListCubit(ProductContainer.instance.get<IFlightService>());
+        final cubit = FlightListCubit(
+          ProductContainer.instance.get<IFlightService>(),
+        );
         unawaited(cubit.loadFlights());
         return cubit;
       },
@@ -88,8 +86,9 @@ final class _FlightListBodyState extends State<_FlightListBody> {
       final packageInfo = await PackageInfo.fromPlatform();
       final currentVersion = packageInfo.version;
 
-      final minimumVersion = CustomRemoteConfig.instance.remoteConfig
-          .getString('minimum_app_version');
+      final minimumVersion = CustomRemoteConfig.instance.remoteConfig.getString(
+        'minimum_app_version',
+      );
       final forceUpdate = CustomRemoteConfig.instance.remoteConfig.getBool(
         'force_update_required',
       );
@@ -239,22 +238,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
     }
   }
 
-  Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.remove('user_token');
-    await prefs.remove('user_email');
-    await prefs.remove('user_name');
-    await prefs.remove('user_id');
-    await prefs.setBool('is_logged_in', false);
-
-    if (!mounted) return;
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
-      (route) => false,
-    );
-  }
+  Future<void> _logout() => context.read<AuthCubit>().logout();
 
   Widget _buildShimmerLoading(BuildContext context) {
     final appTheme = context.appTheme;
@@ -425,17 +409,11 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                   ? Icons.light_mode
                   : Icons.dark_mode,
             ),
-            onPressed: () =>
-                context.read<ApplicationCubit>().toggleTheme(),
+            onPressed: () => context.read<ApplicationCubit>().toggleTheme(),
           ),
           IconButton(
             icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push<void>(
-                context,
-                MaterialPageRoute<void>(builder: (_) => ProfilePage()),
-              );
-            },
+            onPressed: () => const ProfileRoute().push<void>(context),
           ),
           IconButton(
             icon: const Icon(Icons.logout),
@@ -459,7 +437,10 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                           Navigator.of(dialogContext).pop();
                           unawaited(_logout());
                         },
-                        child: ProductText.labelLarge(dialogContext, 'Çıkış Yap'),
+                        child: ProductText.labelLarge(
+                          dialogContext,
+                          'Çıkış Yap',
+                        ),
                       ),
                     ],
                   );
@@ -474,14 +455,8 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.shopping_cart),
-                    onPressed: () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => CartPage(cartItems: List.of(cart)),
-                        ),
-                      );
-                    },
+                    onPressed: () =>
+                        CartRoute($extra: List.of(cart)).go(context),
                   ),
                   if (cart.isNotEmpty)
                     Positioned(
@@ -659,19 +634,12 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                         children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {
-                                final flightMap = flight.toJson();
-                                Navigator.push<void>(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (_) =>
-                                        FlightDetailPage(flight: flightMap),
-                                  ),
-                                );
-                              },
+                              onPressed: () => FlightDetailRoute(
+                                flightId: flight.id.toString(),
+                                $extra: flight.toJson(),
+                              ).go(context),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    scheme.surfaceContainerHighest,
+                                backgroundColor: scheme.surfaceContainerHighest,
                                 foregroundColor: scheme.onSurface,
                               ),
                               child: ProductText.labelLarge(

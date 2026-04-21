@@ -1,18 +1,16 @@
 import 'package:flight_booking/feature/unauth/login/cubit/login_state.dart';
 import 'package:flight_booking/feature/unauth/login/model/login_response_model.dart';
+import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
-import 'package:flight_booking/product/network/network_manager.dart';
 import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._authService, this._networkManager)
-    : super(const LoginState());
+  LoginCubit(this._authService, this._authCubit) : super(const LoginState());
 
   final IAuthService _authService;
-  final IProductNetworkManager _networkManager;
+  final AuthCubit _authCubit;
 
   Future<void> login({
     required String email,
@@ -28,7 +26,6 @@ final class LoginCubit extends Cubit<LoginState> {
     result.fold(
       onSuccess: (LoginResponseModel data) {
         if (data.success) {
-          _networkManager.setAuthToken(data.token);
           successResponse = data;
         } else {
           failureMessage = data.message;
@@ -41,8 +38,14 @@ final class LoginCubit extends Cubit<LoginState> {
     );
 
     if (successResponse != null) {
-      await _saveUserToCache(successResponse!);
-      await _logSuccessfulLogin(successResponse!);
+      final response = successResponse!;
+      await _authCubit.setSession(
+        token: response.token,
+        email: response.user.email,
+        name: response.user.name,
+        userId: response.user.id,
+      );
+      await _logSuccessfulLogin(response);
       emit(state.copyWith(isLoading: false, isSuccess: true));
     } else {
       emit(
@@ -54,16 +57,6 @@ final class LoginCubit extends Cubit<LoginState> {
         ),
       );
     }
-  }
-
-  Future<void> _saveUserToCache(LoginResponseModel loginResponse) async {
-    /// TODO: Database
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_token', loginResponse.token);
-    await prefs.setString('user_email', loginResponse.user.email);
-    await prefs.setString('user_name', loginResponse.user.name);
-    await prefs.setInt('user_id', loginResponse.user.id);
-    await prefs.setBool('is_logged_in', true);
   }
 
   Future<void> _logSuccessfulLogin(LoginResponseModel loginResponse) async {

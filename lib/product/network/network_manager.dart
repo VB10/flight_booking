@@ -39,4 +39,7 @@ abstract interface class IProductNetworkManager {
 
   /// Clear all custom headers
   void clearHeaders();
+
+  /// Register a Dio interceptor (e.g. AuthInterceptor for 401 handling)
+  void registerInterceptor(Interceptor interceptor);
 }

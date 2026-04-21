@@ -38,6 +38,9 @@ dependencies:
   # JSON Serialization
   json_annotation: ^4.9.0
 
+  # Navigation
+  go_router: ^17.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -46,6 +49,7 @@ dev_dependencies:
   very_good_analysis: ^10.0.0
   build_runner: ^2.9.0
   json_serializable: ^6.9.0
+  go_router_builder: ^4.3.0
 
 # dependency_overrides:
 #   flutter_lints: ^5.1.0

@@ -12,7 +12,7 @@ final class AppRouter {
   late final GoRouter config = GoRouter(
     initialLocation: const SplashRoute().location,
     refreshListenable: GoRouterRefreshStream(_authCubit.stream),
-    redirect: (context, state) => authGuard(state, _authCubit.state),
+    redirect: (context, state) => AuthGuard.start(state, _authCubit.state),
     routes: $appRoutes,
   );
 }
