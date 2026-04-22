@@ -1,10 +1,11 @@
-import 'package:flight_booking/core/theme/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
-import '../../auth/flight/flight_list_page.dart';
-import '../login/login_page.dart';
+import 'package:flight_booking/core/theme/theme.dart';
+import 'package:flight_booking/product/application/auth/auth_cubit.dart';
+import 'package:flight_booking/product/navigation/app_routes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -12,38 +13,25 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  static const _splashDuration = Duration(seconds: 2);
+
   @override
   void initState() {
     super.initState();
-    checkUserLogin();
+    unawaited(_routeAfterDelay());
   }
 
-  // Kötü pratik: Tüm cache logic burada sayfaya gömülü
-  void checkUserLogin() async {
-    await Future.delayed(Duration(seconds: 2)); // Fake splash delay
-
-    // SharedPreferences'i her seferinde al - kötü pratik
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Hard coded key'ler - kötü praktik
-    String? token = prefs.getString('user_token');
-    String? userEmail = prefs.getString('user_email');
-    String? userName = prefs.getString('user_name');
-    int? userId = prefs.getInt('user_id');
-
-    // Basit kontrol - proper validation yok
-    if (token != null && token.isNotEmpty && userEmail != null) {
-      // User logged in
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const FlightListPage()),
-      );
+  Future<void> _routeAfterDelay() async {
+    final authCubit = context.read<AuthCubit>();
+    await Future.wait<void>([
+      Future<void>.delayed(_splashDuration),
+      authCubit.restoreSession(),
+    ]);
+    if (!mounted) return;
+    if (authCubit.state.isLoggedIn) {
+      const FlightListRoute().go(context);
     } else {
-      // User not logged in
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      const LoginRoute().go(context);
     }
   }
 

@@ -10,17 +10,20 @@
 - ✅ v7: View - ViewModel - Mixin yapısı
 - ✅ v8: Network layer ve service layer ve model layer
 - ✅ v9: Cubit + View + Mixin + ValueListenable pattern
+- ✅ v10: Navigation & Routing
 
 ## 📋 Planlanan Bölümler
-
-### Package Management (v6.1)
-- [ ] Custom widget library
-- [ ] Custom package management
 
 ### Navigation & Routing (v7)
 - [ ] Navigation yapısı (GoRouter / AutoRoute)
 - [ ] Route management
 - [ ] Navigation guards
+
+### Package Management (v6.1)
+- [ ] Custom widget library
+- [ ] Custom package management
+
+
 
 ### State Management (v8)
 - [ ] State management seçimi ve kurulumu

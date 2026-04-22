@@ -112,4 +112,9 @@ final class ProductNetworkManager implements IProductNetworkManager {
   void clearHeaders() {
     _networkManager.clearHeader();
   }
+
+  @override
+  void registerInterceptor(Interceptor interceptor) {
+    _networkManager.dioInterceptors.add(interceptor);
+  }
 }

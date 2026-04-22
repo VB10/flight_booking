@@ -1,4 +1,7 @@
 import 'package:flight_booking/product/application/application_cubit.dart';
+import 'package:flight_booking/product/application/auth/auth_cubit.dart';
+import 'package:flight_booking/product/navigation/app_router.dart';
+import 'package:flight_booking/product/network/interceptor/auth_interceptor.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
 import 'package:flight_booking/product/network/product_network_manager.dart';
 import 'package:flight_booking/product/service/auth_service.dart';
@@ -33,6 +36,16 @@ final class ProductContainer {
       ..registerLazySingleton<IFlightService>(
         () => FlightServiceImpl(_getIt<IProductNetworkManager>()),
       )
-      ..registerLazySingleton<ApplicationCubit>(ApplicationCubit.new);
+      ..registerLazySingleton<ApplicationCubit>(ApplicationCubit.new)
+      ..registerLazySingleton<AuthCubit>(
+        () => AuthCubit(_getIt<IProductNetworkManager>()),
+      )
+      ..registerLazySingleton<AppRouter>(
+        () => AppRouter(_getIt<AuthCubit>()),
+      );
+
+    _getIt<IProductNetworkManager>().registerInterceptor(
+      AuthInterceptor(onUnauthorized: () => _getIt<AuthCubit>().logout()),
+    );
   }
 }

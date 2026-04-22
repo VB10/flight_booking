@@ -12,3 +12,7 @@ targets:
           explicit_to_json: true
           include_if_null: false
           field_rename: none
+      go_router_builder:
+        generate_for:
+          include:
+            - lib/product/navigation/app_routes.dart

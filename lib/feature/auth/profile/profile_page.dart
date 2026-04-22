@@ -1,7 +1,8 @@
 import 'package:flight_booking/core/theme/theme.dart';
-import 'package:flight_booking/feature/unauth/login/login_page.dart';
+import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/service/impl/auth_service_impl.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -90,23 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // Aynı kod tekrarı - kötü praktik
-  void performLogout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Hard coded key'ler yine aynı
-    await prefs.remove('user_token');
-    await prefs.remove('user_email');
-    await prefs.remove('user_name');
-    await prefs.remove('user_id');
-    await prefs.setBool('is_logged_in', false);
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-      (Route<dynamic> route) => false,
-    );
-  }
+  Future<void> performLogout() => context.read<AuthCubit>().logout();
 
   void refreshProfile() async {
     setState(() {
