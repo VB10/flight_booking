@@ -59,8 +59,29 @@ List<Map<String, dynamic>> orders = [];
 class FlightServer {
   final Router _router = Router();
 
+  static const _jsonHeaders = {'Content-Type': 'application/json'};
+
   FlightServer() {
     _setupRoutes();
+  }
+
+  /// Standard error response format
+  Response _errorResponse(
+    int statusCode,
+    String message,
+    String errorCode, {
+    Map<String, dynamic>? details,
+  }) {
+    return Response(
+      statusCode,
+      body: jsonEncode({
+        'success': false,
+        'message': message,
+        'errorCode': errorCode,
+        'details': details,
+      }),
+      headers: _jsonHeaders,
+    );
   }
 
   void _setupRoutes() {
@@ -80,6 +101,7 @@ class FlightServer {
     _router.get('/health', (Request request) {
       return Response.ok(
         jsonEncode({'status': 'OK', 'message': 'Server is running'}),
+        headers: _jsonHeaders,
       );
     });
   }
@@ -102,20 +124,21 @@ class FlightServer {
             'token': 'fake_token_12345', // Fake token
             'user': {'id': 1, 'email': email, 'name': 'Test User'},
           }),
+          headers: _jsonHeaders,
         );
       } else {
-        return Response(
+        return _errorResponse(
           400,
-          body: jsonEncode({
-            'success': false,
-            'message': 'Email veya şifre hatalı!',
-          }),
+          'Email veya şifre hatalı!',
+          'INVALID_CREDENTIALS',
+          details: {'field': 'email/password'},
         );
       }
     } catch (e) {
-      return Response(
+      return _errorResponse(
         500,
-        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
+        'Server error: $e',
+        'SERVER_ERROR',
       );
     }
   }
@@ -129,12 +152,10 @@ class FlightServer {
           'data': flights,
           'message': 'Flights retrieved successfully',
         }),
+        headers: _jsonHeaders,
       );
     } catch (e) {
-      return Response(
-        500,
-        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
-      );
+      return _errorResponse(500, 'Server error: $e', 'SERVER_ERROR');
     }
   }
 
@@ -175,12 +196,10 @@ class FlightServer {
           'orderId': order['id'],
           'totalPrice': totalPrice,
         }),
+        headers: _jsonHeaders,
       );
     } catch (e) {
-      return Response(
-        500,
-        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
-      );
+      return _errorResponse(500, 'Server error: $e', 'SERVER_ERROR');
     }
   }
 
@@ -202,12 +221,10 @@ class FlightServer {
           },
           'message': 'Profile retrieved successfully',
         }),
+        headers: _jsonHeaders,
       );
     } catch (e) {
-      return Response(
-        500,
-        body: jsonEncode({'success': false, 'message': 'Server error: $e'}),
-      );
+      return _errorResponse(500, 'Server error: $e', 'SERVER_ERROR');
     }
   }
 

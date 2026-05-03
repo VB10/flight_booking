@@ -8,29 +8,22 @@
 - ✅ v5: Main.dart düzenlemesi ve yapılandırması
 - ✅ v6: Theme yapısı (light/dark theme)
 - ✅ v7: View - ViewModel - Mixin yapısı
+- ✅ v8: Network layer ve service layer ve model layer
+- ✅ v9: Cubit + View + Mixin + ValueListenable pattern
+- ✅ v10: Navigation & Routing
 
 ## 📋 Planlanan Bölümler
-
-### View Layer (v7.3 - Priority: High)
-- [ ] Service Layer
-- [ ] Model Layer
-
-### View Layer (v7.2 - Priority: High)
-- [ ] Service Layer
-- [ ] Model Layer
-
-### Network Layer (v7.3 - Priority: High)
-- [ ] State Management start 
-
-
-### Package Management (v6.1)
-- [ ] Custom widget library
-- [ ] Custom package management
 
 ### Navigation & Routing (v7)
 - [ ] Navigation yapısı (GoRouter / AutoRoute)
 - [ ] Route management
 - [ ] Navigation guards
+
+### Package Management (v6.1)
+- [ ] Custom widget library
+- [ ] Custom package management
+
+
 
 ### State Management (v8)
 - [ ] State management seçimi ve kurulumu

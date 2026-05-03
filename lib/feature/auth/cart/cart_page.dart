@@ -1,9 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flight_booking/core/theme/theme.dart';
+import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/service/impl/flight_service_impl.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flight_booking/feature/auth/cart/checkout_response_model.dart';
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
@@ -108,7 +107,6 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  // Kötü pratik: Aynı kodun tekrarı burada da
   void _processCheckout() async {
     // Loading göster
     showDialog(
@@ -127,34 +125,24 @@ class _CartPageState extends State<CartPage> {
       },
     );
 
-    Dio dio = Dio(); // Tekrar aynı kod
-    String baseUrl = 'http://localhost:8080'; // Hard coded URL tekrarı
+    // Cart items'ı FlightModel listesine çevir
+    final cartFlights = widget.cartItems
+        .map((item) => FlightModel.fromJson(item))
+        .toList();
 
-    try {
-      // Request body doğrudan yazıldı
-      Map<String, dynamic> requestBody = {
-        'cartItems': widget.cartItems,
-        'userEmail': 'user@test.com', // Hard coded email
-      };
+    final flightService = FlightServiceImpl();
+    final result = await flightService.checkout(
+      cartItems: cartFlights,
+      userEmail: 'user@test.com', // TODO: Get from user session
+    );
 
-      Response response = await dio.post(
-        '$baseUrl/checkout',
-        data: requestBody,
-      );
+    Navigator.pop(context); // Loading dialog'u kapat
 
-      Navigator.pop(context); // Loading dialog'u kapat
-      final responseData = response.data as Map<String, dynamic>?;
-      // Status code kontrolü yine aynı
-      if (response.statusCode == 200 && responseData != null) {
-        CheckoutResponseModel checkoutResponse = CheckoutResponseModel.fromJson(
-          responseData,
-        );
-
+    result.fold(
+      onSuccess: (checkoutResponse) async {
         if (checkoutResponse.success) {
           // Analytics - Checkout başarılı
-          await _logSuccessfulCheckout(
-            requestBody['cartItems'] as List<dynamic>,
-          );
+          await _logSuccessfulCheckout(widget.cartItems);
 
           setState(() {
             widget.cartItems.clear();
@@ -173,28 +161,21 @@ class _CartPageState extends State<CartPage> {
             ),
           );
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: ProductText.bodyMedium(
-              context,
-              'Server hatası: ${response.statusCode}',
+      },
+      onError: (error) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: ProductText.bodyMedium(
+                context,
+                error.model?.message ?? 'Bağlantı hatası',
+              ),
+              backgroundColor: context.colorScheme.error,
             ),
-            backgroundColor: context.colorScheme.error,
-          ),
-        );
-      }
-    } catch (e) {
-      Navigator.pop(context);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: ProductText.bodyMedium(context, 'Bağlantı hatası: $e'),
-            backgroundColor: context.colorScheme.error,
-          ),
-        );
-      }
-    }
+          );
+        }
+      },
+    );
   }
 
   // Kötü pratik: Analytics method'ları da buraya gömülü

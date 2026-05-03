@@ -1,59 +1,59 @@
-class LoginResponseModel {
-  bool success;
-  String message;
-  String token;
-  UserModel user;
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:vexana/vexana.dart';
 
-  LoginResponseModel({
+part 'login_response_model.g.dart';
+
+@JsonSerializable()
+final class LoginResponseModel extends Equatable
+    implements INetworkModel<LoginResponseModel> {
+  const LoginResponseModel({
     required this.success,
     required this.message,
     required this.token,
     required this.user,
   });
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
-    return LoginResponseModel(
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
-      token: json['token'] ?? '',
-      user: UserModel.fromJson(json['user'] ?? {}),
-    );
-  }
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'success': success,
-      'message': message,
-      'token': token,
-      'user': user.toJson(),
-    };
-  }
+  final bool success;
+  final String message;
+  final String token;
+  final UserModel user;
+
+  @override
+  LoginResponseModel fromJson(Map<String, dynamic> json) =>
+      LoginResponseModel.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$LoginResponseModelToJson(this);
+
+  @override
+  List<Object?> get props => [success, message, token, user];
 }
 
-class UserModel {
-  int id;
-  String email;
-  String name;
-
-  UserModel({
+@JsonSerializable()
+final class UserModel extends Equatable implements INetworkModel<UserModel> {
+  const UserModel({
     required this.id,
     required this.email,
     required this.name,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] ?? 0,
-      email: json['email'] ?? '',
-      name: json['name'] ?? '',
-    );
-  }
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'email': email,
-      'name': name,
-    };
-  }
+  final int id;
+  final String email;
+  final String name;
+
+  @override
+  UserModel fromJson(Map<String, dynamic> json) => UserModel.fromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$UserModelToJson(this);
+
+  @override
+  List<Object?> get props => [id, email, name];
 }

@@ -1,0 +1,116 @@
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#4A90D9', 'primaryTextColor': '#fff', 'primaryBorderColor': '#2E6BA4', 'lineColor': '#555', 'secondaryColor': '#E8F4FD', 'tertiaryColor': '#FFF3E0'}}}%%
+
+graph TB
+    subgraph GLOBAL["ProductContainer (get_it — Global DI)"]
+        direction LR
+        PC["ProductContainer.instance.setup()
+        main.dart'ta bir kez"]
+        S1["IAuthService"]
+        S2["IProductNetworkManager"]
+        S3["IFlightService"]
+        S4["...diğer servisler"]
+        PC --> S1 & S2 & S3 & S4
+    end
+
+    subgraph PAGE["FeaturePage (StatefulWidget)"]
+        direction TB
+
+        subgraph BLOC_PROVIDER["BlocProvider(create:)"]
+            direction TB
+
+            subgraph CUBIT_LAYER["Cubit Katmanı"]
+                direction LR
+                STATE["FeatureState
+                ━━━━━━━━━━━━━━━━━━
+                Equatable + copyWith
+                ━━━━━━━━━━━━━━━━━━
+                isLoading: bool
+                errorMessage: String
+                isSuccess: bool
+                flights: List"]
+                CUBIT["FeatureCubit
+                ━━━━━━━━━━━━━━━━━━
+                emit(state.copyWith(...))
+                ━━━━━━━━━━━━━━━━━━
+                API / cache / analytics
+                Servisler constructor ile"]
+                CUBIT -- "state.copyWith()" --> STATE
+            end
+
+            subgraph MIXIN_LAYER["PageMixin (part of)"]
+                direction LR
+                MIXIN["FeaturePageMixin
+                ━━━━━━━━━━━━━━━━━━
+                TextEditingController
+                ValueNotifier — yerel UI
+                ━━━━━━━━━━━━━━━━━━
+                initState: controller + notifier
+                dispose: controller + notifier
+                ━━━━━━━━━━━━━━━━━━
+                context.read — Cubit erişimi
+                onLoginPressed()
+                togglePanel()"]
+            end
+
+            subgraph BODY_LAYER["Body Widget (part of)"]
+                direction TB
+
+                subgraph SERVER_STATE["Sunucu / İş Durumu"]
+                    BB["BlocBuilder
+                    ━━━━━━━━━━━━━━
+                    state.isLoading → Spinner
+                    state.errorMessage → Hata
+                    state.isSuccess → Sonuç"]
+                    BL["BlocListener
+                    ━━━━━━━━━━━━━━
+                    Navigasyon
+                    SnackBar
+                    Tek seferlik yan etkiler"]
+                end
+
+                subgraph LOCAL_STATE["Yerel UI — setState YOK"]
+                    VLB1["ValueListenableBuilder
+                    ━━━━━━━━━━━━━━━━━━━━
+                    obscurePassword
+                    → şifre göster/gizle"]
+                    VLB2["ValueListenableBuilder
+                    ━━━━━━━━━━━━━━━━━━━━
+                    testAccountExpanded
+                    → panel aç/kapa"]
+                    VLB3["ValueListenableBuilder
+                    ━━━━━━━━━━━━━━━━━━━━
+                    selectedChip, tabIndex
+                    → küçük UI toggle'ları"]
+                end
+            end
+        end
+    end
+
+    S1 & S2 -- "ProductContainer.instance.get()" --> CUBIT
+    MIXIN -- "context.read&lt;Cubit&gt;()" --> CUBIT
+    CUBIT -- "emit → BlocBuilder" --> BB
+    CUBIT -- "emit → BlocListener" --> BL
+    MIXIN -- "ValueNotifier" --> VLB1 & VLB2 & VLB3
+
+    style GLOBAL fill:#E8F4FD,stroke:#2E6BA4,stroke-width:2px,color:#1a1a1a
+    style PAGE fill:#F5F5F5,stroke:#555,stroke-width:2px,color:#1a1a1a
+    style BLOC_PROVIDER fill:#E8F0E8,stroke:#4CAF50,stroke-width:2px,color:#1a1a1a
+    style CUBIT_LAYER fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#1a1a1a
+    style MIXIN_LAYER fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#1a1a1a
+    style BODY_LAYER fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#1a1a1a
+    style SERVER_STATE fill:#E8F5E9,stroke:#388E3C,stroke-width:1px,color:#1a1a1a
+    style LOCAL_STATE fill:#FFF8E1,stroke:#FFA000,stroke-width:1px,color:#1a1a1a
+
+    style PC fill:#2E6BA4,color:#fff
+    style S1 fill:#4A90D9,color:#fff
+    style S2 fill:#4A90D9,color:#fff
+    style S3 fill:#4A90D9,color:#fff
+    style S4 fill:#4A90D9,color:#fff
+    style STATE fill:#1976D2,color:#fff
+    style CUBIT fill:#1565C0,color:#fff
+    style MIXIN fill:#F57C00,color:#fff
+    style BB fill:#388E3C,color:#fff
+    style BL fill:#2E7D32,color:#fff
+    style VLB1 fill:#FFA000,color:#fff
+    style VLB2 fill:#FFA000,color:#fff
+    style VLB3 fill:#FFA000,color:#fff

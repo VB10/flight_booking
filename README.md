@@ -133,3 +133,38 @@ flight_booking/
 - Production'da kullanılmamalıdır
 - Refactor videosu için tasarlanmıştır
 - Güvenlik kontrolü yapılmamıştır
+
+
+┌─────────────────────────────────────────────────────────┐
+│  ProductContainer (Global DI — get_it)                  │
+│  main.dart'ta setup() → IAuthService, INetworkManager…  │
+└──────────────┬──────────────────────────────────────────┘
+               │ .get<IService>()
+               ▼
+┌─────────────────────────────────────────────────────────┐
+│  BlocProvider(create: (_) => Cubit(services...))        │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │  Cubit + State (Equatable + copyWith)              │ │
+│  │  state.copyWith(isLoading, errorMessage, isSuccess)│ │
+│  └──────────┬─────────────────────┬───────────────────┘ │
+│             │ emit                │ emit                 │
+│             ▼                     ▼                      │
+│  ┌──────────────────┐  ┌──────────────────────┐         │
+│  │  BlocBuilder     │  │  BlocListener        │         │
+│  │  isLoading→Spin  │  │  isSuccess→Navigate  │         │
+│  │  error→Text      │  │  SnackBar, yan etki  │         │
+│  └──────────────────┘  └──────────────────────┘         │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │  PageMixin (controller + ValueNotifier lifecycle)  │ │
+│  │  context.read<Cubit>() ile erişim                  │ │
+│  └──────────┬─────────────────────────────────────────┘ │
+│             │ ValueNotifier                              │
+│             ▼                                            │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  ValueListenableBuilder (setState YOK)           │   │
+│  │  • obscurePassword → şifre göster/gizle          │   │
+│  │  • testAccountExpanded → panel aç/kapa            │   │
+│  │  • selectedChip, tabIndex → küçük UI toggle       │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
