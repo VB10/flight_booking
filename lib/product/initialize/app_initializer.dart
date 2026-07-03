@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flight_booking/product/cache/product_cache.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flight_booking/product/initialize/platform_initializer.dart';
 import 'package:flight_booking/product/package/firebase/firebase_options.dart';
@@ -21,6 +22,7 @@ final class AppInitializer {
   Future<void> prepare() async {
     await Future.wait([
       platformInitializer.prepare(),
+      ProductCache.instance.init(),
       Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),

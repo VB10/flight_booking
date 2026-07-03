@@ -1,9 +1,12 @@
+import 'package:cache_manager/cache_manager.dart';
 import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
+import 'package:flight_booking/product/cache/model/auth_session_cache_model.dart';
+import 'package:flight_booking/product/cache/product_cache_keys.dart';
+import 'package:flight_booking/product/container/product_container.dart';
 import 'package:flight_booking/product/service/impl/auth_service_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -32,20 +35,18 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final cache = ProductContainer.instance.get<ICacheManager>();
+      final session = cache.readModel<AuthSessionCacheModel>(
+        ProductCacheKeys.session,
+        fromJson: AuthSessionCacheModel.fromJson,
+      );
 
-      // Hard coded key'ler tekrar - kötü praktik
-      String? name = prefs.getString('user_name');
-      String? email = prefs.getString('user_email');
-      int? id = prefs.getInt('user_id');
-      String? token = prefs.getString('user_token');
-
-      if (name != null && email != null && id != null && token != null) {
+      if (session != null) {
         setState(() {
-          userName = name;
-          userEmail = email;
-          userId = id;
-          userToken = token;
+          userName = session.name;
+          userEmail = session.email;
+          userId = session.userId;
+          userToken = session.token;
           isLoading = false;
         });
       } else {

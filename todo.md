@@ -1,77 +1,35 @@
 # Flutter Refactoring Masterclass - Todo List
 
 ## ✅ Yayınlanan Bölümler
-- ✅ v1: Pubspec.yaml kontrolü ve düzenlemesi
-- ✅ v2: Analysis options ve linter rules
-- ✅ v3: Lock files, .gitignore, VSCode settings
+- ✅ v1: Proje inceleme, analiz ve yapılacaklar
+- ✅ v2: Pubspec.yaml kontrolü ve düzenlemesi
+- ✅ v3: Kod standartları, Linter, Editor ayarları
 - ✅ v4: Paket mimarisi ve klasör yapısı
-- ✅ v5: Main.dart düzenlemesi ve yapılandırması
-- ✅ v6: Theme yapısı (light/dark theme)
-- ✅ v7: View - ViewModel - Mixin yapısı
-- ✅ v8: Network layer ve service layer ve model layer
-- ✅ v9: Cubit + View + Mixin + ValueListenable pattern
-- ✅ v10: Navigation & Routing
+- ✅ v5: Proje başlangıç noktası ve Environment yönetimi
+- ✅ v6: Theme & Design System (light/dark)
+- ✅ v7: View - ViewModel - Mixin mimarisi
+- ✅ v8: Network & Service Layer mimarisi (+ get_it DI, model/JSON serialization)
+- ✅ v9: State Management - ValueNotifier + Cubit pattern
+- ✅ v10: Navigation - go_router + AuthCubit (Typed Routes)
 
-## 📋 Planlanan Bölümler
+## 📋 Planlanan Ana Feature'lar
 
-### Navigation & Routing (v7)
-- [ ] Navigation yapısı (GoRouter / AutoRoute)
-- [ ] Route management
-- [ ] Navigation guards
+### Cache Manager (v11)
+- [x] Cache manager soyutlaması — `module/cache_manager` local package (ICacheManager + Strategy)
+- [x] Hive primary + SharedPreferences fallback (kritik key'lerde dual-write)
+- [x] AuthCubit + profile_page → ICacheManager refactor
+- [x] Package testleri (strateji + fallback davranışı)
+- [x] Skill'ler: `/cache-setup` + `/cache-add-model` (Hive model besleme)
+- Issue: https://github.com/VB10/flight_booking/issues/14
 
-### Package Management (v6.1)
+### Code Generation & Assets (v12)
+- [ ] Asset generation (flutter_gen)
+- [ ] Localization (easy_localization / intl)
+- [ ] Build runner script/otomasyon düzeni
+
+### Custom Package & Widget Library (v13)
 - [ ] Custom widget library
 - [ ] Custom package management
-
-
-
-### State Management (v8)
-- [ ] State management seçimi ve kurulumu
-- [ ] Global state yapısı
-- [ ] Feature-level state organization
-- [ ] State persistence
-
-### Service Layer & Dependency Injection (v10)
-- [ ] Network manager ve HTTP client setup
-- [ ] Service layer mimarisi
-
-### Dependency Injection (v10.1)
-- [ ] Dependency injection (GetIt / Riverpod)
-- [ ] Repository pattern implementation
-
-### Cache Manager (v10.2)
-- [ ] Cache manager
-
-### Model & Entity Layer (v11)
-- [ ] Model yapısı ve organizasyonu
-- [ ] Entity - Model - DTO ayrımı
-- [ ] JSON serialization
-- [ ] Type-safe model definitions
-
-### Code Generation (v12)
-- [ ] Build runner configuration
-- [ ] Asset generation (flutter_gen)
-- [ ] Localization generation (easy_localization / intl)
-
-### Route Generation (v12.1)
-- [ ] Route generation
-- [ ] Freezed implementation
-- [ ] JSON serialization (json_serializable)
-
-### Paket Yönetimi (v13)
-- [ ] Core paketlerin incelenmesi ve seçimi
-- [ ] UI/UX paketleri
-- [ ] Network ve data paketleri
-- [ ] Developer tools paketleri
-- [ ] Gereksiz paketlerin temizlenmesi
-
-## Refactor Login & Splash Page
-- [ ] Login Page
-- [ ] Splash Page
-
-### Refactor Flight List & Detail Page\
-- [ ] Flight List Page
-- [ ] Flight Detail Page
 
 ### Testing (v14)
 - [ ] Unit test yapısı ve coverage
@@ -92,9 +50,6 @@
 - [ ] Certificate pinning
 - [ ] Obfuscation settings
 - [ ] Sensitive data handling
-
-### Prompt Engineering (v16.1)
-- [ ] Helpful prompt engineering
 
 ### Multi-Flavor Setup (v17)
 - [ ] Development, staging, production flavors
@@ -122,6 +77,14 @@
 - [ ] Accessibility features
 - [ ] Documentation
 
+## 🔧 Refactoring (Ana feature'lar bittikten sonra)
+> Login zaten cubit/view/mixin ile refactor edildi. Kalanlar eski tek-dosya halinde.
+- [ ] Splash Page
+- [ ] Flight List Page
+- [ ] Flight Detail Page
+- [ ] Cart Page
+- [ ] Profile Page
+
 ---
-**Son Güncelleme:** v3 tamamlandı
-**Toplam Planlanan Bölüm:** 20
+**Son Güncelleme:** v10 yayınlandı (Navigation - go_router)
+**Sıradaki Bölüm:** v11 - Cache Manager

@@ -8,6 +8,7 @@ targets:
             - lib/feature/**/*_model.dart
             - lib/feature/**/*_response_model.dart
             - lib/product/network/error_model.dart
+            - lib/product/cache/model/*.dart
         options:
           explicit_to_json: true
           include_if_null: false

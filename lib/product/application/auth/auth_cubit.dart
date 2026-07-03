@@ -1,39 +1,49 @@
+import 'package:cache_manager/cache_manager.dart';
 import 'package:flight_booking/product/application/auth/auth_state.dart';
+import 'package:flight_booking/product/cache/model/auth_session_cache_model.dart';
+import 'package:flight_booking/product/cache/product_cache_keys.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._network) : super(const AuthState.unauthenticated());
+  AuthCubit(this._network, this._cache, this._fallback)
+      : super(const AuthState.unauthenticated());
 
   final IProductNetworkManager _network;
-
-  /// TODO: Will be refactored to use secure storage in the future for better security.
-  static const _kToken = 'user_token';
-  static const _kEmail = 'user_email';
-  static const _kName = 'user_name';
-  static const _kUserId = 'user_id';
+  final ICacheManager _cache;
+  final IFallbackStore _fallback;
 
   Future<void> restoreSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(_kToken);
-    final email = prefs.getString(_kEmail);
-
-    if (token == null || token.isEmpty || email == null) {
-      emit(const AuthState.unauthenticated());
+    // Primary: the whole session model from the cache (JSON in Hive).
+    final session = _cache.readModel<AuthSessionCacheModel>(
+      ProductCacheKeys.session,
+      fromJson: AuthSessionCacheModel.fromJson,
+    );
+    if (session != null && session.token.isNotEmpty) {
+      _network.setAuthToken(session.token);
+      emit(
+        AuthState(
+          isLoggedIn: true,
+          token: session.token,
+          email: session.email,
+          name: session.name,
+          userId: session.userId,
+        ),
+      );
       return;
     }
 
-    _network.setAuthToken(token);
-    emit(
-      AuthState(
-        isLoggedIn: true,
-        token: token,
-        email: email,
-        name: prefs.getString(_kName),
-        userId: prefs.getInt(_kUserId),
-      ),
-    );
+    // Fallback: Hive lost the session but the token survived in the
+    // standalone store — restore a token-only session and let the app refresh
+    // the profile from the server.
+    final token = _fallback.read(FallbackKeys.token);
+    if (token != null && token.isNotEmpty) {
+      _network.setAuthToken(token);
+      emit(AuthState(isLoggedIn: true, token: token));
+      return;
+    }
+
+    emit(const AuthState.unauthenticated());
   }
 
   Future<void> setSession({
@@ -42,12 +52,17 @@ final class AuthCubit extends Cubit<AuthState> {
     required String name,
     required int userId,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
     await Future.wait([
-      prefs.setString(_kToken, token),
-      prefs.setString(_kEmail, email),
-      prefs.setString(_kName, name),
-      prefs.setInt(_kUserId, userId),
+      _cache.writeModel(
+        ProductCacheKeys.session,
+        AuthSessionCacheModel(
+          token: token,
+          email: email,
+          name: name,
+          userId: userId,
+        ),
+      ),
+      _fallback.write(FallbackKeys.token, token),
     ]);
     _network.setAuthToken(token);
     emit(
@@ -63,12 +78,9 @@ final class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     if (!state.isLoggedIn) return;
-    final prefs = await SharedPreferences.getInstance();
     await Future.wait([
-      prefs.remove(_kToken),
-      prefs.remove(_kEmail),
-      prefs.remove(_kName),
-      prefs.remove(_kUserId),
+      _cache.remove(ProductCacheKeys.session),
+      _fallback.remove(FallbackKeys.token),
     ]);
     _network.clearAuthToken();
     emit(const AuthState.unauthenticated());
