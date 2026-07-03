@@ -1,5 +1,7 @@
+import 'package:cache_manager/cache_manager.dart';
 import 'package:flight_booking/product/application/application_cubit.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
+import 'package:flight_booking/product/cache/product_cache.dart';
 import 'package:flight_booking/product/navigation/app_router.dart';
 import 'package:flight_booking/product/network/interceptor/auth_interceptor.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
@@ -27,6 +29,12 @@ final class ProductContainer {
     }
 
     _getIt
+      ..registerLazySingleton<ICacheManager>(
+        () => ProductCache.instance.manager,
+      )
+      ..registerLazySingleton<IFallbackStore>(
+        () => ProductCache.instance.fallback,
+      )
       ..registerLazySingleton<IProductNetworkManager>(
         () => ProductNetworkManager.instance,
       )
@@ -38,7 +46,11 @@ final class ProductContainer {
       )
       ..registerLazySingleton<ApplicationCubit>(ApplicationCubit.new)
       ..registerLazySingleton<AuthCubit>(
-        () => AuthCubit(_getIt<IProductNetworkManager>()),
+        () => AuthCubit(
+          _getIt<IProductNetworkManager>(),
+          _getIt<ICacheManager>(),
+          _getIt<IFallbackStore>(),
+        ),
       )
       ..registerLazySingleton<AppRouter>(
         () => AppRouter(_getIt<AuthCubit>()),

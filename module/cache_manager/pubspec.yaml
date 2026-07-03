@@ -1,0 +1,29 @@
+name: cache_manager
+description: "Strategy-based cache manager (Hive primary + SharedPreferences fallback) for the flight_booking app."
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Primary cache backend
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
+
+  # Fallback cache backend (kritik anahtarlar için)
+  shared_preferences: ^2.2.2
+
+  # Value equality
+  equatable: ^2.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.0.0
+
+flutter:
