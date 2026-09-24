@@ -17,7 +17,7 @@ class MasterflutterSkill < Formula
   url "https://github.com/VB10/flight_booking.git",
       using:    :git,
       tag:      "skills-v0.1.0",
-      revision: "0000000000000000000000000000000000000000"
+      revision: "b7f3c685e55e9498789de790f360e542f600411c"
   # Tag 'skills-v' prefix'li oldugu icin surum acikca belirtilir.
   version "0.1.0"
 
