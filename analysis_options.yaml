@@ -13,6 +13,13 @@ analyzer:
     - test/.test_coverage.dart
     - assets/translations/**
     - backend/**
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
     
   errors:
     missing_return: error

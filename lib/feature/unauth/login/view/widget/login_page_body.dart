@@ -74,10 +74,12 @@ class _LoginTestAccountButtonSectionState
               ),
               label: ProductText.labelLarge(
                 context,
-                expanded ? 'Test bilgisini gizle' : 'Test hesabını göster',
+                expanded
+                    ? LocaleKeys.login_hide_test_account.translate
+                    : LocaleKeys.login_show_test_account.translate,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: context.colorScheme.primary,
-                    ),
+                  color: context.colorScheme.primary,
+                ),
               ),
             ),
             if (expanded) ...[
@@ -119,8 +121,7 @@ final class _LoginLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      'assets/undraw_aircraft_usu4.svg',
+    return Assets.icon.svg.icAircraft.svg(
       width: _logoSize,
       height: _logoSize,
     );
@@ -138,7 +139,7 @@ final class _LoginEmailField extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        labelText: 'Email',
+        labelText: LocaleKeys.login_email.translate,
         border: const OutlineInputBorder(),
         prefixIcon: Icon(
           Icons.email,
@@ -183,14 +184,16 @@ class _LoginPasswordFieldState extends State<_LoginPasswordField> {
           controller: widget.controller,
           obscureText: obscure,
           decoration: InputDecoration(
-            labelText: 'Password',
+            labelText: LocaleKeys.login_password.translate,
             border: const OutlineInputBorder(),
             prefixIcon: Icon(
               Icons.lock,
               color: context.colorScheme.primary,
             ),
             suffixIcon: IconButton(
-              tooltip: obscure ? 'Göster' : 'Gizle',
+              tooltip: obscure
+                  ? LocaleKeys.login_show_password.translate
+                  : LocaleKeys.login_hide_password.translate,
               icon: Icon(
                 obscure
                     ? Icons.visibility_outlined
@@ -252,7 +255,7 @@ final class _LoginButton extends StatelessWidget {
           child: Center(
             child: ProductText.bodyMedium(
               context,
-              'Login',
+              LocaleKeys.login_submit.translate,
               color: context.colorScheme.onPrimary,
             ),
           ),

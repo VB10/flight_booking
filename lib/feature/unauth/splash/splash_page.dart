@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
+import 'package:flight_booking/product/gen/assets.gen.dart';
+import 'package:flight_booking/product/gen/locale_keys.g.dart';
+import 'package:flight_booking/product/localization/localization_extension.dart';
 import 'package:flight_booking/product/navigation/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -44,8 +46,7 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(
-              'assets/animation/lottie/lottie_loading.json',
+            Assets.animation.lottie.lottieLoading.lottie(
               width: 200,
               height: 200,
               fit: BoxFit.contain,
@@ -53,7 +54,7 @@ class _SplashPageState extends State<SplashPage> {
             const SizedBox(height: AppSizes.spacingXl),
             ProductText.h2(
               context,
-              'Flight Booking',
+              LocaleKeys.general_app_name.translate,
               style: context.appTextTheme.headlineLarge?.copyWith(
                 color: colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
@@ -62,7 +63,7 @@ class _SplashPageState extends State<SplashPage> {
             const SizedBox(height: AppSizes.spacingL),
             ProductText.bodyLarge(
               context,
-              'Uçak Bileti Rezervasyon Uygulaması',
+              LocaleKeys.general_app_tagline.translate,
               style: context.appTextTheme.bodyLarge?.copyWith(
                 color: colorScheme.onPrimary.withOpacity(0.9),
               ),

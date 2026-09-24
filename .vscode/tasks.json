@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Codegen: all",
+      "detail": "LocaleKeys + assets/fonts + models + routes",
+      "type": "shell",
+      "command": "./scripts/generate.sh",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Codegen: watch",
+      "detail": "build_runner watch (regenerate on save)",
+      "type": "shell",
+      "command": "./scripts/generate.sh --watch",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Codegen: localization only",
+      "detail": "Regenerate LocaleKeys after editing a translation JSON",
+      "type": "shell",
+      "command": "./scripts/generate.sh --localization",
+      "problemMatcher": []
+    },
+    {
+      "label": "Codegen: clean build",
+      "detail": "Clean generated output, then generate everything",
+      "type": "shell",
+      "command": "./scripts/generate.sh --clean",
+      "problemMatcher": []
+    }
+  ]
+}

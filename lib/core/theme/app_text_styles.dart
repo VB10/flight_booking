@@ -1,9 +1,11 @@
+import 'package:flight_booking/product/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
 final class AppTextStyles {
   AppTextStyles._();
 
-  static const String _fontFamily = 'Roboto';
+  /// Generated from `pubspec.yaml` fonts (see ./scripts/generate.sh).
+  static const String _fontFamily = FontFamily.roboto;
 
   static TextStyle get displayLarge => const TextStyle(
         fontFamily: _fontFamily,

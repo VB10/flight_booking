@@ -31,7 +31,7 @@ dependencies:
 
   # view-util
   shimmer: ^3.0.0
-  lottie: ^2.7.0
+  lottie: ^3.3.1
 
   # native-plugin
   package_info_plus: ^4.2.0
@@ -45,6 +45,10 @@ dependencies:
   # Navigation
   go_router: ^17.2.2
 
+  # Localization (wrapped by ProductLocalization — pages never import it)
+  easy_localization: ^3.0.8
+  easy_logger: ^0.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -55,32 +59,85 @@ dev_dependencies:
   json_serializable: ^6.9.0
   go_router_builder: ^4.3.0
 
+  # Asset & font codegen -> lib/product/gen/
+  flutter_gen_runner: ^5.13.0+1
+
 # dependency_overrides:
 #   flutter_lints: ^5.1.0
 
-  
+# Asset/font code generation. Run: ./scripts/generate.sh
+flutter_gen:
+  output: lib/product/gen/
+  line_length: 80
+  integrations:
+    flutter_svg: true
+    lottie: true
+  assets:
+    enabled: true
+    outputs:
+      class_name: Assets
+      style: dot-delimiter
+  fonts:
+    enabled: true
+    outputs:
+      class_name: FontFamily
+
 flutter:
 
   uses-material-design: true
 
-  # Assets
+  # Assets — flutter_gen turns these into `Assets.*` (lib/product/gen/assets.gen.dart)
   assets:
     - assets/animation/lottie/
     - assets/icon/svg/
-  #   - assets/icon/png
+    - assets/translations/
 
-  # Fonts
+  # Fonts — flutter_gen turns these into `FontFamily.roboto`
   fonts:
     - family: Roboto
       fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
-        - asset: assets/fonts/Roboto-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Roboto-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Roboto-Light.ttf
-          weight: 300
         - asset: assets/fonts/Roboto-Thin.ttf
           weight: 100
+        - asset: assets/fonts/Roboto-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/Roboto-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Roboto-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/Roboto-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/Roboto-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Roboto-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Roboto-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/Roboto-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Roboto-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
         - asset: assets/fonts/Roboto-Black.ttf
           weight: 900
+        - asset: assets/fonts/Roboto-BlackItalic.ttf
+          weight: 900
+          style: italic

@@ -1,6 +1,8 @@
 import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
+import 'package:flight_booking/product/gen/locale_keys.g.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/localization/localization_extension.dart';
 import 'package:flight_booking/product/service/impl/flight_service_impl.dart';
 import 'package:flutter/material.dart';
 
@@ -63,7 +65,10 @@ class _CartPageState extends State<CartPage> {
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: ProductText.bodyMedium(context, 'Bilet sepetten çıkarıldı!'),
+        content: ProductText.bodyMedium(
+          context,
+          LocaleKeys.cart_removed_snackbar.translate,
+        ),
         backgroundColor: context.appTheme.warning,
       ),
     );
@@ -73,7 +78,10 @@ class _CartPageState extends State<CartPage> {
     if (widget.cartItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: ProductText.bodyMedium(context, 'Sepetiniz boş!'),
+          content: ProductText.bodyMedium(
+            context,
+            LocaleKeys.cart_checkout_empty_warning.translate,
+          ),
           backgroundColor: context.colorScheme.error,
         ),
       );
@@ -84,22 +92,33 @@ class _CartPageState extends State<CartPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: ProductText.titleLarge(context, 'Ödeme Onayı'),
+          title: ProductText.titleLarge(
+            context,
+            LocaleKeys.cart_checkout_confirm_title.translate,
+          ),
           content: ProductText.bodyMedium(
             context,
-            'Toplam ${getTotalPrice()} ₺ ödeme yapmak istediğinizden emin misiniz?',
+            LocaleKeys.cart_checkout_confirm_message.translateArgs([
+              getTotalPrice().toString(),
+            ]),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: ProductText.labelLarge(context, 'İptal'),
+              child: ProductText.labelLarge(
+                context,
+                LocaleKeys.general_cancel.translate,
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _processCheckout();
               },
-              child: ProductText.labelLarge(context, 'Onayla'),
+              child: ProductText.labelLarge(
+                context,
+                LocaleKeys.cart_confirm.translate,
+              ),
             ),
           ],
         );
@@ -118,7 +137,10 @@ class _CartPageState extends State<CartPage> {
             children: [
               const CircularProgressIndicator(),
               const SizedBox(width: AppSizes.spacingL),
-              ProductText.bodyMedium(context, 'Ödeme işlemi yapılıyor...'),
+              ProductText.bodyMedium(
+                context,
+                LocaleKeys.cart_processing_payment.translate,
+              ),
             ],
           ),
         );
@@ -168,7 +190,7 @@ class _CartPageState extends State<CartPage> {
             SnackBar(
               content: ProductText.bodyMedium(
                 context,
-                error.model?.message ?? 'Bağlantı hatası',
+                error.model?.message ?? LocaleKeys.cart_connection_error.translate,
               ),
               backgroundColor: context.colorScheme.error,
             ),
@@ -260,7 +282,7 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: ProductText.titleLarge(context, 'Sepetim'),
+        title: ProductText.titleLarge(context, LocaleKeys.cart_title.translate),
         backgroundColor: context.colorScheme.primary,
       ),
       body: widget.cartItems.isEmpty
@@ -276,7 +298,7 @@ class _CartPageState extends State<CartPage> {
                   const SizedBox(height: AppSizes.spacingL),
                   ProductText.titleMedium(
                     context,
-                    'Sepetiniz boş',
+                    LocaleKeys.cart_empty.translate,
                     style: context.appTextTheme.titleMedium?.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
                     ),
@@ -322,7 +344,9 @@ class _CartPageState extends State<CartPage> {
                               ),
                               ProductText.labelSmall(
                                 context,
-                                'Tarih: ${flight['date']}',
+                                LocaleKeys.flight_date.translateArgs([
+                                  flight['date']?.toString() ?? '',
+                                ]),
                               ),
                             ],
                           ),
@@ -331,7 +355,9 @@ class _CartPageState extends State<CartPage> {
                             children: [
                               ProductText.titleMedium(
                                 context,
-                                '${flight['price']} ₺',
+                                LocaleKeys.flight_price.translateArgs([
+                                  flight['price']?.toString() ?? '0',
+                                ]),
                                 style: context.appTextTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: appTheme.success,
@@ -367,14 +393,16 @@ class _CartPageState extends State<CartPage> {
                         children: [
                           ProductText.titleLarge(
                             context,
-                            'Toplam:',
+                            LocaleKeys.cart_total_label.translate,
                             style: context.appTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           ProductText.titleLarge(
                             context,
-                            '${getTotalPrice()} ₺',
+                            LocaleKeys.flight_price.translateArgs([
+                              getTotalPrice().toString(),
+                            ]),
                             style: context.appTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: context.appTheme.success,
@@ -393,7 +421,10 @@ class _CartPageState extends State<CartPage> {
                             AppSizes.buttonHeightMedium,
                           ),
                         ),
-                        child: ProductText.labelLarge(context, 'Ödeme Yap'),
+                        child: ProductText.labelLarge(
+                          context,
+                          LocaleKeys.cart_pay_button.translate,
+                        ),
                       ),
                     ],
                   ),

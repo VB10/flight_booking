@@ -7,13 +7,15 @@ import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/application/application_cubit.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/container/product_container.dart';
+import 'package:flight_booking/product/gen/assets.gen.dart';
+import 'package:flight_booking/product/gen/locale_keys.g.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/localization/localization_extension.dart';
 import 'package:flight_booking/product/navigation/app_routes.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -126,14 +128,16 @@ final class _FlightListBodyState extends State<_FlightListBody> {
             children: [
               Icon(Icons.system_update, color: dialogContext.appTheme.warning),
               const SizedBox(width: AppSizes.spacingS),
-              ProductText.titleLarge(dialogContext, 'Güncelleme Gerekli'),
+              ProductText.titleLarge(
+                dialogContext,
+                LocaleKeys.flight_update_required_title.translate,
+              ),
             ],
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(
-                'assets/undraw_connected-world_anke.svg',
+              Assets.icon.svg.icConnectedWorld.svg(
                 width: 100,
                 height: 100,
               ),
@@ -141,7 +145,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
               ProductText.bodyLarge(
                 dialogContext,
                 message.isEmpty
-                    ? 'Yeni versiyon mevcut! Lütfen uygulamayı güncelleyin.'
+                    ? LocaleKeys.flight_update_required_message.translate
                     : message,
                 textAlign: TextAlign.center,
               ),
@@ -153,7 +157,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                 onPressed: () => Navigator.of(dialogContext).pop(),
                 child: ProductText.bodyMedium(
                   dialogContext,
-                  'Daha Sonra',
+                  LocaleKeys.general_later.translate,
                   color: dialogContext.colorScheme.onSurfaceVariant,
                 ),
               ),
@@ -170,7 +174,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
               },
               child: ProductText.labelLarge(
                 dialogContext,
-                'Güncelle',
+                LocaleKeys.flight_update.translate,
                 style: dialogContext.appTextTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -193,7 +197,13 @@ final class _FlightListBodyState extends State<_FlightListBody> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: ProductText.bodyMedium(context, 'Bilet sepete eklendi!'),
+        content: ProductText.bodyMedium(
+          context,
+          // Plural key: the language picks the branch, we only pass the count.
+          LocaleKeys.flight_added_to_cart.translatePlural(
+            _cartNotifier.value.length,
+          ),
+        ),
         backgroundColor: context.appTheme.success,
       ),
     );
@@ -399,17 +409,27 @@ final class _FlightListBodyState extends State<_FlightListBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: ProductText.titleMedium(context, 'Uçak Biletleri'),
+        title: ProductText.titleMedium(
+          context,
+          LocaleKeys.flight_list_title.translate,
+        ),
         backgroundColor: context.colorScheme.primary,
         actions: [
           IconButton(
-            tooltip: 'Tema',
+            tooltip: LocaleKeys.flight_theme_tooltip.translate,
             icon: Icon(
               Theme.of(context).brightness == Brightness.dark
                   ? Icons.light_mode
                   : Icons.dark_mode,
             ),
             onPressed: () => context.read<ApplicationCubit>().toggleTheme(),
+          ),
+          IconButton(
+            tooltip: LocaleKeys.flight_language_tooltip.translate,
+            icon: const Icon(Icons.translate),
+            onPressed: () => unawaited(
+              context.read<ApplicationCubit>().toggleLocale(context),
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.person),
@@ -422,15 +442,21 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                 context: context,
                 builder: (dialogContext) {
                   return AlertDialog(
-                    title: ProductText.titleLarge(dialogContext, 'Çıkış Yap'),
+                    title: ProductText.titleLarge(
+                      dialogContext,
+                      LocaleKeys.flight_logout.translate,
+                    ),
                     content: ProductText.bodyMedium(
                       dialogContext,
-                      'Çıkış yapmak istediğinizden emin misiniz?',
+                      LocaleKeys.flight_logout_confirm.translate,
                     ),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(dialogContext).pop(),
-                        child: ProductText.labelLarge(dialogContext, 'İptal'),
+                        child: ProductText.labelLarge(
+                          dialogContext,
+                          LocaleKeys.general_cancel.translate,
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -439,7 +465,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                         },
                         child: ProductText.labelLarge(
                           dialogContext,
-                          'Çıkış Yap',
+                          LocaleKeys.flight_logout.translate,
                         ),
                       ),
                     ],
@@ -498,15 +524,16 @@ final class _FlightListBodyState extends State<_FlightListBody> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'assets/undraw_fast-loading_ae60.svg',
+                  Assets.icon.svg.icFastLoading.svg(
                     width: 150,
                     height: 150,
                   ),
                   const SizedBox(height: AppSizes.spacingXl),
                   ProductText.bodyLarge(
                     context,
-                    'Hata: ${listState.errorMessage}',
+                    LocaleKeys.general_error_message.translateArgs([
+                      listState.errorMessage,
+                    ]),
                     style: context.appTextTheme.bodyLarge?.copyWith(
                       color: context.colorScheme.error,
                     ),
@@ -519,7 +546,10 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                       backgroundColor: context.colorScheme.primary,
                       foregroundColor: context.colorScheme.onPrimary,
                     ),
-                    child: ProductText.labelLarge(context, 'Tekrar Dene'),
+                    child: ProductText.labelLarge(
+                      context,
+                      LocaleKeys.general_retry.translate,
+                    ),
                   ),
                 ],
               ),
@@ -555,7 +585,9 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                           ),
                           ProductText.titleLarge(
                             context,
-                            '${flight.price} ₺',
+                            LocaleKeys.flight_price.translateArgs([
+                              flight.price.toString(),
+                            ]),
                             style: context.appTextTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: appTheme.success,
@@ -615,14 +647,18 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                         children: [
                           ProductText.labelSmall(
                             context,
-                            'Süre: ${flight.duration}',
+                            LocaleKeys.flight_duration.translateArgs([
+                              flight.duration,
+                            ]),
                             style: context.appTextTheme.labelSmall?.copyWith(
                               color: scheme.onSurfaceVariant,
                             ),
                           ),
                           ProductText.labelSmall(
                             context,
-                            'Tarih: ${flight.date}',
+                            LocaleKeys.flight_date.translateArgs([
+                              flight.date,
+                            ]),
                             style: context.appTextTheme.labelSmall?.copyWith(
                               color: scheme.onSurfaceVariant,
                             ),
@@ -644,7 +680,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                               ),
                               child: ProductText.labelLarge(
                                 context,
-                                'Detaylar',
+                                LocaleKeys.flight_details.translate,
                               ),
                             ),
                           ),
@@ -658,7 +694,7 @@ final class _FlightListBodyState extends State<_FlightListBody> {
                               ),
                               child: ProductText.labelLarge(
                                 context,
-                                'Sepete Ekle',
+                                LocaleKeys.flight_add_to_cart.translate,
                               ),
                             ),
                           ),

@@ -5,10 +5,12 @@ import 'package:flight_booking/feature/unauth/login/cubit/login_cubit.dart';
 import 'package:flight_booking/feature/unauth/login/cubit/login_state.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/container/product_container.dart';
+import 'package:flight_booking/product/gen/assets.gen.dart';
+import 'package:flight_booking/product/gen/locale_keys.g.dart';
+import 'package:flight_booking/product/localization/localization_extension.dart';
 import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 part 'view/login_page_mixin.dart';
 part 'view/widget/_login_test_account_info.dart';
@@ -29,7 +31,7 @@ final class _LoginPageState extends State<LoginPage> with LoginPageMixin {
       child: Scaffold(
         backgroundColor: context.colorScheme.surface,
         appBar: AppBar(
-          title: ProductText.h3(context, 'Flight Booking'),
+          title: ProductText.h3(context, LocaleKeys.general_app_name.translate),
           centerTitle: true,
           backgroundColor: context.colorScheme.primary,
         ),

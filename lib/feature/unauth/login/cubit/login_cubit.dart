@@ -1,7 +1,9 @@
 import 'package:flight_booking/feature/unauth/login/cubit/login_state.dart';
 import 'package:flight_booking/feature/unauth/login/model/login_response_model.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
+import 'package:flight_booking/product/gen/locale_keys.g.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
+import 'package:flight_booking/product/localization/localization_extension.dart';
 import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +35,9 @@ final class LoginCubit extends Cubit<LoginState> {
       },
       onError: (error) {
         failureMessage =
-            error.model?.message ?? error.description ?? 'Giriş başarısız';
+            error.model?.message ??
+            error.description ??
+            LocaleKeys.login_failed.translate;
       },
     );
 
@@ -53,7 +57,7 @@ final class LoginCubit extends Cubit<LoginState> {
           isLoading: false,
 
           ///TODO: Localization
-          errorMessage: failureMessage ?? 'Giriş başarısız',
+          errorMessage: failureMessage ?? LocaleKeys.login_failed.translate,
         ),
       );
     }

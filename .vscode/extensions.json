@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "dart-code.dart-code",
+    "dart-code.flutter",
+    "felixangelov.bloc",
+    "anthropic.claude-code",
+    "usernamehw.errorlens",
+    "eamodio.gitlens",
+    "editorconfig.editorconfig",
+    "jeroen-meijer.pubspec-assist",
+    "esskar.vscode-flutter-i18n-json",
+    "oderwat.indent-rainbow",
+    "shardulm94.trailing-spaces"
+  ]
+}
