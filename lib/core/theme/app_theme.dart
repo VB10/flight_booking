@@ -1,6 +1,7 @@
 import 'package:flight_booking/core/theme/app_color_scheme.dart';
 import 'package:flight_booking/core/theme/app_text_styles.dart';
 import 'package:flight_booking/core/theme/app_theme_extension.dart';
+import 'package:flight_booking/product/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
 final class AppTheme {
@@ -15,7 +16,7 @@ final class AppTheme {
         bodyColor: scheme.onSurface,
         displayColor: scheme.onSurface,
       ),
-      fontFamily: 'Roboto',
+      fontFamily: FontFamily.roboto,
       extensions: <ThemeExtension<dynamic>>[
         AppThemeExtension.light,
       ],
@@ -31,7 +32,7 @@ final class AppTheme {
         bodyColor: scheme.onSurface,
         displayColor: scheme.onSurface,
       ),
-      fontFamily: 'Roboto',
+      fontFamily: FontFamily.roboto,
       extensions: <ThemeExtension<dynamic>>[
         AppThemeExtension.dark,
       ],

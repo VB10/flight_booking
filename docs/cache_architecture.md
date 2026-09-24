@@ -114,7 +114,7 @@ sequenceDiagram
 | DI | `lib/product/container/product_container.dart` |
 | Bootstrap | `lib/product/initialize/app_initializer.dart` |
 | Codegen script | `scripts/generate_models.sh` |
-| Skill/command | `.claude/skills/cache-setup`, `.claude/skills/cache-add-model` |
+| Skill/command | `.claude/skills/masterflutter-cache-setup`, `.claude/skills/masterflutter-cache-add-model` |
 
 ---
 
@@ -162,7 +162,7 @@ sequenceDiagram
 
 **Otomasyon / DX (1 dk)**
 - `scripts/generate_models.sh` demosu (json_serializable).
-- `/cache-setup` ve `/cache-add-model` skill'leri: mimariyi tek komutla üretme +
+- `/masterflutter-cache-setup` ve `/masterflutter-cache-add-model` skill'leri: mimariyi tek komutla üretme +
   yeni DTO besleme.
 
 **Kapanış (30 sn)**

@@ -1,0 +1,265 @@
+name: Release
+
+# main'e skill iceren bir PR merge edildiginde yeni surumu otomatik cikarir:
+#   1. Conventional commit'lerden sonraki surumu hesaplar
+#   2. skills-vX.Y.Z tag'ini olusturup push eder
+#   3. Formula'daki version + tag + revision alanlarini gunceller
+#   4. Formula degisikligini main'e commit'ler
+#   5. GitHub Release olusturur (+ opsiyonel Slack bildirimi)
+#
+# Tag onadi: uygulamanin kendi surum tag'leri (v1.0.0) ile karismamasi icin
+# skill paketi 'skills-v' prefix'i kullanir.
+#
+# Dongu korumasi: paths filtresi sadece paketlenen dosyalari dinler, Formula/**
+# ve README disaridadir — yani bu workflow'un kendi commit'i onu tekrar
+# tetiklemez. Ayrica GITHUB_TOKEN ile yapilan push'lar GitHub tarafindan zaten
+# yeni workflow tetiklemez.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.claude/skills/**'
+      - 'bin/masterflutter-skill'
+      - 'docs/prompt/**'
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Surum artisi'
+        type: choice
+        options: [auto, patch, minor, major]
+        default: auto
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  TAG_PREFIX: skills-v
+  FORMULA: Formula/masterflutter-skill.rb
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Git kimligi
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sonraki surumu hesapla
+        id: ver
+        env:
+          FORCED_BUMP: ${{ github.event.inputs.bump }}
+        run: |
+          set -euo pipefail
+
+          last="$(git tag --list "${TAG_PREFIX}*" --sort=-v:refname | head -1)"
+          if [ -z "$last" ]; then
+            echo "Hic ${TAG_PREFIX} tag'i yok, ${TAG_PREFIX}0.1.0 ile baslanacak."
+            next="${TAG_PREFIX}0.1.0"
+            plain="0.1.0"
+            bump="initial"
+          else
+            range="${last}..HEAD"
+
+            if [ -z "$(git log --format='%H' "$range")" ]; then
+              echo "::notice::$last sonrasi yeni commit yok — surum cikarilmayacak."
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            log="$(git log --format='%s%n%b' "$range")"
+
+            bump="${FORCED_BUMP:-auto}"
+            if [ "$bump" = "auto" ] || [ -z "$bump" ]; then
+              if printf '%s\n' "$log" | grep -qE '^[a-z]+(\([^)]*\))?!:' \
+                 || printf '%s\n' "$log" | grep -q '^BREAKING CHANGE'; then
+                bump="major"
+              elif printf '%s\n' "$log" | grep -qE '^feat(\([^)]*\))?:'; then
+                bump="minor"
+              else
+                bump="patch"
+              fi
+            fi
+
+            IFS=. read -r ma mi pa <<< "${last#"$TAG_PREFIX"}"
+            case "$bump" in
+              major) ma=$((ma + 1)); mi=0; pa=0 ;;
+              minor) mi=$((mi + 1)); pa=0 ;;
+              patch) pa=$((pa + 1)) ;;
+              *) echo "::error::Bilinmeyen bump: $bump"; exit 1 ;;
+            esac
+            plain="${ma}.${mi}.${pa}"
+            next="${TAG_PREFIX}${plain}"
+          fi
+
+          if git rev-parse -q --verify "refs/tags/$next" >/dev/null; then
+            echo "::error::$next tag'i zaten var."
+            exit 1
+          fi
+
+          echo "last=$last"   >> "$GITHUB_OUTPUT"
+          echo "next=$next"   >> "$GITHUB_OUTPUT"
+          echo "plain=$plain" >> "$GITHUB_OUTPUT"
+          echo "bump=$bump"   >> "$GITHUB_OUTPUT"
+          echo "skip=false"   >> "$GITHUB_OUTPUT"
+          echo "### Surum: \`${last:-yok}\` → \`$next\` (_${bump}_)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Tag olustur ve push et
+        if: steps.ver.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          git tag -a "${{ steps.ver.outputs.next }}" -m "masterflutter-skill ${{ steps.ver.outputs.next }}"
+          git push origin "${{ steps.ver.outputs.next }}"
+
+      - name: Formula'yi yeni surume sabitle
+        if: steps.ver.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          next="${{ steps.ver.outputs.next }}"
+          plain="${{ steps.ver.outputs.plain }}"
+          sha="$GITHUB_SHA"
+
+          sed -i -E \
+            -e "s|^([[:space:]]*version[[:space:]]+)\"[0-9]+\.[0-9]+\.[0-9]+\"|\1\"${plain}\"|" \
+            -e "s|(tag:[[:space:]]*)\"[^\"]*\"|\1\"${next}\"|" \
+            -e "s|(revision:[[:space:]]*)\"[0-9a-f]{40}\"|\1\"${sha}\"|" \
+            "$FORMULA"
+
+          # Ucu de gercekten yazildi mi?
+          grep -q "version \"${plain}\""       "$FORMULA" || { echo "::error::version yazilamadi"; exit 1; }
+          grep -q "tag:.*\"${next}\""          "$FORMULA" || { echo "::error::tag yazilamadi"; exit 1; }
+          grep -q "revision:.*\"${sha}\""      "$FORMULA" || { echo "::error::revision yazilamadi"; exit 1; }
+
+          ruby -c "$FORMULA"
+
+      - name: Formula degisikligini main'e push et
+        if: steps.ver.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          next="${{ steps.ver.outputs.next }}"
+
+          if git diff --quiet -- "$FORMULA"; then
+            echo "::notice::Formula zaten guncel."
+            exit 0
+          fi
+
+          git add "$FORMULA"
+          git commit -m "chore(brew): pin formula to ${next} [skip ci]"
+
+          # Arada baska bir merge girmis olabilir.
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            echo "Push denemesi $i basarisiz, tekrar deneniyor..."
+            sleep 5
+          done
+          echo "::error::Formula push edilemedi."
+          exit 1
+
+      - name: GitHub Release olustur
+        if: steps.ver.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          next="${{ steps.ver.outputs.next }}"
+          last="${{ steps.ver.outputs.last }}"
+
+          {
+            echo "## Kurulum"
+            echo
+            echo '```bash'
+            echo "brew update && brew upgrade masterflutter-skill && masterflutter-skill init"
+            echo '```'
+            echo
+            echo "Ardindan Claude Code'u yeniden baslat."
+            echo "Flutter projesi basina: \`cd <proje> && masterflutter-skill project\`"
+          } > notes.md
+
+          if [ -n "$last" ]; then
+            gh release create "$next" --title "masterflutter-skill $next" \
+              --notes-file notes.md --generate-notes --notes-start-tag "$last"
+          else
+            gh release create "$next" --title "masterflutter-skill $next" --notes-file notes.md
+          fi
+
+      - name: Slack'e bildir
+        if: steps.ver.outputs.skip != 'true'
+        env:
+          WEBHOOK: ${{ secrets.MASTERFLUTTER_RELEASE_WEBHOOK }}
+        run: |
+          set -euo pipefail
+
+          # Secret tanimli degilse sessizce atlanir — workflow patlamaz.
+          if [ -z "${WEBHOOK:-}" ]; then
+            echo "::notice::MASTERFLUTTER_RELEASE_WEBHOOK tanimli degil, Slack bildirimi atlandi."
+            exit 0
+          fi
+
+          next="${{ steps.ver.outputs.next }}"
+          last="${{ steps.ver.outputs.last }}"
+          bump="${{ steps.ver.outputs.bump }}"
+          repo="${{ github.repository }}"
+
+          if [ -n "$last" ]; then
+            changes="$(git log --no-merges --format='• %s' "${last}..${next}" | head -8)"
+            count="$(git log --no-merges --format='%H' "${last}..${next}" | wc -l | tr -d ' ')"
+          else
+            changes="• ilk surum"
+            count="1"
+          fi
+          [ -n "$changes" ] || changes="• (degisiklik ozeti yok)"
+
+          skills="$(find .claude/skills -mindepth 1 -maxdepth 1 -type d -name 'masterflutter-*' | wc -l | tr -d ' ')"
+          prompts="$(find docs/prompt -name '*.md' | wc -l | tr -d ' ')"
+
+          payload="$(jq -n \
+            --arg next    "$next" \
+            --arg bump    "$bump" \
+            --arg count   "$count" \
+            --arg changes "$changes" \
+            --arg skills  "$skills" \
+            --arg prompts "$prompts" \
+            --arg url     "https://github.com/${repo}/releases/tag/${next}" \
+            '{
+              text: ("masterflutter-skill " + $next + " yayinda"),
+              blocks: [
+                { type: "header",
+                  text: { type: "plain_text", text: ("🍺 masterflutter-skill " + $next + " yayında"), emoji: true } },
+                { type: "section",
+                  fields: [
+                    { type: "mrkdwn", text: ("*Değişiklik*\n" + $count + " commit · _" + $bump + "_") },
+                    { type: "mrkdwn", text: ("*İçerik*\n" + $skills + " skill · " + $prompts + " prompt dosyası") }
+                  ] },
+                { type: "section",
+                  text: { type: "mrkdwn", text: $changes } },
+                { type: "section",
+                  text: { type: "mrkdwn", text: "*Güncellemek için:*\n```brew update && brew upgrade masterflutter-skill && masterflutter-skill init```\nArdından Claude Code’u yeniden başlat." } },
+                { type: "actions",
+                  elements: [
+                    { type: "button",
+                      text: { type: "plain_text", text: "Release notlarını aç", emoji: true },
+                      url: $url }
+                  ] }
+              ]
+            }')"
+
+          code="$(curl -sS -o /tmp/slack.out -w '%{http_code}' \
+            -X POST -H 'Content-Type: application/json' \
+            --data "$payload" "$WEBHOOK")"
+
+          if [ "$code" = "200" ]; then
+            echo "✓ Slack bildirimi gonderildi."
+          else
+            echo "::warning::Slack bildirimi basarisiz (HTTP $code): $(cat /tmp/slack.out)"
+          fi

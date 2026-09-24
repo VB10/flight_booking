@@ -1,0 +1,53 @@
+{
+  "general": {
+    "app_name": "Flight Booking",
+    "app_tagline": "Flight Ticket Booking App",
+    "cancel": "Cancel",
+    "retry": "Try Again",
+    "later": "Later",
+    "error_message": "Error: {}"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "show_password": "Show",
+    "hide_password": "Hide",
+    "show_test_account": "Show test account",
+    "hide_test_account": "Hide test account",
+    "test_account_info": "Test account: {email} / {password}",
+    "failed": "Login failed"
+  },
+  "flight": {
+    "list_title": "Flights",
+    "theme_tooltip": "Theme",
+    "language_tooltip": "Language",
+    "logout": "Log Out",
+    "logout_confirm": "Are you sure you want to log out?",
+    "added_to_cart": {
+      "one": "Ticket added. You have 1 ticket in your cart.",
+      "other": "Ticket added. You have {} tickets in your cart."
+    },
+    "details": "Details",
+    "add_to_cart": "Add to Cart",
+    "duration": "Duration: {}",
+    "date": "Date: {}",
+    "price": "{} ₺",
+    "update_required_title": "Update Required",
+    "update_required_message": "A new version is available! Please update the app.",
+    "update": "Update"
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty",
+    "removed_snackbar": "Ticket removed from cart!",
+    "checkout_empty_warning": "Your cart is empty!",
+    "checkout_confirm_title": "Payment Confirmation",
+    "checkout_confirm_message": "Are you sure you want to pay a total of {} ₺?",
+    "confirm": "Confirm",
+    "processing_payment": "Processing payment...",
+    "total_label": "Total:",
+    "pay_button": "Pay",
+    "connection_error": "Connection error"
+  }
+}

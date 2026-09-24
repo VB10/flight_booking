@@ -1,0 +1,225 @@
+#!/usr/bin/env bash
+#
+# masterflutter-skill — Masterclass skill'lerini Claude Code icin etkinlestirir.
+# managed-by: flight_booking (Flutter Refactoring Masterclass)
+#
+# Homebrew formula'si kurulum sirasinda @@PKGSHARE@@ ve @@VERSION@@
+# yer tutucularini gercek degerlerle degistirir. Repo icinden dogrudan
+# calistirildiginda yollar script konumundan cozulur.
+#
+# Paket iki parca tasir:
+#   1. .claude/skills/masterflutter-*  → skill'ler (Claude Code /<skill-adi>)
+#   2. docs/prompt/*                   → skillerin aksiyondan once okudugu spec'ler
+#
+set -euo pipefail
+
+PKGSHARE="@@PKGSHARE@@"
+VERSION="@@VERSION@@"
+if [[ "$PKGSHARE" == *"@@"* ]]; then
+  # Repo icinden calisiyoruz: kaynaklar repo yerlesimindedir.
+  REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  PKGSHARE="$REPO_ROOT"
+  VERSION="dev"
+  SRC_SKILLS="$REPO_ROOT/.claude/skills"
+  SRC_PROMPTS="$REPO_ROOT/docs/prompt"
+else
+  # Homebrew Cellar yerlesimi (bkz. Formula/masterflutter-skill.rb install bloku).
+  SRC_SKILLS="$PKGSHARE/skills"
+  SRC_PROMPTS="$PKGSHARE/prompt"
+fi
+
+CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+DEST_SKILLS="$CLAUDE_DIR/skills"
+DEST_PROMPTS="$CLAUDE_DIR/reference/masterflutter"
+STAMP="$DEST_SKILLS/.masterflutter-version"
+
+# Kaynak repo korumasi: bu dosya duruyorsa hedef dizin paketin kendi kaynagidir,
+# uzerine yazmak calisilan repoyu eski bir surumle ezer.
+SOURCE_MARKER=".claude/.masterflutter-source"
+
+c_reset=$'\033[0m'; c_grn=$'\033[32m'; c_ylw=$'\033[33m'; c_red=$'\033[31m'
+ok()   { printf "%s✓%s %s\n" "$c_grn" "$c_reset" "$*"; }
+warn() { printf "%s!%s %s\n" "$c_ylw" "$c_reset" "$*"; }
+err()  { printf "%s✗%s %s\n" "$c_red" "$c_reset" "$*" >&2; }
+
+usage() {
+  cat <<EOF
+masterflutter-skill $VERSION — Masterclass skill'lerini Claude Code icin etkinlestirir
+
+Kullanim:
+  masterflutter-skill init            Skill'leri $DEST_SKILLS
+                                      altina kopyalar (global, her projede gecerli)
+  masterflutter-skill project [dir]   Ayni paketi <dir>/.claude/skills altina kopyalar
+                                      (repoya commit edilebilir, prompt yollari calisir)
+  masterflutter-skill status [dir]    Global ve proje durumunu gosterir
+  masterflutter-skill remove          Kopyalanan masterflutter-* skill'lerini siler
+
+Iki kurulum modu:
+  1. init     → $DEST_SKILLS
+                Skill'ler her projede listelenir; skillerin okudugu prompt
+                spesifikasyonlari global fallback olarak $DEST_PROMPTS/prompt
+                altina iner.
+  2. project  → <dir>/.claude/skills + <dir>/docs/prompt
+                SKILL.md icindeki ../../../docs/prompt/... yollari boylece cozulur.
+
+Notlar:
+  Kaynak : $PKGSHARE
+  Global : $CLAUDE_DIR  (CLAUDE_CONFIG_DIR ile degistirilebilir)
+  Slash komut dosyasi yok — skill'ler Claude Code'da /<skill-adi> olarak cagrilir.
+EOF
+}
+
+# Dizin yoksa sessizce bos doner: 'set -e' + 'pipefail' altinda patlamayi engeller.
+skill_dirs_in() {
+  [[ -d "$1" ]] || return 0
+  find "$1" -mindepth 1 -maxdepth 1 -type d -name 'masterflutter-*' 2>/dev/null | sort
+}
+
+count_lines() {
+  local n; n="$(printf '%s' "$1" | grep -c . || true)"
+  printf '%s' "$n"
+}
+
+count_md_in() {
+  [[ -d "$1" ]] || { printf '0'; return 0; }
+  find "$1" -name '*.md' 2>/dev/null | wc -l | tr -d ' '
+}
+
+# copy_skills <skills-dest>
+copy_skills() {
+  local dest="$1" dirs count=0
+
+  dirs="$(skill_dirs_in "$SRC_SKILLS")"
+  [[ -n "$dirs" ]] || { err "Kaynakta masterflutter-* skill'i yok: $SRC_SKILLS"; exit 1; }
+
+  mkdir -p "$dest"
+  while IFS= read -r d; do
+    [[ -n "$d" ]] || continue
+    local name; name="$(basename "$d")"
+    rm -rf "${dest:?}/$name"
+    cp -R "$d" "$dest/$name"
+    ok "skill: $name"
+    count=$((count + 1))
+  done <<< "$dirs"
+  echo
+  ok "$count skill → $dest"
+}
+
+# copy_prompts <prompt-dest>  (kaynak prompt tasimiyorsa atlanir)
+copy_prompts() {
+  local dest="$1"
+  [[ -d "$SRC_PROMPTS" ]] || return 0
+  mkdir -p "$(dirname "$dest")"
+  rm -rf "${dest:?}"
+  cp -R "$SRC_PROMPTS" "$dest"
+  ok "$(count_md_in "$dest") prompt dosyasi → $dest"
+}
+
+cmd_init() {
+  [[ -d "$SRC_SKILLS" ]] || { err "Kaynak dizin bulunamadi: $SRC_SKILLS"; exit 1; }
+
+  copy_skills "$DEST_SKILLS"
+  printf '%s\n' "$VERSION" > "$STAMP"
+
+  # Skiller aksiyondan once docs/prompt/*.md spesifikasyonlarini proje-goreli
+  # yoldan okur. Global kurulumda o yol olmadigi icin buraya fallback kopya kalir.
+  copy_prompts "$DEST_PROMPTS/prompt"
+  [[ -d "$DEST_PROMPTS/prompt" ]] && printf '%s\n' "$VERSION" > "$DEST_PROMPTS/.masterflutter-prompt-version"
+
+  echo
+  warn "Etkinlesmesi icin Claude Code'u yeniden baslat."
+  warn "Flutter projesinde calisacaksan: cd <proje> && masterflutter-skill project"
+}
+
+cmd_project() {
+  local target="${1:-$PWD}"
+  [[ -d "$target" ]] || { err "Dizin bulunamadi: $target"; exit 1; }
+  target="$(cd "$target" && pwd)"
+
+  if [[ -f "$target/$SOURCE_MARKER" ]]; then
+    err "$target paketin kaynak reposu — uzerine yazilmayacak."
+    err "Kaynakta degisiklik yapip PR ac; dagitimi Release workflow ustlenir."
+    exit 1
+  fi
+
+  [[ -f "$target/pubspec.yaml" ]] || warn "pubspec.yaml yok — Flutter projesi olmayabilir."
+
+  copy_skills "$target/.claude/skills"
+  printf '%s\n' "$VERSION" > "$target/.claude/.masterflutter-version"
+  copy_prompts "$target/docs/prompt"
+
+  echo
+  warn "Repoya girmesini istemiyorsan .gitignore'a '.claude/skills/' ekle."
+}
+
+cmd_status() {
+  echo "Paket surumu  : $VERSION"
+
+  local count
+  count="$(count_lines "$(skill_dirs_in "$DEST_SKILLS")")"
+  if [[ "$count" == "0" ]]; then
+    warn "Global kurulum yok. 'masterflutter-skill init' calistir."
+  else
+    local installed
+    installed="$(cat "$STAMP" 2>/dev/null || echo 'bilinmiyor')"
+    echo "Kurulu surum  : $installed"
+    echo "Kurulu skill  : $count"
+    echo "Konum         : $DEST_SKILLS"
+    if [[ -d "$DEST_PROMPTS/prompt" ]]; then
+      echo "Global prompt : kurulu ($(count_md_in "$DEST_PROMPTS/prompt") dosya)"
+    else
+      echo "Global prompt : yok"
+    fi
+    if [[ "$installed" != "$VERSION" ]]; then
+      echo
+      warn "Kopya guncel degil ($installed → $VERSION). 'masterflutter-skill init' ile yenile."
+    fi
+  fi
+
+  local proj="${1:-$PWD}"
+  proj="$(cd "$proj" 2>/dev/null && pwd || echo "$proj")"
+  echo
+  echo "Proje         : $proj"
+  if [[ -f "$proj/$SOURCE_MARKER" ]]; then
+    echo "Durum         : paketin kaynak reposu (kopyalama kapali)"
+    return 0
+  fi
+  if [[ -d "$proj/.claude/skills" ]]; then
+    local pv
+    pv="$(cat "$proj/.claude/.masterflutter-version" 2>/dev/null || echo 'bilinmiyor')"
+    echo "Proje kopyasi : kurulu (surum $pv)"
+    [[ "$pv" == "$VERSION" ]] || warn "Proje kopyasi guncel degil. 'masterflutter-skill project' ile yenile."
+  else
+    warn "Proje kopyasi yok. Flutter projesiyse 'masterflutter-skill project' calistir."
+  fi
+}
+
+cmd_remove() {
+  local dirs count=0
+
+  dirs="$(skill_dirs_in "$DEST_SKILLS")"
+  if [[ -z "$dirs" ]]; then
+    warn "Silinecek masterflutter-* skill'i yok: $DEST_SKILLS"
+  else
+    while IFS= read -r d; do
+      [[ -n "$d" ]] || continue
+      rm -rf "$d"
+      ok "silindi: $(basename "$d")"
+      count=$((count + 1))
+    done <<< "$dirs"
+  fi
+
+  rm -f "$STAMP"
+  rm -rf "${DEST_PROMPTS:?}"
+  echo
+  ok "$count skill silindi (global prompt kopyasi dahil)."
+}
+
+case "${1:-}" in
+  init)              cmd_init ;;
+  project|reference) cmd_project "${2:-}" ;;
+  status)            cmd_status "${2:-}" ;;
+  remove)            cmd_remove ;;
+  -h|--help|help|"") usage ;;
+  *) err "Bilinmeyen komut: $1"; echo; usage; exit 1 ;;
+esac

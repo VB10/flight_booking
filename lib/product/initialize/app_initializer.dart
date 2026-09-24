@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flight_booking/product/cache/product_cache.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
 import 'package:flight_booking/product/initialize/platform_initializer.dart';
+import 'package:flight_booking/product/localization/product_localization.dart';
 import 'package:flight_booking/product/package/firebase/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ final class AppInitializer {
     await Future.wait([
       platformInitializer.prepare(),
       ProductCache.instance.init(),
+      ProductLocalization.init(),
       Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),

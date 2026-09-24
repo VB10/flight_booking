@@ -44,7 +44,9 @@ final class ProductContainer {
       ..registerLazySingleton<IFlightService>(
         () => FlightServiceImpl(_getIt<IProductNetworkManager>()),
       )
-      ..registerLazySingleton<ApplicationCubit>(ApplicationCubit.new)
+      ..registerLazySingleton<ApplicationCubit>(
+        () => ApplicationCubit(_getIt<ICacheManager>()),
+      )
       ..registerLazySingleton<AuthCubit>(
         () => AuthCubit(
           _getIt<IProductNetworkManager>(),

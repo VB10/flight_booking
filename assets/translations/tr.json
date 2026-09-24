@@ -1,0 +1,53 @@
+{
+  "general": {
+    "app_name": "Flight Booking",
+    "app_tagline": "Uçak Bileti Rezervasyon Uygulaması",
+    "cancel": "İptal",
+    "retry": "Tekrar Dene",
+    "later": "Daha Sonra",
+    "error_message": "Hata: {}"
+  },
+  "login": {
+    "email": "E-posta",
+    "password": "Şifre",
+    "submit": "Giriş Yap",
+    "show_password": "Göster",
+    "hide_password": "Gizle",
+    "show_test_account": "Test hesabını göster",
+    "hide_test_account": "Test bilgisini gizle",
+    "test_account_info": "Test hesabı: {email} / {password}",
+    "failed": "Giriş başarısız"
+  },
+  "flight": {
+    "list_title": "Uçak Biletleri",
+    "theme_tooltip": "Tema",
+    "language_tooltip": "Dil",
+    "logout": "Çıkış Yap",
+    "logout_confirm": "Çıkış yapmak istediğinizden emin misiniz?",
+    "added_to_cart": {
+      "one": "Bilet eklendi. Sepetinizde 1 bilet var.",
+      "other": "Bilet eklendi. Sepetinizde {} bilet var."
+    },
+    "details": "Detaylar",
+    "add_to_cart": "Sepete Ekle",
+    "duration": "Süre: {}",
+    "date": "Tarih: {}",
+    "price": "{} ₺",
+    "update_required_title": "Güncelleme Gerekli",
+    "update_required_message": "Yeni versiyon mevcut! Lütfen uygulamayı güncelleyin.",
+    "update": "Güncelle"
+  },
+  "cart": {
+    "title": "Sepetim",
+    "empty": "Sepetiniz boş",
+    "removed_snackbar": "Bilet sepetten çıkarıldı!",
+    "checkout_empty_warning": "Sepetiniz boş!",
+    "checkout_confirm_title": "Ödeme Onayı",
+    "checkout_confirm_message": "Toplam {} ₺ ödeme yapmak istediğinizden emin misiniz?",
+    "confirm": "Onayla",
+    "processing_payment": "Ödeme işlemi yapılıyor...",
+    "total_label": "Toplam:",
+    "pay_button": "Ödeme Yap",
+    "connection_error": "Bağlantı hatası"
+  }
+}

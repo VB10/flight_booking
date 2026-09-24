@@ -1,3 +1,12 @@
+# Code generation config. Single entry point: ./scripts/generate.sh
+#
+# - json_serializable : *.g.dart for network/cache models
+# - go_router_builder : app_routes.g.dart (typed routes)
+# - flutter_gen_runner: lib/product/gen/{assets,fonts}.gen.dart
+#                       (its own settings live under `flutter_gen:` in pubspec.yaml)
+#
+# LocaleKeys (lib/product/gen/locale_keys.g.dart) is NOT a build_runner builder —
+# easy_localization ships a CLI; ./scripts/generate.sh runs it first.
 targets:
   $default:
     builders:
@@ -17,3 +26,5 @@ targets:
         generate_for:
           include:
             - lib/product/navigation/app_routes.dart
+      flutter_gen_runner:
+        enabled: true
