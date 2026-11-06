@@ -19,8 +19,8 @@ Repo, her bölümde kurulan mimariyi tekrar uygulayabilen yetenekleri kendi içi
 
 | | |
 |---|---|
-| **11 skill** (`.claude/skills/masterflutter-*`) | `/masterflutter-` yazıp listeye bak — cache, route, cubit, codegen, localization, asset, network, view refactor, ortam kurulumu |
-| **2 agent** (`.claude/agents/`) | `masterflutter-reviewer` — diff'i bu reponun kurallarına göre denetler · `masterflutter-refactor-scout` — bir sayfada ne kaldığını, hangi sırayla yapılacağını raporlar |
+| **13 skill** (`.claude/skills/masterflutter-*`) | `/masterflutter-` yazıp listeye bak — cache, route, cubit, codegen, localization, asset, network, view refactor, ortam kurulumu, **design system kurulumu + tasarımdan ekran bağlama** (v13) |
+| **3 agent** (`.claude/agents/`) | `masterflutter-reviewer` — diff'i bu reponun kurallarına göre denetler · `masterflutter-refactor-scout` — bir sayfada ne kaldığını, hangi sırayla yapılacağını raporlar · `masterflutter-screen-binder` — Claude Design board'unu tek ekran olarak koda bağlar (Sonnet) |
 | **Plugin'ler** (`.claude/settings.json`) | `claude-mem`, `i-have-adhd` — repo ile birlikte gelir, `./scripts/setup.sh` kurar |
 
 ## 🚀 Hızlı Başlangıç

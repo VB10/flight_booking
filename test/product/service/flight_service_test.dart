@@ -39,7 +39,7 @@ void main() {
       final cartItems = [
         const FlightModel(
           id: 1,
-          airline: 'Turkish Airlines',
+          airline: 'Skyline Air',
           from: 'Istanbul',
           to: 'Ankara',
           departureTime: '08:00',
@@ -72,7 +72,7 @@ void main() {
       final cartItems = [
         const FlightModel(
           id: 1,
-          airline: 'Turkish Airlines',
+          airline: 'Skyline Air',
           from: 'Istanbul',
           to: 'Ankara',
           departureTime: '08:00',
@@ -83,7 +83,7 @@ void main() {
         ),
         const FlightModel(
           id: 2,
-          airline: 'Pegasus',
+          airline: 'Nordwind',
           from: 'Istanbul',
           to: 'Izmir',
           departureTime: '10:30',

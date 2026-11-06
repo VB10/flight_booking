@@ -95,7 +95,7 @@ mixin $FlightListRoute on GoRouteData {
 mixin $FlightDetailRoute on GoRouteData {
   static FlightDetailRoute _fromState(GoRouterState state) => FlightDetailRoute(
     flightId: state.pathParameters['flightId']!,
-    $extra: state.extra as Map<String, dynamic>,
+    $extra: state.extra as Map<String, dynamic>?,
   );
 
   FlightDetailRoute get _self => this as FlightDetailRoute;
@@ -124,28 +124,23 @@ RouteBase get $cartRoute =>
     GoRouteData.$route(path: '/cart', factory: $CartRoute._fromState);
 
 mixin $CartRoute on GoRouteData {
-  static CartRoute _fromState(GoRouterState state) =>
-      CartRoute($extra: state.extra as List<Map<String, dynamic>>);
-
-  CartRoute get _self => this as CartRoute;
+  static CartRoute _fromState(GoRouterState state) => const CartRoute();
 
   @override
   String get location => GoRouteData.$location('/cart');
 
   @override
-  void go(BuildContext context) => context.go(location, extra: _self.$extra);
+  void go(BuildContext context) => context.go(location);
 
   @override
-  Future<T?> push<T>(BuildContext context) =>
-      context.push<T>(location, extra: _self.$extra);
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
 
   @override
   void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location, extra: _self.$extra);
+      context.pushReplacement(location);
 
   @override
-  void replace(BuildContext context) =>
-      context.replace(location, extra: _self.$extra);
+  void replace(BuildContext context) => context.replace(location);
 }
 
 RouteBase get $profileRoute =>

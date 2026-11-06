@@ -11,6 +11,27 @@ BACKEND_DIR="./backend"
 # Port kontrolü
 PORT=${1:-8080}
 echo "🌐 Port: $PORT"
+
+# Port doluysa (eski bir server açık kalmışsa) kapat, sonra yeniden aç
+free_port() {
+    local pids
+    pids=$(lsof -ti tcp:"$PORT" 2>/dev/null)
+    [ -z "$pids" ] && return 0
+    echo "♻️  Port $PORT kullanımda (PID: $(echo $pids | tr '\n' ' ')) — kapatılıyor..."
+    kill $pids 2>/dev/null
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+        lsof -ti tcp:"$PORT" >/dev/null 2>&1 || { echo "✅ Port $PORT boşaltıldı"; return 0; }
+        sleep 0.5
+    done
+    echo "⚠️  Kapanmadı, zorla kapatılıyor (kill -9)"
+    kill -9 $(lsof -ti tcp:"$PORT") 2>/dev/null
+}
+free_port
+
+# Sadece portu boşalt (VS Code launch'tan önce çağrılır)
+if [ "$2" = "--free-only" ]; then
+    exit 0
+fi
 echo "📁 Ana proje dizini: $MAIN_PROJECT_DIR"
 echo "📁 Backend dizini: $BACKEND_DIR"
 

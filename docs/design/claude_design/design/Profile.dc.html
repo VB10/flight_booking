@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>6 Profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.light,.dark{--f:Roboto,system-ui,sans-serif;font-family:var(--f);color:var(--onSurface)}
+.light{--canvas:#E9ECF2;--primary:#1565C0;--onPrimary:#FFFFFF;--primaryContainer:#D6E4FF;--onPrimaryContainer:#001B3E;--secondaryContainer:#CCE8FF;--onSecondaryContainer:#001E31;--tertiaryContainer:#C8F0CB;--onTertiaryContainer:#002106;--error:#BA1A1A;--errorContainer:#FFDAD6;--onErrorContainer:#410002;--surface:#F8FAFF;--onSurface:#191C20;--surfaceContainerHighest:#E1E2E9;--onSurfaceVariant:#43474E;--outline:#73777F;--outlineVariant:#C3C6CF;--warningContainer:#FFE0C2;--onWarningContainer:#3A1800;--infoContainer:#C6E7FF;--onInfoContainer:#001E2E;--cardBackground:#FFFFFF;--divider:#DDE0E8;--shimmerBase:#E3E6EC;--shimmerHighlight:#F4F6FA}
+.dark{--canvas:#0A0D11;--primary:#A9C7FF;--onPrimary:#002F65;--primaryContainer:#00468C;--onPrimaryContainer:#D6E4FF;--secondaryContainer:#004B71;--onSecondaryContainer:#CCE8FF;--tertiaryContainer:#1B5120;--onTertiaryContainer:#A9F5AA;--error:#FFB4AB;--errorContainer:#93000A;--onErrorContainer:#FFDAD6;--surface:#101418;--onSurface:#E1E2E8;--surfaceContainerHighest:#32353A;--onSurfaceVariant:#C3C6CF;--outline:#8D9199;--outlineVariant:#43474E;--warningContainer:#6A3600;--onWarningContainer:#FFDCC0;--infoContainer:#004C6B;--onInfoContainer:#C6E7FF;--cardBackground:#1B1F25;--divider:#2F343B;--shimmerBase:#262B32;--shimmerHighlight:#343A43}
+.hm{font:400 28px/36px var(--f)}.hs{font:400 24px/32px var(--f)}.tl{font:400 22px/28px var(--f)}.tm{font:500 16px/24px var(--f);letter-spacing:.15px}
+.bl{font:400 16px/24px var(--f);letter-spacing:.5px}.bm{font:400 14px/20px var(--f);letter-spacing:.25px}.bs{font:400 12px/16px var(--f);letter-spacing:.4px}
+.ll{font:500 14px/20px var(--f);letter-spacing:.1px}.lm{font:500 12px/16px var(--f);letter-spacing:.5px}
+.ov{color:var(--onSurfaceVariant)}.upper{text-transform:uppercase;letter-spacing:1px}
+.row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.f1{flex:1;min-width:0}
+.g8{gap:8px}.g10{gap:10px}.g16{gap:16px}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cd{background:var(--cardBackground);border:1px solid var(--outlineVariant);border-radius:12px;padding:16px}
+.dv{height:1px;background:var(--divider);flex:none}
+.ph{width:390px;height:844px;border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--surface);color:var(--onSurface);border:1px solid var(--outlineVariant);flex:none}
+.pg{flex:1;min-height:0;overflow:hidden;padding:8px 20px 0;display:flex;flex-direction:column;gap:16px}
+.bar{display:flex;align-items:center;height:64px;padding:0 4px;flex:none;background:var(--surface);color:var(--onSurface)}.bar .ti{flex:1;min-width:0;margin:0 0 0 4px}
+.ib{width:48px;height:48px;border-radius:50%;border:0;background:none;color:var(--onSurfaceVariant);display:grid;place-items:center;position:relative;padding:0;flex:none}
+.btn{height:48px;padding:0 24px;border-radius:12px;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.btn .i{width:20px;height:20px}.b-p{background:var(--primary);color:var(--onPrimary)}
+.ic{width:40px;height:40px;border-radius:50%;background:var(--primaryContainer);color:var(--onPrimaryContainer);display:grid;place-items:center;flex:none}.ic .i{width:20px;height:20px}
+.av{width:72px;height:72px;border-radius:50%;background:var(--primaryContainer);color:var(--onPrimaryContainer);display:grid;place-items:center;font:500 28px/36px var(--f);flex:none}
+.sbd{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.5px;white-space:nowrap}.sbd .i{width:16px;height:16px}
+.s-warn{background:var(--warningContainer);color:var(--onWarningContainer)}
+.sw{width:52px;height:32px;border-radius:16px;background:var(--primary);position:relative;flex:none}.sw::after{content:'';position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:var(--onPrimary)}
+.sw.o{background:var(--surfaceContainerHighest);box-shadow:inset 0 0 0 2px var(--outline)}.sw.o::after{right:auto;left:8px;top:8px;width:16px;height:16px;background:var(--outline)}
+.seg{display:inline-flex;border:1px solid var(--outline);border-radius:12px;overflow:hidden;flex:none}.seg b{display:grid;place-items:center;min-width:52px;height:44px;font:500 14px/20px var(--f);color:var(--onSurface)}.seg b.on{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}
+.stt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 32px}
+.big{width:96px;height:96px;border-radius:50%;display:grid;place-items:center}.big .i{width:40px;height:40px}.bg-er{background:var(--errorContainer);color:var(--onErrorContainer)}
+.sh{display:block;background:linear-gradient(90deg,var(--shimmerBase) 25%,var(--shimmerHighlight) 50%,var(--shimmerBase) 75%);background-size:200% 100%;animation:shm 1.4s linear infinite;border-radius:8px}
+@keyframes shm{from{background-position:200% 0}to{background-position:-200% 0}}
+.an{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.3px}
+.an-e{background:var(--surfaceContainerHighest);color:var(--onSurfaceVariant)}.an-d{background:var(--infoContainer);color:var(--onInfoContainer)}.an-f{background:var(--tertiaryContainer);color:var(--onTertiaryContainer)}.an-m{background:var(--warningContainer);color:var(--onWarningContainer)}
+</style>
+</helmet>
+<div style="width:1370px;min-height:2260px;display:flex;flex-direction:column">
+
+<header class="light" style="background:var(--canvas);padding:60px 60px 40px;display:flex;flex-direction:column;gap:12px">
+<span class="lm upper" style="color:var(--primary)">Screen 6</span>
+<h1 class="hm" style="margin:0">Profile</h1>
+<p class="bl ov" style="margin:0;max-width:1000px">Initials avatar, StatusBadge for the membership level, two StatTile, an InfoRow list for account details, plus the settings that moved here from Flights.</p>
+<div class="row g8" style="flex-wrap:wrap">
+<span class="an an-e">Existing data: id · name · email · joinDate · totalBookings · membershipLevel</span>
+<span class="an an-e">Existing actions: refresh · log out</span>
+<span class="an an-f">NEW FEATURE: Settings section — SettingsRow + AppSwitch (theme) + SegmentedToggle (EN / TR)</span>
+<span class="an an-m">MOVED: theme toggle + language switch from Flights top bar</span>
+<span class="an an-f">NEW FEATURE: Booking history entry row (list screen not drawn; reuses compact FlightCard + StatusBadge)</span>
+<span class="an an-d">NEW DATA: bookings[] — past bookings behind “Booking history”</span>
+</div>
+</header>
+
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="2">
+<section class="{{t.cls}}" style="background:var(--canvas);padding:40px 60px;display:flex;flex-direction:column;gap:16px">
+<span class="tl">{{t.name}}</span>
+<div style="display:flex;gap:40px">
+<sc-for list="{{states}}" as="s" hint-placeholder-count="3">
+<div class="col g8">
+<span class="lm ov upper">{{s.name}}</span>
+<div class="ph">
+<div class="bar"><button class="ib" aria-label="Back" style="color:var(--onSurface)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><h2 class="ti tl">Profile</h2>
+<button class="ib" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></button>
+<button class="ib" aria-label="Log out"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></button></div>
+
+<sc-if value="{{s.content}}" hint-placeholder-val="{{ true }}">
+<div class="pg">
+<div class="cd row g16" style="flex:none"><span class="av">AD</span><div class="f1 col" style="gap:4px;align-items:flex-start"><span class="tl">Ayşe Demir</span><span class="bm ov" style="max-width:100%;overflow:hidden;text-overflow:ellipsis">ayse.demir@example.com</span><span class="sbd s-warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a7 7 0 100-14 7 7 0 000 14zM8.2 13.9L7 23l5-3 5 3-1.2-9.1"/></svg>Gold</span></div></div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:none">
+<div class="cd col g8"><span class="ic" style="width:32px;height:32px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 010 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a3 3 0 010-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2zM13 5v2M13 17v2M13 11v2"/></svg></span><span class="hs">12</span><span class="bs ov">Total bookings</span></div>
+<div class="cd col g8"><span class="ic" style="width:32px;height:32px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1zM16 2v4M8 2v4M2 10h20"/></svg></span><span class="hs">Mar 2023</span><span class="bs ov">Member since</span></div>
+</div>
+<div class="cd" style="padding:0 16px;flex:none">
+<div class="row g16" style="height:52px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg></span><span class="bm ov f1">Account ID</span><span class="ll">USR-48213</span></div><div class="dv"></div>
+<div class="row g16" style="height:52px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zM22 6l-10 7L2 6"/></svg></span><span class="bm ov">Email</span><span class="ll f1" style="text-align:right;overflow:hidden;text-overflow:ellipsis">ayse.demir@example.com</span></div><div class="dv"></div>
+<div class="row g16" style="height:52px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1zM16 2v4M8 2v4M2 10h20"/></svg></span><span class="bm ov f1">Joined</span><span class="ll">14 Mar 2023</span></div><div class="dv"></div>
+<div class="row g16" style="height:52px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a7 7 0 100-14 7 7 0 000 14zM8.2 13.9L7 23l5-3 5 3-1.2-9.1"/></svg></span><span class="bm ov f1">Membership</span><span class="ll">Gold</span></div>
+</div>
+<span class="lm ov upper" style="flex:none">Settings</span>
+<div class="cd" style="padding:0 16px;flex:none;margin-top:-8px">
+<div class="row g16" style="height:60px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span><span class="bm f1">Dark theme</span><span class="sw {{t.sw}}" role="img" aria-label="{{t.swLabel}}"></span></div><div class="dv"></div>
+<div class="row g16" style="height:60px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM2 12h20M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg></span><span class="bm f1">Language</span><span class="seg"><b class="on">EN</b><b>TR</b></span></div>
+</div>
+<div class="cd row g16" style="flex:none;padding:8px 16px;height:64px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 109-9 9.8 9.8 0 00-6.7 2.8L3 8M3 3v5h5M12 7v5l4 2"/></svg></span><div class="f1 col"><span class="ll">Booking history</span><span class="bs ov">12 bookings</span></div><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--onSurfaceVariant)"><path d="M9 18l6-6-6-6"/></svg></div>
+</div>
+</sc-if>
+
+<sc-if value="{{s.loading}}" hint-placeholder-val="{{ false }}">
+<div class="pg" aria-hidden="true">
+<div class="cd row g16" style="flex:none"><span class="sh" style="width:72px;height:72px;border-radius:50%"></span><div class="f1 col g8"><span class="sh" style="width:60%;height:20px"></span><span class="sh" style="width:80%;height:14px"></span><span class="sh" style="width:64px;height:28px"></span></div></div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:none"><span class="sh" style="height:128px;border-radius:12px"></span><span class="sh" style="height:128px;border-radius:12px"></span></div>
+<div class="cd col" style="padding:0 16px;flex:none"><div class="row g16" style="height:52px"><span class="sh" style="width:40px;height:40px;border-radius:50%"></span><span class="sh" style="width:90px;height:14px"></span><span class="f1"></span><span class="sh" style="width:80px;height:14px"></span></div><div class="dv"></div><div class="row g16" style="height:52px"><span class="sh" style="width:40px;height:40px;border-radius:50%"></span><span class="sh" style="width:60px;height:14px"></span><span class="f1"></span><span class="sh" style="width:130px;height:14px"></span></div><div class="dv"></div><div class="row g16" style="height:52px"><span class="sh" style="width:40px;height:40px;border-radius:50%"></span><span class="sh" style="width:70px;height:14px"></span><span class="f1"></span><span class="sh" style="width:90px;height:14px"></span></div><div class="dv"></div><div class="row g16" style="height:52px"><span class="sh" style="width:40px;height:40px;border-radius:50%"></span><span class="sh" style="width:100px;height:14px"></span><span class="f1"></span><span class="sh" style="width:50px;height:14px"></span></div></div>
+</div>
+</sc-if>
+
+<sc-if value="{{s.error}}" hint-placeholder-val="{{ false }}">
+<div class="stt"><span class="big bg-er"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 1l22 22M16.7 11.1A11 11 0 0121 14M5 12.6a11 11 0 015.2-2.9M10.7 5.1A16 16 0 0122.6 9M1.4 9a16 16 0 013.2-2.2M8.5 16.1a6 6 0 013.5-1.1M12 20h.01"/></svg></span><div class="col g8"><span class="tm">Couldn’t load your profile</span><span class="bm ov">Check your connection and try again.</span></div><button class="btn b-p"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg>Try Again</button></div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1370,"height":2260}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+themes: [{ cls: 'light', name: 'Light', sw: 'o', swLabel: 'Off' }, { cls: 'dark', name: 'Dark', sw: '', swLabel: 'On' }],
+states: [
+{ name: 'Content', content: true, loading: false, error: false },
+{ name: 'LoadingState · shimmer header + tiles', content: false, loading: true, error: false },
+{ name: 'ErrorState', content: false, loading: false, error: true }
+]
+};
+}
+}
+</script>
+</body>
+</html>

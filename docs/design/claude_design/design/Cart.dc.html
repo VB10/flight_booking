@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>5 My cart</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.light,.dark{--f:Roboto,system-ui,sans-serif;font-family:var(--f);color:var(--onSurface)}
+.light{--canvas:#E9ECF2;--primary:#1565C0;--onPrimary:#FFFFFF;--primaryContainer:#D6E4FF;--onPrimaryContainer:#001B3E;--secondaryContainer:#CCE8FF;--onSecondaryContainer:#001E31;--tertiaryContainer:#C8F0CB;--onTertiaryContainer:#002106;--error:#BA1A1A;--errorContainer:#FFDAD6;--onErrorContainer:#410002;--surface:#F8FAFF;--onSurface:#191C20;--surfaceContainerHighest:#E1E2E9;--onSurfaceVariant:#43474E;--outline:#73777F;--outlineVariant:#C3C6CF;--successContainer:#C8F0CB;--onSuccessContainer:#002106;--warningContainer:#FFE0C2;--onWarningContainer:#3A1800;--infoContainer:#C6E7FF;--onInfoContainer:#001E2E;--cardBackground:#FFFFFF;--divider:#DDE0E8;--scrim:rgba(0,0,0,.5)}
+.dark{--canvas:#0A0D11;--primary:#A9C7FF;--onPrimary:#002F65;--primaryContainer:#00468C;--onPrimaryContainer:#D6E4FF;--secondaryContainer:#004B71;--onSecondaryContainer:#CCE8FF;--tertiaryContainer:#1B5120;--onTertiaryContainer:#A9F5AA;--error:#FFB4AB;--errorContainer:#93000A;--onErrorContainer:#FFDAD6;--surface:#101418;--onSurface:#E1E2E8;--surfaceContainerHighest:#32353A;--onSurfaceVariant:#C3C6CF;--outline:#8D9199;--outlineVariant:#43474E;--successContainer:#1B5120;--onSuccessContainer:#A9F5AA;--warningContainer:#6A3600;--onWarningContainer:#FFDCC0;--infoContainer:#004C6B;--onInfoContainer:#C6E7FF;--cardBackground:#1B1F25;--divider:#2F343B;--scrim:rgba(0,0,0,.6)}
+.hm{font:400 28px/36px var(--f)}.hs{font:400 24px/32px var(--f)}.tl{font:400 22px/28px var(--f)}.tm{font:500 16px/24px var(--f);letter-spacing:.15px}
+.bl{font:400 16px/24px var(--f);letter-spacing:.5px}.bm{font:400 14px/20px var(--f);letter-spacing:.25px}.bs{font:400 12px/16px var(--f);letter-spacing:.4px}
+.ll{font:500 14px/20px var(--f);letter-spacing:.1px}.lm{font:500 12px/16px var(--f);letter-spacing:.5px}
+.ov{color:var(--onSurfaceVariant)}.upper{text-transform:uppercase;letter-spacing:1px}
+.row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.f1{flex:1;min-width:0}
+.g8{gap:8px}.g10{gap:10px}.g16{gap:16px}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cd{background:var(--cardBackground);border:1px solid var(--outlineVariant);border-radius:12px;padding:16px}
+.ph{width:390px;height:844px;border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--surface);color:var(--onSurface);border:1px solid var(--outlineVariant);flex:none}
+.pg{flex:1;min-height:0;overflow:hidden;padding:8px 20px 0;display:flex;flex-direction:column;gap:16px}
+.bar{display:flex;align-items:center;height:64px;padding:0 4px;flex:none;background:var(--surface);color:var(--onSurface)}.bar .ti{flex:1;min-width:0;margin:0 0 0 4px}
+.ib{width:48px;height:48px;border-radius:50%;border:0;background:none;color:var(--onSurfaceVariant);display:grid;place-items:center;position:relative;padding:0;flex:none}
+.btn{height:48px;padding:0 24px;border-radius:12px;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.btn .i{width:20px;height:20px}.btn.fw{width:100%}
+.b-p{background:var(--primary);color:var(--onPrimary)}.b-s{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}.b-t{background:none;color:var(--primary);padding:0 16px}
+.spin{width:20px;height:20px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:sp .9s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pt{font:700 22px/28px var(--f);color:var(--primary);white-space:nowrap}.pt.lg{font-size:32px;line-height:40px}.pt.sm{font-size:16px;line-height:24px}
+.sbd{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.5px;white-space:nowrap}.sbd .i{width:16px;height:16px}
+.s-ok{background:var(--successContainer);color:var(--onSuccessContainer)}
+.sum{flex:none;display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--surface);border-top:1px solid var(--outlineVariant)}
+.scrim{position:absolute;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:0 32px;z-index:5}
+.dlg{width:100%;background:var(--surfaceContainerHighest);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;color:var(--onSurface)}.dlg .ft{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.snk{position:absolute;left:20px;right:20px;bottom:104px;min-height:48px;padding:12px 16px;border-radius:8px;display:flex;align-items:center;gap:12px;font:400 14px/20px var(--f);letter-spacing:.25px;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:4}
+.snk .i{width:20px;height:20px}.snk .tx{flex:1}.snk .ac{border:0;background:none;color:inherit;font:500 14px/20px var(--f);height:44px;padding:0 8px;text-decoration:underline}
+.k-in{background:var(--infoContainer);color:var(--onInfoContainer)}.k-wn{background:var(--warningContainer);color:var(--onWarningContainer)}
+.stt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 32px}
+.big{width:96px;height:96px;border-radius:50%;display:grid;place-items:center}.big .i{width:40px;height:40px}
+.bg-sec{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}.bg-er{background:var(--errorContainer);color:var(--onErrorContainer)}.bg-ok{background:var(--successContainer);color:var(--onSuccessContainer)}
+.an{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.3px}
+.an-e{background:var(--surfaceContainerHighest);color:var(--onSurfaceVariant)}.an-d{background:var(--infoContainer);color:var(--onInfoContainer)}.an-f{background:var(--tertiaryContainer);color:var(--onTertiaryContainer)}
+</style>
+</helmet>
+<div style="width:1800px;min-height:4100px;display:flex;flex-direction:column">
+
+<header class="light" style="background:var(--canvas);padding:60px 60px 40px;display:flex;flex-direction:column;gap:12px">
+<span class="lm upper" style="color:var(--primary)">Screen 5</span>
+<h1 class="hm" style="margin:0">My Cart</h1>
+<p class="bl ov" style="margin:0;max-width:1100px">Compact FlightCard list with a trailing remove icon, and a SummaryBar pinned to the bottom with the total and the primary Pay button. Eight states per theme, including the payment flow.</p>
+<div class="row g8" style="flex-wrap:wrap">
+<span class="an an-e">Existing data: tickets (same flight fields) · total price</span>
+<span class="an an-e">Existing actions: remove a ticket · pay for all</span>
+<span class="an an-f">NEW FEATURE: Undo action in the “Ticket removed” AppSnackbar</span>
+<span class="an an-f">NEW FEATURE: swipe-to-dismiss on compact FlightCard (alongside the remove icon)</span>
+<span class="an an-f">NEW FEATURE: payment success / booking confirmation screen</span>
+<span class="an an-d">NEW DATA: bookingReference — “FB-7K2M9Q” on the confirmation screen</span>
+<span class="an an-f">NEW FEATURE: “View Bookings” action → Profile › Booking history</span>
+</div>
+</header>
+
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="2">
+<section class="{{t.cls}}" style="background:var(--canvas);padding:40px 60px;display:flex;flex-direction:column;gap:16px">
+<span class="tl">{{t.name}}</span>
+<div style="display:flex;flex-wrap:wrap;gap:40px;width:1680px">
+<sc-for list="{{states}}" as="s" hint-placeholder-count="8">
+<div class="col g8">
+<span class="lm ov upper">{{s.name}}</span>
+<div class="ph">
+<sc-if value="{{s.bar}}" hint-placeholder-val="{{ true }}"><div class="bar"><button class="ib" aria-label="Back" style="color:var(--onSurface)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><h2 class="ti tl">My Cart</h2></div></sc-if>
+
+<sc-if value="{{s.list}}" hint-placeholder-val="{{ true }}">
+<div class="pg">
+<sc-for list="{{s.tickets}}" as="c" hint-placeholder-count="2">
+<div class="cd col g8" style="flex:none">
+<div class="row g8"><span class="tm f1">{{c.route}}</span><button class="ib" aria-label="Remove ticket" style="margin:-12px -12px -12px 0"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6M10 11v6M14 11v6"/></svg></button></div>
+<span class="bm ov">{{c.airline}} · {{c.date}}</span>
+<div class="row"><span class="bm f1">{{c.times}}</span><span class="pt sm">{{c.price}}</span></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{s.empty}}" hint-placeholder-val="{{ false }}">
+<div class="stt"><span class="big bg-sec"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg></span><div class="col g8"><span class="tm">Your cart is empty</span><span class="bm ov">Find a flight and add it to your cart.</span></div><button class="btn b-s">Browse Flights</button></div>
+</sc-if>
+
+<sc-if value="{{s.error}}" hint-placeholder-val="{{ false }}">
+<div class="stt"><span class="big bg-er"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 1l22 22M16.7 11.1A11 11 0 0121 14M5 12.6a11 11 0 015.2-2.9M10.7 5.1A16 16 0 0122.6 9M1.4 9a16 16 0 013.2-2.2M8.5 16.1a6 6 0 013.5-1.1M12 20h.01"/></svg></span><div class="col g8"><span class="tm">Connection error</span><span class="bm ov">Check your connection and try again.</span></div><button class="btn b-p"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg>Try Again</button></div>
+</sc-if>
+
+<sc-if value="{{s.success}}" hint-placeholder-val="{{ false }}">
+<div class="pg" style="padding-top:40px;align-items:stretch">
+<div class="col g16" style="align-items:center;text-align:center;flex:none"><span class="big bg-ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.1V12a10 10 0 11-5.9-9.1M22 4L12 14l-3-3"/></svg></span><div class="col" style="gap:4px"><h2 class="hs" style="margin:0">Payment successful</h2><span class="bm ov">Your 2 tickets are booked.</span></div></div>
+<div class="cd row g16" style="flex:none"><div class="f1 col"><span class="bs ov">Booking reference</span><span class="tl" style="letter-spacing:1px">FB-7K2M9Q</span></div><span class="sbd s-ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Confirmed</span></div>
+<sc-for list="{{s.tickets}}" as="c" hint-placeholder-count="2">
+<div class="cd col" style="flex:none;gap:4px;padding:12px 16px"><div class="row g8"><span class="tm f1">{{c.route}}</span><span class="pt sm">{{c.price}}</span></div><span class="bm ov">{{c.airline}} · {{c.date}} · {{c.times}}</span></div>
+</sc-for>
+<div class="row" style="flex:none;padding:0 4px"><span class="ll ov f1">Total paid</span><span class="pt">1.250 ₺</span></div>
+<div class="f1"></div>
+<div class="col g8" style="padding-bottom:24px;flex:none"><button class="btn b-p fw">Back to Flights</button><button class="btn b-s fw">View Bookings</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{s.sum}}" hint-placeholder-val="{{ true }}">
+<div class="sum"><div class="col f1"><span class="ll ov">Total:</span><span class="pt lg">{{s.total}}</span></div><button class="btn b-p" style="min-width:132px">Pay</button></div>
+</sc-if>
+
+<sc-if value="{{s.snackInfo}}" hint-placeholder-val="{{ false }}"><div class="snk k-in" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM12 16v-4M12 8h.01"/></svg><span class="tx">Ticket removed from cart!</span><button class="ac">Undo</button></div></sc-if>
+<sc-if value="{{s.snackWarn}}" hint-placeholder-val="{{ false }}"><div class="snk k-wn" role="alert"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0zM12 9v4M12 17h.01"/></svg><span class="tx">Your cart is empty!</span></div></sc-if>
+<sc-if value="{{s.dialog}}" hint-placeholder-val="{{ false }}"><div class="scrim"><div class="dlg" role="alertdialog" aria-label="Payment Confirmation"><span class="hs">Payment Confirmation</span><span class="bm ov">Are you sure you want to pay a total of 1.250 ₺?</span><div class="ft"><button class="btn b-t">Cancel</button><button class="btn b-p">Confirm</button></div></div></div></sc-if>
+<sc-if value="{{s.overlay}}" hint-placeholder-val="{{ false }}"><div class="scrim" aria-busy="true"><div class="dlg" style="width:auto;flex-direction:row;align-items:center;gap:16px;padding:20px 24px"><span class="spin" style="width:28px;height:28px;color:var(--primary)"></span><span class="tm">Processing payment...</span></div></div></sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1800,"height":4100}}'>
+class Component extends DCLogic {
+renderVals() {
+const a = { route: 'Istanbul → Ankara', airline: 'Skyline Air', date: '12 Dec 2026', times: '08:30 – 09:45 · 1h 15m', price: '650 ₺' };
+const b = { route: 'Ankara → Antalya', airline: 'Azure Jet', date: '13 Dec 2026', times: '14:45 – 16:05 · 1h 20m', price: '600 ₺' };
+const st = (name, o) => Object.assign({ name: name, bar: true, list: false, empty: false, error: false, success: false, sum: true, total: '1.250 ₺', tickets: [a, b], snackInfo: false, snackWarn: false, dialog: false, overlay: false }, o);
+return {
+themes: [{ cls: 'light', name: 'Light' }, { cls: 'dark', name: 'Dark' }],
+states: [
+st('Content · 2 tickets', { list: true }),
+st('Removed · AppSnackbar info', { list: true, tickets: [a], total: '650 ₺', snackInfo: true }),
+st('Pay · AppDialog confirm', { list: true, dialog: true }),
+st('Processing · LoadingOverlay', { list: true, overlay: true }),
+st('Payment success · booking confirmation', { bar: false, success: true, sum: false }),
+st('EmptyState', { empty: true, tickets: [], total: '0 ₺' }),
+st('Pay with empty cart · AppSnackbar warning', { empty: true, tickets: [], total: '0 ₺', snackWarn: true }),
+st('ErrorState · Connection error', { error: true, sum: false })
+]
+};
+}
+}
+</script>
+</body>
+</html>

@@ -45,26 +45,31 @@ void main() {
       );
     });
 
-    test('login with invalid credentials should fail with ProductErrorModel',
-        () async {
-      final result = await authService.login(
-        email: 'wrong@test.com',
-        password: 'wrongpassword',
-      );
+    test(
+      'login with invalid credentials should fail with ProductErrorModel',
+      () async {
+        final result = await authService.login(
+          email: 'wrong@test.com',
+          password: 'wrongpassword',
+        );
 
-      result.fold(
-        onSuccess: (_) {
-          fail('Expected error but got success');
-        },
-        onError: (error) {
-          expect(error.statusCode, equals(400));
-          // Check ProductErrorModel fields
-          expect(error.model, isA<ProductErrorModel>());
-          expect(error.model?.message, equals('Email veya şifre hatalı!'));
-          expect(error.model?.errorCode, equals(ErrorCodes.invalidCredentials));
-        },
-      );
-    });
+        result.fold(
+          onSuccess: (_) {
+            fail('Expected error but got success');
+          },
+          onError: (error) {
+            expect(error.statusCode, equals(400));
+            // Check ProductErrorModel fields
+            expect(error.model, isA<ProductErrorModel>());
+            expect(error.model?.message, equals('Email veya şifre hatalı!'));
+            expect(
+              error.model?.errorCode,
+              equals(ErrorCodes.invalidCredentials),
+            );
+          },
+        );
+      },
+    );
 
     test('login with empty credentials should fail', () async {
       final result = await authService.login(

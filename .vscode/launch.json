@@ -1,28 +1,58 @@
-
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "App (Development)",
-            "request": "launch",
-            "type": "dart",
-            "toolArgs": [
-                "--dart-define",
-                "FLAVOR=development",
-                "--dart-define",
-                "FLAVOR=dev_key_123"
-            ]
-        },
-        {
-            "name": "App (Production)",
-            "request": "launch",
-            "type": "dart",
-            "toolArgs": [
-                "--dart-define",
-                "FLAVOR=production",
-                "--dart-define",
-                "FLAVOR=prod_key_456"
-            ]
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "App (Development)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define",
+        "FLAVOR=development"
+      ]
+    },
+    {
+      "name": "App (Production)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define",
+        "FLAVOR=production"
+      ]
+    },
+    {
+      "name": "Backend (Dart server)",
+      "request": "launch",
+      "type": "dart",
+      "program": "bin/server.dart",
+      "cwd": "${workspaceFolder}/backend",
+      "env": {
+        "PORT": "8080"
+      },
+      "console": "terminal",
+      "preLaunchTask": "Backend: free port"
+    },
+    {
+      "name": "App + Backend (with backend task)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define",
+        "FLAVOR=development"
+      ],
+      "preLaunchTask": "Backend: start"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "App + Backend",
+      "configurations": [
+        "Backend (Dart server)",
+        "App (Development)"
+      ],
+      "stopAll": true
+    }
+  ]
 }

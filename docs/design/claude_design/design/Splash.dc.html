@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>1 Splash</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.light,.dark{--f:Roboto,system-ui,sans-serif;font-family:var(--f);color:var(--onSurface)}
+.light{--canvas:#E9ECF2;--primary:#1565C0;--onPrimary:#FFFFFF;--primaryContainer:#D6E4FF;--onPrimaryContainer:#001B3E;--secondaryContainer:#CCE8FF;--onSecondaryContainer:#001E31;--tertiaryContainer:#C8F0CB;--onTertiaryContainer:#002106;--surface:#F8FAFF;--onSurface:#191C20;--surfaceContainerHighest:#E1E2E9;--onSurfaceVariant:#43474E;--outline:#73777F;--outlineVariant:#C3C6CF;--brandPrimary:#0D47A1;--warning:#B34F00;--onWarning:#FFFFFF;--warningContainer:#FFE0C2;--onWarningContainer:#3A1800;--info:#006A8E;--infoContainer:#C6E7FF;--onInfoContainer:#001E2E;--scrim:rgba(0,0,0,.5)}
+.dark{--canvas:#0A0D11;--primary:#A9C7FF;--onPrimary:#002F65;--primaryContainer:#00468C;--onPrimaryContainer:#D6E4FF;--secondaryContainer:#004B71;--onSecondaryContainer:#CCE8FF;--tertiaryContainer:#1B5120;--onTertiaryContainer:#A9F5AA;--surface:#101418;--onSurface:#E1E2E8;--surfaceContainerHighest:#32353A;--onSurfaceVariant:#C3C6CF;--outline:#8D9199;--outlineVariant:#43474E;--brandPrimary:#7FB2FF;--warning:#FFB77A;--onWarning:#4A2400;--warningContainer:#6A3600;--onWarningContainer:#FFDCC0;--info:#7FD0F5;--infoContainer:#004C6B;--onInfoContainer:#C6E7FF;--scrim:rgba(0,0,0,.6)}
+.hm{font:400 28px/36px var(--f)}.hs{font:400 24px/32px var(--f)}.tl{font:400 22px/28px var(--f)}
+.bl{font:400 16px/24px var(--f);letter-spacing:.5px}.bm{font:400 14px/20px var(--f);letter-spacing:.25px}
+.lm{font:500 12px/16px var(--f);letter-spacing:.5px}
+.ov{color:var(--onSurfaceVariant)}.upper{text-transform:uppercase;letter-spacing:1px}
+.row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.g8{gap:8px}.g16{gap:16px}.g24{gap:24px}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ph{width:390px;height:844px;border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--surface);color:var(--onSurface);border:1px solid var(--outlineVariant);flex:none}
+.btn{height:48px;padding:0 24px;border-radius:12px;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.b-t{background:none;color:var(--primary);padding:0 16px}.b-w{background:var(--warning);color:var(--onWarning)}
+.ic{width:40px;height:40px;border-radius:50%;background:var(--primaryContainer);color:var(--onPrimaryContainer);display:grid;place-items:center;flex:none}.ic .i{width:20px;height:20px}
+.scrim{position:absolute;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:0 32px;z-index:5}
+.dlg{width:100%;background:var(--surfaceContainerHighest);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;color:var(--onSurface)}.dlg .ft{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.ind{width:120px;height:4px;border-radius:2px;background:var(--outlineVariant);position:relative;overflow:hidden}.ind::after{content:'';position:absolute;top:0;bottom:0;width:48px;border-radius:2px;background:var(--primary);animation:slide 1.4s ease-in-out infinite}
+@keyframes slide{from{left:-48px}to{left:120px}}
+.an{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.3px}
+.an-e{background:var(--surfaceContainerHighest);color:var(--onSurfaceVariant)}.an-d{background:var(--infoContainer);color:var(--onInfoContainer)}.an-f{background:var(--tertiaryContainer);color:var(--onTertiaryContainer)}.an-m{background:var(--warningContainer);color:var(--onWarningContainer)}
+</style>
+</helmet>
+<div style="width:940px;min-height:2260px;display:flex;flex-direction:column">
+
+<header class="light" style="background:var(--canvas);padding:60px 60px 40px;display:flex;flex-direction:column;gap:12px">
+<span class="lm upper" style="color:var(--primary)">Screen 1</span>
+<h1 class="hm" style="margin:0">Splash</h1>
+<p class="bl ov" style="margin:0;max-width:800px">Shows the app mark while the app starts and checks whether a forced update is required.</p>
+<div class="row g8" style="flex-wrap:wrap">
+<span class="an an-e">Existing data: appName “Flight Booking” · tagline “Flight Ticket Booking App”</span>
+<span class="an an-e">Components: AppDialog (warning variant) · AppButton text + warning</span>
+<span class="an an-e">No NEW DATA / NEW FEATURE on this screen</span>
+</div>
+</header>
+
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="2">
+<section class="{{t.cls}}" style="background:var(--canvas);padding:40px 60px;display:flex;flex-direction:column;gap:16px">
+<span class="tl">{{t.name}}</span>
+<div style="display:flex;gap:40px">
+<sc-for list="{{states}}" as="s" hint-placeholder-count="2">
+<div class="col g8">
+<span class="lm ov upper">{{s.name}}</span>
+<div class="ph">
+<div style="flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px">
+<div style="position:absolute;left:50%;top:174px;width:280px;height:280px;margin-left:-140px;border-radius:50%;border:1px solid var(--outlineVariant)"></div>
+<div style="position:absolute;left:50%;top:94px;width:440px;height:440px;margin-left:-220px;border-radius:50%;border:1px solid var(--outlineVariant);opacity:.5"></div>
+<div style="width:96px;height:96px;border-radius:24px;background:var(--brandPrimary);color:var(--surface);display:grid;place-items:center;position:relative"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:56px;height:56px;stroke-width:1.75"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.8.2 1.1L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.3.8.4 1.2.2l.5-.2c.4-.3.6-.7.5-1.1z"/></svg></div>
+<div class="col" style="align-items:center;gap:4px;position:relative"><h2 class="hm" style="margin:0">Flight Booking</h2><span class="bl ov">Flight Ticket Booking App</span></div>
+</div>
+<div style="height:120px;display:flex;align-items:center;justify-content:center"><div class="ind" role="progressbar" aria-label="Loading"></div></div>
+<sc-if value="{{s.update}}" hint-placeholder-val="{{ false }}">
+<div class="scrim"><div class="dlg" role="alertdialog" aria-label="Update Required"><span class="ic" style="background:var(--warningContainer);color:var(--onWarningContainer)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0zM12 9v4M12 17h.01"/></svg></span><span class="hs">Update Required</span><span class="bm ov">A new version is available! Please update the app.</span><div class="ft"><button class="btn b-t">Later</button><button class="btn b-w">Update</button></div></div></div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":940,"height":2260}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+themes: [{ cls: 'light', name: 'Light' }, { cls: 'dark', name: 'Dark' }],
+states: [{ name: 'Loading', update: false }, { name: 'Update Required · warning AppDialog', update: true }]
+};
+}
+}
+</script>
+</body>
+</html>

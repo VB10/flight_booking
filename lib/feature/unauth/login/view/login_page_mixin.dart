@@ -32,4 +32,12 @@ mixin LoginPageMixin on State<LoginPage> {
       ),
     );
   }
+
+  /// "Show test account" also fills the form, so the demo account is one tap
+  /// away instead of retyped.
+  void onShowTestAccount() {
+    emailController.text = _TestAccount.email;
+    passwordController.text = _TestAccount.password;
+    loginCubit.clearFieldErrors();
+  }
 }

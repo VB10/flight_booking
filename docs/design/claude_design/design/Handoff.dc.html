@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Handoff notes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.light{--f:Roboto,system-ui,sans-serif;font-family:var(--f);color:var(--onSurface);--canvas:#E9ECF2;--primary:#1565C0;--onPrimary:#FFFFFF;--primaryContainer:#D6E4FF;--onPrimaryContainer:#001B3E;--secondaryContainer:#CCE8FF;--onSecondaryContainer:#001E31;--tertiaryContainer:#C8F0CB;--onTertiaryContainer:#002106;--surface:#F8FAFF;--onSurface:#191C20;--surfaceContainerHighest:#E1E2E9;--onSurfaceVariant:#43474E;--outline:#73777F;--outlineVariant:#C3C6CF;--warningContainer:#FFE0C2;--onWarningContainer:#3A1800;--infoContainer:#C6E7FF;--onInfoContainer:#001E2E;--cardBackground:#FFFFFF;--divider:#DDE0E8}
+.hm{font:400 28px/36px var(--f)}.hs{font:400 24px/32px var(--f)}.tl{font:400 22px/28px var(--f)}.tm{font:500 16px/24px var(--f);letter-spacing:.15px}
+.bl{font:400 16px/24px var(--f);letter-spacing:.5px}.bm{font:400 14px/20px var(--f);letter-spacing:.25px}.bs{font:400 12px/16px var(--f);letter-spacing:.4px}
+.ll{font:500 14px/20px var(--f);letter-spacing:.1px}.lm{font:500 12px/16px var(--f);letter-spacing:.5px}
+.ov{color:var(--onSurfaceVariant)}.upper{text-transform:uppercase;letter-spacing:1px}
+.row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.f1{flex:1;min-width:0}
+.g8{gap:8px}.g10{gap:10px}.g16{gap:16px}.g20{gap:20px}.g24{gap:24px}
+.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cd{background:var(--cardBackground);border:1px solid var(--outlineVariant);border-radius:12px;padding:16px}
+.an{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.3px}
+.an-e{background:var(--surfaceContainerHighest);color:var(--onSurfaceVariant)}.an-d{background:var(--infoContainer);color:var(--onInfoContainer)}.an-f{background:var(--tertiaryContainer);color:var(--onTertiaryContainer)}.an-m{background:var(--warningContainer);color:var(--onWarningContainer)}
+.node{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:8px;background:var(--primaryContainer);color:var(--onPrimaryContainer);font:500 13px/16px var(--f);white-space:nowrap}
+.node.nw{background:var(--tertiaryContainer);color:var(--onTertiaryContainer)}
+.tr{display:grid;grid-template-columns:84px 190px 230px 190px minmax(0,1fr);gap:16px;padding:10px 0;border-bottom:1px solid var(--divider);align-items:start}
+.th{display:grid;grid-template-columns:84px 190px 230px 190px minmax(0,1fr);gap:16px;padding:0 0 10px;border-bottom:2px solid var(--outline)}
+</style>
+</helmet>
+<div class="light" style="width:1600px;min-height:5200px;background:var(--canvas);padding:60px;display:flex;flex-direction:column;gap:56px">
+
+<header class="col g8">
+<span class="lm upper" style="color:var(--primary)">Handoff notes</span>
+<h1 class="hm" style="margin:0">Flight Booking — handoff</h1>
+<p class="bl ov" style="margin:0;max-width:1000px">Token names match the Flutter theme 1:1. Dark mode uses the same names with different values (page 0a). Spacing values are always from 8 · 10 · 16 · 20 · 24 · 32; page horizontal padding is 20. Corner radius: radiusSmall 8, radiusMedium 12, radiusLarge 24.</p>
+<div class="row g8" style="flex-wrap:wrap;margin-top:8px"><span class="an an-e">Existing</span><span class="an an-d">NEW DATA</span><span class="an an-f">NEW FEATURE</span><span class="an an-m">MOVED</span><span class="ll ov" style="margin-left:8px">Same color coding is used on every screen header.</span></div>
+</header>
+
+<section class="col g16">
+<h2 class="hs" style="margin:0">1 · Component inventory per screen</h2>
+<div class="cd" style="border-radius:24px;padding:24px 32px">
+<div class="th"><span class="lm ov upper">Screen</span><span class="lm ov upper">Component</span><span class="lm ov upper">Variant</span><span class="lm ov upper">State</span><span class="lm ov upper">Tokens (color role · spacing · radius · text style)</span></div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+<div class="tr"><span class="lm" style="color:var(--primary)">{{r.s}}</span><span class="ll">{{r.c}}</span><span class="bm ov">{{r.v}}</span><span class="bm ov">{{r.st}}</span><span class="bm">{{r.t}}</span></div>
+</sc-for>
+</div>
+</section>
+
+<section class="col g16">
+<h2 class="hs" style="margin:0">2 · NEW DATA and NEW FEATURE — by screen</h2>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="6">
+<div class="cd col g10" style="border-radius:16px"><span class="tm">{{g.screen}}</span>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="2"><div class="col" style="gap:2px"><span class="an {{it.cls}}" style="align-self:flex-start">{{it.label}}</span><span class="bs ov" style="padding-left:2px">{{it.note}}</span></div></sc-for>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section class="col g16">
+<h2 class="hs" style="margin:0">3 · Navigation map</h2>
+<div class="cd" style="border-radius:24px;padding:24px 32px">
+<div class="row g10" style="flex-wrap:wrap;padding-bottom:20px;border-bottom:2px solid var(--outline)"><span class="node">Splash</span><span class="ov">→</span><span class="node">Login</span><span class="ov">→</span><span class="node">Flights</span><span class="ov">→</span><span class="node">Flight detail</span><span class="ov">·</span><span class="node">My Cart</span><span class="ov">→</span><span class="node nw">Booking confirmation</span><span class="ov">·</span><span class="node">Profile</span><span class="ov">→</span><span class="node nw">Booking history</span></div>
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="10">
+<div style="display:grid;grid-template-columns:190px 32px 190px minmax(0,1fr);gap:16px;padding:10px 0;border-bottom:1px solid var(--divider);align-items:center"><span class="node {{n.fc}}" style="justify-self:start">{{n.from}}</span><span class="ov" style="text-align:center">→</span><span class="node {{n.tc}}" style="justify-self:start">{{n.to}}</span><span class="bm ov">{{n.via}}</span></div>
+</sc-for>
+<p class="bm ov" style="margin:16px 0 0">Green nodes are NEW FEATURE screens. Back always returns to the previous screen; the Android system back button follows the same stack. Log out clears the stack and lands on Login.</p>
+</div>
+</section>
+
+<section class="col g16">
+<h2 class="hs" style="margin:0">4 · Decisions</h2>
+<div class="cd col g10" style="border-radius:24px;padding:24px 32px">
+<span class="bm"><b>Cart BadgeIconButton lives in AppTopBar, not a floating button.</b> It stays visible while the list scrolls, cannot overlap a card’s Add to Cart row or the Snackbar, and matches where the existing app already put it.</span>
+<span class="bm"><b>Theme and language moved to Profile › Settings.</b> They are rarely changed, and the Flights top bar keeps three actions (cart, profile, log out) that fit at 390 pt with Turkish titles.</span>
+<span class="bm"><b>Remove from cart uses a trailing icon plus swipe-to-dismiss.</b> The icon is the accessible path; swipe is the shortcut. Undo in the Snackbar covers accidental removal.</span>
+<span class="bm"><b>New semantic roles.</b> successContainer, warningContainer, infoContainer, their on-roles, onSuccess, onWarning and scrim were added so AppSnackbar, StatusBadge, InfoBanner and the warning AppDialog never use one-off colors. Contrast pairs are at least 4.5:1 in both themes.</span>
+<span class="bm"><b>Added components.</b> AppChip, AppSearchField, AppAvatar, AirlineMark, RouteVisual, InfoBanner, SummaryBar, SettingsRow, AppSwitch, SegmentedToggle, LoadingOverlay. All appear on pages 0b and 7.</span>
+<span class="bm"><b>Text growth.</b> Labels sit in flexible rows with min-width 0 and about 30% spare width; buttons in FlightCard use flex 1 so “Sepete Ekle” fits as easily as “Add to Cart”.</span>
+</div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":5200}}'>
+class Component extends DCLogic {
+renderVals() {
+const D = [
+['Splash','App mark','96 × 96 rounded square, aircraft glyph','loading, update','brandPrimary fill · surface glyph · radiusLarge'],
+['Splash','Title + tagline','—','all','headlineMedium + bodyLarge · onSurface / onSurfaceVariant · gap 4'],
+['Splash','Progress indicator','linear 120 × 4','loading','primary on outlineVariant · radius 2'],
+['Splash','AppDialog','warning','update required','surfaceContainerHighest · radiusLarge · padding 24 · headlineSmall + bodyMedium · icon on warningContainer / onWarningContainer'],
+['Splash','AppButton','text “Later” + warning “Update”','default','labelLarge · primary · warning / onWarning · radiusMedium · height 48'],
+['Login','Illustration','globe + flight path','all','primaryContainer · brandPrimary strokes · radiusLarge · height 196'],
+['Login','AppTextField','Email · leading icon','default, filled, error, disabled','outline · primary on focus · error · radiusMedium · height 56 · padding 16 · bodyLarge, label bodySmall'],
+['Login','AppTextField','Password · trailing Show / Hide','default, filled, focused, error, disabled','as Email · action labelLarge in primary · height 44 target'],
+['Login','AppButton','primary “Login”, full width','default, loading','primary / onPrimary · radiusMedium · height 48 · labelLarge'],
+['Login','AppButton','text “Show / Hide test account”','default','primary · labelLarge · full width'],
+['Login','InfoBanner','info','expanded','infoContainer / onInfoContainer · icon info · radiusMedium · padding 16 · bodyMedium'],
+['Login','AppSnackbar','error “Login failed”','failed','errorContainer / onErrorContainer · radiusSmall · margin 20 · bodyMedium'],
+['Flights','AppTopBar','title + 3 actions','all','surface · titleLarge · height 64 · left padding 20'],
+['Flights','BadgeIconButton','cart, count 2','0, 1, 9+','onSurfaceVariant icon 24 · badge error / onError · labelSmall · target 48'],
+['Flights','AppSearchField','leading search icon','default','AppTextField tokens · gap 16 to chips'],
+['Flights','AppChip','date, sort, airline','selected, unselected, pressed','secondaryContainer / onSecondaryContainer · outline · radiusSmall · height 44 · gap 8 · labelLarge'],
+['Flights','FlightCard','full','default, adding','cardBackground · outlineVariant · radiusMedium · padding 16 · gap 16'],
+['Flights','FlightCard text','airline, times, cities, duration','—','titleMedium · titleLarge (w500) · bodyMedium onSurfaceVariant · labelSmall'],
+['Flights','PriceTag','md','—','primary · titleLarge w700'],
+['Flights','AppButton','secondary “Details” + primary “Add to Cart”','default, pressed, loading','secondaryContainer / onSecondaryContainer · primary / onPrimary · gap 8 · radiusMedium'],
+['Flights','LoadingState','3 shimmer FlightCards','loading','shimmerBase → shimmerHighlight · radiusSmall blocks · radiusMedium buttons'],
+['Flights','EmptyState','icon + message + “Clear filters”','empty','secondaryContainer / onSecondaryContainer circle 96 · titleMedium + bodyMedium · gap 16'],
+['Flights','ErrorState','icon + message + “Try Again”','error','errorContainer / onErrorContainer circle 96 · primary AppButton'],
+['Flights','AppSnackbar','success','ticket added','successContainer / onSuccessContainer · radiusSmall · bottom 24'],
+['Flights','AppDialog','confirm “Log Out”','log out','surfaceContainerHighest · radiusLarge · padding 24 · scrim 50% light / 60% dark'],
+['Detail','AppTopBar','back + title','all','surface · titleLarge · height 64'],
+['Detail','RouteVisual','hero','content','primaryContainer / onPrimaryContainer · radiusLarge · padding 20 · headlineLarge (w500) codes · bodyMedium city'],
+['Detail','InfoRow','icon + label + value × 4','content','primaryContainer / onPrimaryContainer icon · bodyMedium onSurfaceVariant · labelLarge · divider · height 52'],
+['Detail','Info tiles','flight, aircraft, class, baggage','content','cardBackground · radiusMedium · padding 12 / 16 · bodySmall + titleMedium · gap 8'],
+['Detail','PriceTag','lg','content','primary · 32 / 40 w700'],
+['Detail','AppButton','primary “Add to Cart”, pinned','default, disabled','primary / onPrimary · bar surface + outlineVariant top border · padding 16 / 20'],
+['Detail','LoadingState / ErrorState','hero + rows skeleton / message','loading, error','shimmerBase, shimmerHighlight · errorContainer / onErrorContainer'],
+['Cart','AppTopBar','back + title','all','surface · titleLarge · height 64'],
+['Cart','FlightCard','compact + remove icon','default, swipe','cardBackground · radiusMedium · padding 16 · titleMedium + bodyMedium · PriceTag sm · swipe bg errorContainer'],
+['Cart','SummaryBar','Total + PriceTag lg + Pay','default, loading, empty total','surface · outlineVariant top border · padding 16 / 20 · labelLarge · primary AppButton'],
+['Cart','AppDialog','confirm “Payment Confirmation”','pay','surfaceContainerHighest · radiusLarge · headlineSmall + bodyMedium · text Cancel + primary Confirm'],
+['Cart','LoadingOverlay','spinner + “Processing payment...”','processing','scrim · surfaceContainerHighest · radiusLarge · padding 20 / 24 · primary spinner'],
+['Cart','AppSnackbar','info with Undo · warning','removed, empty pay','infoContainer / onInfoContainer · warningContainer / onWarningContainer · radiusSmall'],
+['Cart','EmptyState / ErrorState','browse flights / connection error','empty, error','secondaryContainer · errorContainer · circle 96 · titleMedium + bodyMedium'],
+['Cart','Booking confirmation','icon, reference, tickets, 2 buttons','success','successContainer / onSuccessContainer circle 96 · headlineSmall · titleLarge reference · StatusBadge success'],
+['Profile','AppTopBar','back + refresh + log out','all','surface · titleLarge · height 64'],
+['Profile','AppAvatar','72, initials','content','primaryContainer / onPrimaryContainer · 28 / 36 w500'],
+['Profile','StatusBadge','membership “Gold”','content','warningContainer / onWarningContainer · radiusSmall · labelMedium · height 28'],
+['Profile','StatTile','Total bookings, Member since','content','cardBackground · radiusMedium · padding 16 · headlineSmall + bodySmall'],
+['Profile','InfoRow','id, email, joined, membership','content','as Detail InfoRow'],
+['Profile','SettingsRow','AppSwitch + SegmentedToggle','content','primary / onPrimary switch · outline · secondaryContainer selected · height 60'],
+['Profile','Booking history row','chevron','content','cardBackground · radiusMedium · labelLarge + bodySmall · height 64'],
+['Profile','LoadingState / ErrorState','shimmer header + tiles / message','loading, error','shimmerBase, shimmerHighlight · errorContainer / onErrorContainer']
+];
+const rows = D.map((a) => ({ s: a[0], c: a[1], v: a[2], st: a[3], t: a[4] }));
+const E = 'an-e', Dn = 'an-d', F = 'an-f', M = 'an-m';
+const groups = [
+{ screen: 'Screen 1 · Splash', items: [{ cls: E, label: 'Nothing new', note: 'Uses existing appName and tagline.' }] },
+{ screen: 'Screen 2 · Login', items: [{ cls: E, label: 'Nothing new', note: 'Existing email, password, demo helper.' }] },
+{ screen: 'Screen 3 · Flights', items: [
+{ cls: F, label: 'NEW FEATURE: search field', note: 'AppSearchField — city or airline.' },
+{ cls: F, label: 'NEW FEATURE: date-range filter', note: 'AppChip, selected state.' },
+{ cls: F, label: 'NEW FEATURE: sort', note: 'AppChip — price / departure.' },
+{ cls: F, label: 'NEW FEATURE: Clear filters', note: 'Action inside EmptyState.' },
+{ cls: M, label: 'MOVED: theme + language', note: 'From the top bar to Profile › Settings.' }] },
+{ screen: 'Screen 4 · Flight detail', items: [
+{ cls: Dn, label: 'NEW DATA: airportCode', note: 'For from and to, shown in RouteVisual.' },
+{ cls: Dn, label: 'NEW DATA: flightNumber', note: 'Tile “Flight”.' },
+{ cls: Dn, label: 'NEW DATA: aircraftType', note: 'Tile “Aircraft”.' },
+{ cls: Dn, label: 'NEW DATA: seatClass', note: 'Tile “Class”.' },
+{ cls: Dn, label: 'NEW DATA: baggageAllowance', note: 'Tile “Baggage”.' }] },
+{ screen: 'Screen 5 · My Cart', items: [
+{ cls: F, label: 'NEW FEATURE: Undo on removal', note: 'Action in AppSnackbar info.' },
+{ cls: F, label: 'NEW FEATURE: swipe-to-dismiss', note: 'On compact FlightCard.' },
+{ cls: F, label: 'NEW FEATURE: booking confirmation screen', note: 'Shown after a successful payment.' },
+{ cls: Dn, label: 'NEW DATA: bookingReference', note: 'e.g. FB-7K2M9Q.' },
+{ cls: F, label: 'NEW FEATURE: View Bookings', note: 'Opens Profile › Booking history.' }] },
+{ screen: 'Screen 6 · Profile', items: [
+{ cls: F, label: 'NEW FEATURE: Settings section', note: 'AppSwitch (theme) + SegmentedToggle (EN / TR).' },
+{ cls: F, label: 'NEW FEATURE: Booking history entry', note: 'List screen not drawn; reuses compact FlightCard + StatusBadge.' },
+{ cls: Dn, label: 'NEW DATA: bookings[]', note: 'Past bookings behind the history row.' }] }
+];
+const nav = [
+['Splash','Login','Start-up check passes, no valid session','','' ],
+['Splash','Flights','Start-up check passes, valid session','',''],
+['Splash','Update Required (AppDialog)','Forced update: Update opens the store, Later continues to Login or Flights','','' ],
+['Login','Flights','Login succeeds','',''],
+['Flights','Flight detail','Details on a FlightCard','',''],
+['Flights','My Cart','Cart BadgeIconButton in AppTopBar','',''],
+['Flights','Profile','Profile icon in AppTopBar','',''],
+['Flights','Log Out (AppDialog)','Log out icon · Cancel stays, Log Out goes to Login','',''],
+['Flight detail','Flights','Back · Add to Cart stays on the screen and shows AppSnackbar success','',''],
+['My Cart','Flights','Back, or “Browse Flights” in EmptyState','',''],
+['My Cart','Payment Confirmation (AppDialog)','Pay · Cancel stays, Confirm shows LoadingOverlay','',''],
+['My Cart','Booking confirmation','Payment succeeds','','nw'],
+['Booking confirmation','Flights','Back to Flights','nw',''],
+['Booking confirmation','Booking history','View Bookings','nw','nw'],
+['Profile','Booking history','Booking history row','','nw'],
+['Profile','Login','Log out icon, then confirm','',''],
+['Profile','Flights','Back','','']
+].map((a) => ({ from: a[0], to: a[1], via: a[2], fc: a[3], tc: a[4] }));
+return { rows: rows, groups: groups, nav: nav };
+}
+}
+</script>
+</body>
+</html>

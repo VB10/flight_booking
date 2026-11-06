@@ -49,8 +49,9 @@ void main() {
                     ),
                     Text(LocaleKeys.flight_details.translate),
                     Text(
+                      // The argument is a formatted price (ProductFormat.price).
                       LocaleKeys.cart_checkout_confirm_message.translateArgs([
-                        '250',
+                        '250 ₺',
                       ]),
                     ),
                   ],

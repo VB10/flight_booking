@@ -1,153 +1,65 @@
+import 'dart:async';
+
 import 'package:flight_booking/core/theme/theme.dart';
+import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
+import 'package:flight_booking/feature/auth/flight_detail/cubit/flight_detail_cubit.dart';
+import 'package:flight_booking/feature/auth/flight_detail/cubit/flight_detail_state.dart';
+import 'package:flight_booking/product/application/cart/cart_cubit.dart';
+import 'package:flight_booking/product/container/product_container.dart';
+import 'package:flight_booking/product/gen/locale_keys.g.dart';
+import 'package:flight_booking/product/localization/localization_extension.dart';
+import 'package:flight_booking/product/navigation/app_routes.dart';
+import 'package:flight_booking/product/service/flight_service.dart';
+import 'package:flight_booking/product/util/format/product_format.dart';
+import 'package:flight_booking/product/widget/flight/airline_mark.dart';
+import 'package:flight_booking/product/widget/flight/route_visual.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-class FlightDetailPage extends StatefulWidget {
-  final Map<String, dynamic> flight;
+part 'view/flight_detail_page_mixin.dart';
+part 'view/widget/_flight_detail_skeleton.dart';
+part 'view/widget/_flight_info_tiles.dart';
+part 'view/widget/flight_detail_page_body.dart';
 
-  FlightDetailPage({required this.flight});
+final class FlightDetailPage extends StatefulWidget {
+  const FlightDetailPage({required this.flightId, this.flight, super.key});
+
+  final String flightId;
+
+  /// Flight handed over by the list; null on deep link / refresh.
+  final Map<String, dynamic>? flight;
 
   @override
-  _FlightDetailPageState createState() => _FlightDetailPageState();
+  State<FlightDetailPage> createState() => _FlightDetailPageState();
 }
 
-class _FlightDetailPageState extends State<FlightDetailPage> {
+final class _FlightDetailPageState extends State<FlightDetailPage>
+    with FlightDetailPageMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: ProductText.titleLarge(context, 'Bilet Detayları'),
-        backgroundColor: context.colorScheme.primary,
-      ),
-      body: Padding(
-        padding: AppPagePadding.all20(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Card(
-              elevation: 5,
-              child: Padding(
-                padding: AppPagePadding.all20(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: ProductText.h3(
-                        context,
-                        widget.flight['airline'] as String,
-                        style: context.appTextTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: context.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.spacingL),
-                    buildDetailRow(
-                      context,
-                      'Kalkış Şehri:',
-                      widget.flight['from'] as String,
-                    ),
-                    buildDetailRow(
-                      context,
-                      'Varış Şehri:',
-                      widget.flight['to'] as String,
-                    ),
-                    buildDetailRow(
-                      context,
-                      'Kalkış Saati:',
-                      widget.flight['departureTime'] as String,
-                    ),
-                    buildDetailRow(
-                      context,
-                      'Varış Saati:',
-                      widget.flight['arrivalTime'] as String,
-                    ),
-                    buildDetailRow(
-                      context,
-                      'Uçuş Süresi:',
-                      widget.flight['duration'] as String,
-                    ),
-                    buildDetailRow(
-                      context,
-                      'Tarih:',
-                      widget.flight['date'] as String,
-                    ),
-                    buildDetailRow(
-                      context,
-                      'Fiyat:',
-                      '${widget.flight['price']} ₺',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSizes.spacingXl),
-            Card(
-              elevation: 3,
-              child: Padding(
-                padding: AppPagePadding.all20(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProductText.titleMedium(
-                      context,
-                      'Bagaj Bilgileri',
-                      style: context.appTextTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: AppSizes.spacingS),
-                    ProductText.bodyMedium(context, '• El bagajı: 8 kg dahil'),
-                    ProductText.bodyMedium(context, '• Bagaj: 20 kg dahil'),
-                    ProductText.bodyMedium(context, '• Yemek servisi mevcut'),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSizes.spacingXl),
-            ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: ProductText.bodyMedium(
-                      context,
-                      'Bilet rezerve edildi!',
-                    ),
-                    backgroundColor: context.appTheme.success,
-                  ),
-                );
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: context.appTheme.success,
-                foregroundColor: context.colorScheme.onPrimary,
-                minimumSize: const Size(
-                  double.infinity,
-                  AppSizes.buttonHeightMedium,
-                ),
-              ),
-              child: ProductText.labelLarge(context, 'Rezervasyon Yap'),
-            ),
-          ],
+    return BlocProvider(
+      create: (_) => flightDetailCubit,
+      child: Scaffold(
+        backgroundColor: context.colorScheme.surface,
+        appBar: AppTopBar(
+          title: LocaleKeys.flight_detail_title.translate,
+          onBack: onBack,
+          backTooltip: LocaleKeys.flight_detail_back.translate,
         ),
-      ),
-    );
-  }
-
-  Widget buildDetailRow(BuildContext context, String title, String value) {
-    return Padding(
-      padding: AppPagePadding.pageVertical8(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ProductText.titleMedium(context, title),
-          ProductText.bodyLarge(
-            context,
-            value,
-            style: context.appTextTheme.bodyLarge?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
+        body: const _FlightDetailBody(),
+        bottomNavigationBar:
+            BlocSelector<FlightDetailCubit, FlightDetailState, bool>(
+              selector: (state) => state.isContent,
+              builder: (context, isContent) => BottomActionBar(
+                child: AppButton.primary(
+                  label: LocaleKeys.flight_add_to_cart.translate,
+                  icon: Icons.shopping_cart_outlined,
+                  expand: true,
+                  onPressed: isContent ? () => onAddToCart(context) : null,
+                ),
+              ),
             ),
-          ),
-        ],
       ),
     );
   }

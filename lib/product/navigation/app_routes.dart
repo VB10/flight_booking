@@ -14,7 +14,7 @@ final class SplashRoute extends GoRouteData with $SplashRoute {
   const SplashRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => SplashPage();
+  Widget build(BuildContext context, GoRouterState state) => const SplashPage();
 }
 
 @TypedGoRoute<LoginRoute>(path: '/login')
@@ -40,25 +40,22 @@ final class FlightListRoute extends GoRouteData with $FlightListRoute {
 }
 
 final class FlightDetailRoute extends GoRouteData with $FlightDetailRoute {
-  const FlightDetailRoute({required this.flightId, required this.$extra});
+  const FlightDetailRoute({required this.flightId, this.$extra});
 
   final String flightId;
-  final Map<String, dynamic> $extra;
+  final Map<String, dynamic>? $extra;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      FlightDetailPage(flight: $extra);
+      FlightDetailPage(flightId: flightId, flight: $extra);
 }
 
 @TypedGoRoute<CartRoute>(path: '/cart')
 final class CartRoute extends GoRouteData with $CartRoute {
-  const CartRoute({required this.$extra});
-
-  final List<Map<String, dynamic>> $extra;
+  const CartRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) =>
-      CartPage(cartItems: $extra);
+  Widget build(BuildContext context, GoRouterState state) => const CartPage();
 }
 
 @TypedGoRoute<ProfileRoute>(path: '/profile')
@@ -66,5 +63,6 @@ final class ProfileRoute extends GoRouteData with $ProfileRoute {
   const ProfileRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => ProfilePage();
+  Widget build(BuildContext context, GoRouterState state) =>
+      const ProfilePage();
 }

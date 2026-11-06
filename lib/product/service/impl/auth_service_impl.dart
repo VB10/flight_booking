@@ -10,7 +10,7 @@ import 'package:vexana/vexana.dart';
 /// Concrete implementation of auth service
 final class AuthServiceImpl implements IAuthService {
   AuthServiceImpl([IProductNetworkManager? networkManager])
-      : _networkManager = networkManager ?? ProductNetworkManager.instance;
+    : _networkManager = networkManager ?? ProductNetworkManager.instance;
 
   final IProductNetworkManager _networkManager;
 
@@ -39,20 +39,20 @@ final class AuthServiceImpl implements IAuthService {
   Future<NetworkResult<ProfileResponseModel, ProductErrorModel>> getProfile() {
     return _networkManager
         .sendRequest<ProfileResponseModel, ProfileResponseModel>(
-      NetworkPaths.profile,
-      parseModel: const ProfileResponseModel(
-        success: false,
-        data: ProfileData(
-          id: 0,
-          email: '',
-          name: '',
-          joinDate: '',
-          totalBookings: 0,
-          membershipLevel: '',
-        ),
-        message: '',
-      ),
-      method: RequestType.GET,
-    );
+          NetworkPaths.profile,
+          parseModel: const ProfileResponseModel(
+            success: false,
+            data: ProfileData(
+              id: 0,
+              email: '',
+              name: '',
+              joinDate: '',
+              totalBookings: 0,
+              membershipLevel: '',
+            ),
+            message: '',
+          ),
+          method: RequestType.GET,
+        );
   }
 }

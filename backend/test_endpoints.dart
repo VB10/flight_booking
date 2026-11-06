@@ -81,14 +81,14 @@ Future<void> testCheckoutEndpoint(HttpClient client) async {
       'cartItems': [
         {
           'id': 1,
-          'airline': 'Turkish Airlines',
+          'airline': 'Skyline Air',
           'from': 'Istanbul',
           'to': 'Ankara',
           'price': 299
         },
         {
           'id': 2,
-          'airline': 'Pegasus',
+          'airline': 'Nordwind',
           'from': 'Istanbul', 
           'to': 'Izmir',
           'price': 199

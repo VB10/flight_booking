@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>0b Base components</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.light,.dark{--f:Roboto,system-ui,sans-serif;font-family:var(--f);color:var(--onSurface)}
+.light{--canvas:#E9ECF2;--primary:#1565C0;--onPrimary:#FFFFFF;--primaryContainer:#D6E4FF;--onPrimaryContainer:#001B3E;--secondary:#0277BD;--onSecondary:#FFFFFF;--secondaryContainer:#CCE8FF;--onSecondaryContainer:#001E31;--tertiary:#2E7D32;--onTertiary:#FFFFFF;--tertiaryContainer:#C8F0CB;--onTertiaryContainer:#002106;--error:#BA1A1A;--onError:#FFFFFF;--errorContainer:#FFDAD6;--onErrorContainer:#410002;--surface:#F8FAFF;--onSurface:#191C20;--surfaceContainerHighest:#E1E2E9;--onSurfaceVariant:#43474E;--outline:#73777F;--outlineVariant:#C3C6CF;--brandPrimary:#0D47A1;--brandSecondary:#0288D1;--success:#1B7A36;--onSuccess:#FFFFFF;--successContainer:#C8F0CB;--onSuccessContainer:#002106;--warning:#B34F00;--onWarning:#FFFFFF;--warningContainer:#FFE0C2;--onWarningContainer:#3A1800;--info:#006A8E;--infoContainer:#C6E7FF;--onInfoContainer:#001E2E;--cardBackground:#FFFFFF;--divider:#DDE0E8;--shimmerBase:#E3E6EC;--shimmerHighlight:#F4F6FA;--scrim:rgba(0,0,0,.5)}
+.dark{--canvas:#0A0D11;--primary:#A9C7FF;--onPrimary:#002F65;--primaryContainer:#00468C;--onPrimaryContainer:#D6E4FF;--secondary:#8FCDFF;--onSecondary:#00344F;--secondaryContainer:#004B71;--onSecondaryContainer:#CCE8FF;--tertiary:#8DD88F;--onTertiary:#00390A;--tertiaryContainer:#1B5120;--onTertiaryContainer:#A9F5AA;--error:#FFB4AB;--onError:#690005;--errorContainer:#93000A;--onErrorContainer:#FFDAD6;--surface:#101418;--onSurface:#E1E2E8;--surfaceContainerHighest:#32353A;--onSurfaceVariant:#C3C6CF;--outline:#8D9199;--outlineVariant:#43474E;--brandPrimary:#7FB2FF;--brandSecondary:#4FC3F7;--success:#7FD890;--onSuccess:#00390F;--successContainer:#1B5120;--onSuccessContainer:#A9F5AA;--warning:#FFB77A;--onWarning:#4A2400;--warningContainer:#6A3600;--onWarningContainer:#FFDCC0;--info:#7FD0F5;--infoContainer:#004C6B;--onInfoContainer:#C6E7FF;--cardBackground:#1B1F25;--divider:#2F343B;--shimmerBase:#262B32;--shimmerHighlight:#343A43;--scrim:rgba(0,0,0,.6)}
+.dl{font:400 57px/64px var(--f)}.hs{font:400 24px/32px var(--f)}.hm{font:400 28px/36px var(--f)}
+.tl{font:400 22px/28px var(--f)}.tm{font:500 16px/24px var(--f);letter-spacing:.15px}.ts{font:500 14px/20px var(--f);letter-spacing:.1px}
+.bl{font:400 16px/24px var(--f);letter-spacing:.5px}.bm{font:400 14px/20px var(--f);letter-spacing:.25px}.bs{font:400 12px/16px var(--f);letter-spacing:.4px}
+.ll{font:500 14px/20px var(--f);letter-spacing:.1px}.lm{font:500 12px/16px var(--f);letter-spacing:.5px}.ls{font:500 11px/16px var(--f);letter-spacing:.5px}
+.w5{font-weight:500}.ov{color:var(--onSurfaceVariant)}.upper{text-transform:uppercase;letter-spacing:1px}
+.row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.f1{flex:1;min-width:0}
+.g8{gap:8px}.g10{gap:10px}.g16{gap:16px}.g20{gap:20px}.g24{gap:24px}.g32{gap:32px}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cd{background:var(--cardBackground);border:1px solid var(--outlineVariant);border-radius:12px;padding:16px}
+.dv{height:1px;background:var(--divider);flex:none}
+.bar{display:flex;align-items:center;height:64px;padding:0 4px 0 20px;flex:none;background:var(--surface);color:var(--onSurface)}
+.bar.bk{padding-left:4px}.bar .ti{flex:1;min-width:0;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar.bk .ti{margin-left:4px}
+.ib{width:48px;height:48px;border-radius:50%;border:0;background:none;color:var(--onSurfaceVariant);display:grid;place-items:center;position:relative;padding:0;flex:none}
+.bdg{position:absolute;top:6px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--error);color:var(--onError);font:500 11px/16px var(--f);text-align:center}
+.btn{height:48px;padding:0 24px;border-radius:12px;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.btn .i{width:20px;height:20px}
+.btn.hf{flex:1;min-width:0;padding:0 8px}.btn.fw{width:100%}
+.b-p{background:var(--primary);color:var(--onPrimary)}.b-s{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}.b-t{background:none;color:var(--primary);padding:0 16px}.b-w{background:var(--warning);color:var(--onWarning)}
+.pr{box-shadow:inset 0 0 0 100px color-mix(in srgb,currentColor 14%,transparent)}
+.dis{background:color-mix(in srgb,var(--onSurface) 12%,transparent);color:color-mix(in srgb,var(--onSurface) 38%,transparent)}.b-t.dis{background:none}
+.spin{width:20px;height:20px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:sp .9s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.tf{position:relative;height:56px;border:1px solid var(--outline);border-radius:12px;display:flex;align-items:center;gap:12px;padding:0 8px 0 16px;color:var(--onSurfaceVariant)}
+.tf .lb{position:absolute;left:52px;top:15px;font:400 16px/24px var(--f);letter-spacing:.5px;color:var(--onSurfaceVariant)}
+.tf.nl .lb{left:16px}
+.tf.up .lb,.tf.fo .lb,.tf.er .lb{left:12px;top:-9px;font:400 12px/16px var(--f);letter-spacing:.4px;padding:0 4px;background:var(--surface)}
+.tf.fo{border-color:var(--primary);box-shadow:inset 0 0 0 1px var(--primary)}.tf.fo .lb{color:var(--primary)}
+.tf.er{border-color:var(--error);box-shadow:inset 0 0 0 1px var(--error);color:var(--error)}.tf.er .lb{color:var(--error)}
+.vl{flex:1;min-width:0;font:400 16px/24px var(--f);letter-spacing:.5px;color:var(--onSurface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crt{display:inline-block;vertical-align:middle;width:2px;height:24px;background:var(--primary)}
+.ta{border:0;background:none;color:var(--primary);font:500 14px/20px var(--f);letter-spacing:.1px;height:44px;padding:0 12px;border-radius:12px}
+.sup{font:400 12px/16px var(--f);letter-spacing:.4px;margin:4px 16px 0;color:var(--onSurfaceVariant)}.sup.er{color:var(--error)}
+.chip{height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--outline);background:none;color:var(--onSurfaceVariant);display:inline-flex;align-items:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.chip.on{background:var(--secondaryContainer);color:var(--onSecondaryContainer);border-color:transparent}.chip .i{width:18px;height:18px}
+.sbd{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.5px;white-space:nowrap}.sbd .i{width:16px;height:16px}
+.s-warn{background:var(--warningContainer);color:var(--onWarningContainer)}.s-ok{background:var(--successContainer);color:var(--onSuccessContainer)}.s-info{background:var(--infoContainer);color:var(--onInfoContainer)}.s-err{background:var(--errorContainer);color:var(--onErrorContainer)}.s-n{background:var(--surfaceContainerHighest);color:var(--onSurfaceVariant)}
+.ic{width:40px;height:40px;border-radius:50%;background:var(--primaryContainer);color:var(--onPrimaryContainer);display:grid;place-items:center;flex:none}.ic .i{width:20px;height:20px}
+.pt{font:700 22px/28px var(--f);color:var(--primary);white-space:nowrap}.pt.lg{font-size:32px;line-height:40px}.pt.sm{font-size:16px;line-height:24px}
+.rt{display:flex;align-items:center;width:100%;color:var(--primary)}.rt .ln{flex:1;height:2px;background:var(--outlineVariant);border-radius:1px}.rt .dt{width:8px;height:8px;border-radius:50%;border:2px solid var(--outline);flex:none}.rt .i{width:20px;height:20px;transform:rotate(45deg);margin:0 4px}
+.scrim{position:absolute;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:0 32px;z-index:5}
+.dlg{width:100%;background:var(--surfaceContainerHighest);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;color:var(--onSurface)}.dlg .ft{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.snk{position:absolute;left:20px;right:20px;bottom:24px;min-height:48px;padding:12px 16px;border-radius:8px;display:flex;align-items:center;gap:12px;font:400 14px/20px var(--f);letter-spacing:.25px;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:4}
+.snk .i{width:20px;height:20px}.snk .tx{flex:1}.snk .ac{border:0;background:none;color:inherit;font:500 14px/20px var(--f);height:44px;padding:0 8px;text-decoration:underline}
+.snk.st{position:static}
+.k-ok{background:var(--successContainer);color:var(--onSuccessContainer)}.k-er{background:var(--errorContainer);color:var(--onErrorContainer)}.k-in{background:var(--infoContainer);color:var(--onInfoContainer)}.k-wn{background:var(--warningContainer);color:var(--onWarningContainer)}
+.stt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 32px}
+.big{width:96px;height:96px;border-radius:50%;display:grid;place-items:center}.big .i{width:40px;height:40px}
+.bg-sec{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}.bg-er{background:var(--errorContainer);color:var(--onErrorContainer)}
+.sh{display:block;background:linear-gradient(90deg,var(--shimmerBase) 25%,var(--shimmerHighlight) 50%,var(--shimmerBase) 75%);background-size:200% 100%;animation:shm 1.4s linear infinite;border-radius:8px}
+@keyframes shm{from{background-position:200% 0}to{background-position:-200% 0}}
+.sum{flex:none;display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--surface);border-top:1px solid var(--outlineVariant)}
+.sw{width:52px;height:32px;border-radius:16px;background:var(--primary);position:relative;flex:none}.sw::after{content:'';position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:var(--onPrimary)}
+.sw.o{background:var(--surfaceContainerHighest);box-shadow:inset 0 0 0 2px var(--outline)}.sw.o::after{right:auto;left:8px;top:8px;width:16px;height:16px;background:var(--outline)}
+.seg{display:inline-flex;border:1px solid var(--outline);border-radius:12px;overflow:hidden;flex:none}.seg b{display:grid;place-items:center;min-width:52px;height:44px;font:500 14px/20px var(--f);color:var(--onSurface)}.seg b.on{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}
+.av{width:72px;height:72px;border-radius:50%;background:var(--primaryContainer);color:var(--onPrimaryContainer);display:grid;place-items:center;font:500 28px/36px var(--f);flex:none}
+.box{background:var(--surface);border:1px solid var(--outlineVariant);border-radius:12px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+</style>
+</helmet>
+<div class="light" style="width:1600px;min-height:2900px;background:var(--canvas);padding:60px;display:flex;flex-direction:column;gap:40px">
+
+<header class="col g8">
+<span class="lm upper" style="color:var(--primary)">Page 0b · Design system · Base components</span>
+<h1 class="hm" style="margin:0">Components — each one becomes a Flutter widget</h1>
+<p class="bl ov" style="margin:0;max-width:1000px">Default appearance of every kit component in light and dark. All states are on page 7. Component names are the widget names; the extra components at the bottom are the ones added beyond the required list.</p>
+</header>
+
+<div style="display:flex;gap:40px;align-items:flex-start">
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="2">
+<div class="{{t.cls}}" style="width:740px;background:var(--surface);border:1px solid var(--outlineVariant);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:32px">
+<span class="hs">{{t.name}}</span>
+
+<div class="col g10"><span class="lm ov upper">AppButton · primary / secondary / text</span>
+<div class="row g10"><button class="btn b-p">Login</button><button class="btn b-s">Details</button><button class="btn b-t">Show test account</button></div></div>
+
+<div class="col g10"><span class="lm ov upper">AppTextField · default + leading icon · filled + trailing action</span>
+<div class="tf"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zM22 6l-10 7L2 6"/></svg><span class="lb">Email</span><span class="vl"></span></div>
+<div class="tf up"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2zM7 11V7a5 5 0 0110 0v4"/></svg><span class="lb">Password</span><span class="vl">••••••••</span><button class="ta">Show</button></div></div>
+
+<div class="col g10"><span class="lm ov upper">AppTopBar · title, back, action icons · BadgeIconButton 0 / 1 / 9+</span>
+<div class="box"><div class="bar bk"><button class="ib" aria-label="Back" style="color:var(--onSurface)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><h2 class="ti tl">Flight details</h2><button class="ib" aria-label="Refresh"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg></button></div>
+<div class="bar"><h2 class="ti tl">Flights</h2><button class="ib" aria-label="Cart"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg><span class="bdg">2</span></button><button class="ib" aria-label="Profile"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button></div></div>
+<div class="row g24">
+<div class="col g8" style="align-items:center"><button class="ib" aria-label="Cart, empty"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg></button><span class="bs ov">0 · no badge</span></div>
+<div class="col g8" style="align-items:center"><button class="ib" aria-label="Cart, 1 ticket"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg><span class="bdg">1</span></button><span class="bs ov">1</span></div>
+<div class="col g8" style="align-items:center"><button class="ib" aria-label="Cart, more than 9 tickets"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg><span class="bdg">9+</span></button><span class="bs ov">9+</span></div>
+</div></div>
+
+<div class="col g10"><span class="lm ov upper">FlightCard · full · compact</span>
+<div class="row g16" style="align-items:flex-start">
+<div class="cd col g16" style="width:338px">
+<div class="row g10"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.8.2 1.1L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.3.8.4 1.2.2l.5-.2c.4-.3.6-.7.5-1.1z"/></svg></span><div class="f1 col"><span class="tm">Skyline Air</span><span class="bs ov">12 Dec 2026</span></div><span class="pt">650 ₺</span></div>
+<div class="row g10"><div class="col"><span class="tl w5">08:30</span><span class="bm ov">Istanbul</span></div><div class="f1 col" style="align-items:center;gap:2px"><span class="ls ov">1h 15m</span><div class="rt"><i class="dt"></i><i class="ln"></i><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.8.2 1.1L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.3.8.4 1.2.2l.5-.2c.4-.3.6-.7.5-1.1z"/></svg><i class="ln"></i><i class="dt"></i></div></div><div class="col" style="align-items:flex-end"><span class="tl w5">09:45</span><span class="bm ov">Ankara</span></div></div>
+<div class="row g8"><button class="btn b-s hf">Details</button><button class="btn b-p hf">Add to Cart</button></div>
+</div>
+<div class="cd col g8" style="width:338px">
+<div class="row g8"><span class="tm f1">Istanbul → Ankara</span><button class="ib" aria-label="Remove ticket" style="margin:-12px -12px -12px 0"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6M10 11v6M14 11v6"/></svg></button></div>
+<span class="bm ov">Skyline Air · 12 Dec 2026</span>
+<div class="row"><span class="bm f1">08:30 – 09:45 · 1h 15m</span><span class="pt sm">650 ₺</span></div>
+</div></div></div>
+
+<div class="col g10"><span class="lm ov upper">PriceTag sm / md / lg · StatusBadge · InfoRow · StatTile</span>
+<div class="row g24"><span class="pt sm">650 ₺</span><span class="pt">1.250 ₺</span><span class="pt lg">1.250 ₺</span>
+<span class="sbd s-warn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a7 7 0 100-14 7 7 0 000 14zM8.2 13.9L7 23l5-3 5 3-1.2-9.1"/></svg>Gold</span><span class="sbd s-n">Silver</span><span class="sbd s-ok">Confirmed</span></div>
+<div class="row g16" style="align-items:stretch">
+<div class="cd f1" style="padding:0 16px"><div class="row g16" style="height:52px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM12 6v6l4 2"/></svg></span><span class="bm ov f1">Departure</span><span class="ll">08:30</span></div><div class="dv"></div><div class="row g16" style="height:52px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1zM16 2v4M8 2v4M2 10h20"/></svg></span><span class="bm ov f1">Date</span><span class="ll">12 Dec 2026</span></div></div>
+<div class="cd col g8" style="width:165px"><span class="ic" style="width:32px;height:32px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 010 6v2a2 2 0 002 2h16a2 2 0 002-2v-2a3 3 0 010-6V7a2 2 0 00-2-2H4a2 2 0 00-2 2zM13 5v2M13 17v2M13 11v2"/></svg></span><span class="hs">12</span><span class="bs ov">Total bookings</span></div>
+</div></div>
+
+<div class="col g10"><span class="lm ov upper">AppDialog · confirm · warning</span>
+<div class="row g16" style="align-items:flex-start">
+<div class="dlg" style="width:338px;border:1px solid var(--outlineVariant)"><span class="hs">Payment Confirmation</span><span class="bm ov">Are you sure you want to pay a total of 1.250 ₺?</span><div class="ft"><button class="btn b-t">Cancel</button><button class="btn b-p">Confirm</button></div></div>
+<div class="dlg" style="width:338px;border:1px solid var(--outlineVariant)"><span class="ic" style="background:var(--warningContainer);color:var(--onWarningContainer)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0zM12 9v4M12 17h.01"/></svg></span><span class="hs">Update Required</span><span class="bm ov">A new version is available! Please update the app.</span><div class="ft"><button class="btn b-t">Later</button><button class="btn b-w">Update</button></div></div>
+</div></div>
+
+<div class="col g10"><span class="lm ov upper">AppSnackbar · success / error / info / warning</span>
+<div class="snk st k-ok"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.1V12a10 10 0 11-5.9-9.1M22 4L12 14l-3-3"/></svg><span class="tx">Ticket added. You have 2 tickets in your cart.</span></div>
+<div class="snk st k-er"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM12 8v4M12 16h.01"/></svg><span class="tx">Login failed</span></div>
+<div class="snk st k-in"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM12 16v-4M12 8h.01"/></svg><span class="tx">Ticket removed from cart!</span><button class="ac">Undo</button></div>
+<div class="snk st k-wn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0zM12 9v4M12 17h.01"/></svg><span class="tx">Your cart is empty!</span></div></div>
+
+<div class="col g10"><span class="lm ov upper">LoadingState · EmptyState · ErrorState</span>
+<div class="row g16" style="align-items:stretch">
+<div class="box f1" style="height:290px;padding:16px;gap:12px;justify-content:center"><div class="row g10"><span class="sh" style="width:40px;height:40px;border-radius:50%"></span><div class="f1 col g8"><span class="sh" style="width:55%;height:14px"></span><span class="sh" style="width:35%;height:12px"></span></div><span class="sh" style="width:56px;height:24px"></span></div><div class="row g10"><span class="sh" style="width:52px;height:36px"></span><span class="sh f1" style="height:8px"></span><span class="sh" style="width:52px;height:36px"></span></div><div class="row g8"><span class="sh f1" style="height:48px;border-radius:12px"></span><span class="sh f1" style="height:48px;border-radius:12px"></span></div></div>
+<div class="box f1" style="height:290px"><div class="stt" style="padding:0 16px;gap:12px"><span class="big bg-sec" style="width:72px;height:72px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg></span><div class="col g8"><span class="tm">Your cart is empty</span><span class="bm ov">Find a flight and add it to your cart.</span></div><button class="btn b-s">Browse Flights</button></div></div>
+</div>
+<div class="box" style="height:240px"><div class="stt" style="padding:0 16px;gap:12px"><span class="big bg-er" style="width:72px;height:72px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 1l22 22M16.7 11.1A11 11 0 0121 14M5 12.6a11 11 0 015.2-2.9M10.7 5.1A16 16 0 0122.6 9M1.4 9a16 16 0 013.2-2.2M8.5 16.1a6 6 0 013.5-1.1M12 20h.01"/></svg></span><div class="col g8"><span class="tm">Connection error</span><span class="bm ov">Check your connection and try again.</span></div><button class="btn b-p">Try Again</button></div></div></div>
+
+<div class="col g16"><span class="lm upper" style="color:var(--primary)">Added components</span>
+<div class="col g10"><span class="lm ov upper">AppChip · selected / unselected · AppAvatar · AirlineMark</span>
+<div class="row g10"><button class="chip on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>12 Dec</button><button class="chip">Sort: Price</button><span class="av" style="margin-left:16px">AD</span><span class="ic" style="margin-left:8px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.8.2 1.1L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.3.8.4 1.2.2l.5-.2c.4-.3.6-.7.5-1.1z"/></svg></span></div></div>
+<div class="col g10"><span class="lm ov upper">AppSearchField (AppTextField + search icon)</span>
+<div class="tf"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3"/></svg><span class="lb">Search city or airline</span><span class="vl"></span></div></div>
+<div class="col g10"><span class="lm ov upper">InfoBanner</span>
+<div class="row g10" style="align-items:flex-start;padding:16px;border-radius:12px;background:var(--infoContainer);color:var(--onInfoContainer)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--info)"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM12 16v-4M12 8h.01"/></svg><span class="bm">Test account: demo@flightbooking.app / Demo1234</span></div></div>
+<div class="col g10"><span class="lm ov upper">SettingsRow · AppSwitch · SegmentedToggle</span>
+<div class="cd" style="padding:0 16px"><div class="row g16" style="height:60px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg></span><span class="bm f1">Dark theme</span><span class="sw o" role="img" aria-label="Off"></span></div><div class="dv"></div><div class="row g16" style="height:60px"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a10 10 0 100-20 10 10 0 000 20zM2 12h20M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg></span><span class="bm f1">Language</span><span class="seg"><b class="on">EN</b><b>TR</b></span></div></div></div>
+<div class="col g10"><span class="lm ov upper">SummaryBar</span>
+<div class="box"><div class="sum"><div class="col f1"><span class="ll ov">Total:</span><span class="pt lg">1.250 ₺</span></div><button class="btn b-p" style="min-width:132px">Pay</button></div></div></div>
+<div class="col g10"><span class="lm ov upper">LoadingOverlay (blocking)</span>
+<div class="box" style="height:150px"><div class="scrim"><div class="dlg" style="width:auto;flex-direction:row;align-items:center;gap:16px;padding:20px 24px"><span class="spin" style="width:28px;height:28px;color:var(--primary)"></span><span class="tm">Processing payment...</span></div></div></div></div>
+</div>
+
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":2900}}'>
+class Component extends DCLogic {
+renderVals() {
+return { themes: [{ cls: 'light', name: 'Light' }, { cls: 'dark', name: 'Dark' }] };
+}
+}
+</script>
+</body>
+</html>

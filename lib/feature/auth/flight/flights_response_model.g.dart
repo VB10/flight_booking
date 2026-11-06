@@ -34,6 +34,12 @@ FlightModel _$FlightModelFromJson(Map<String, dynamic> json) => FlightModel(
   price: (json['price'] as num).toInt(),
   duration: json['duration'] as String,
   date: json['date'] as String,
+  fromCode: json['fromCode'] as String?,
+  toCode: json['toCode'] as String?,
+  flightNumber: json['flightNumber'] as String?,
+  aircraftType: json['aircraftType'] as String?,
+  seatClass: json['seatClass'] as String?,
+  baggageAllowance: json['baggageAllowance'] as String?,
 );
 
 Map<String, dynamic> _$FlightModelToJson(FlightModel instance) =>
@@ -47,4 +53,10 @@ Map<String, dynamic> _$FlightModelToJson(FlightModel instance) =>
       'price': instance.price,
       'duration': instance.duration,
       'date': instance.date,
+      'fromCode': ?instance.fromCode,
+      'toCode': ?instance.toCode,
+      'flightNumber': ?instance.flightNumber,
+      'aircraftType': ?instance.aircraftType,
+      'seatClass': ?instance.seatClass,
+      'baggageAllowance': ?instance.baggageAllowance,
     };

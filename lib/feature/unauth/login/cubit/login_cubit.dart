@@ -11,16 +11,55 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 final class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this._authService, this._authCubit) : super(const LoginState());
 
+  static final RegExp _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
   final IAuthService _authService;
   final AuthCubit _authCubit;
+
+  /// Fields were filled programmatically (test account): stale validation
+  /// errors under them must go.
+  void clearFieldErrors() {
+    if (state.emailError.isEmpty && state.passwordError.isEmpty) return;
+    emit(state.copyWith(emailError: '', passwordError: ''));
+  }
 
   Future<void> login({
     required String email,
     required String password,
   }) async {
-    emit(state.copyWith(isLoading: true, errorMessage: '', isSuccess: false));
+    final trimmedEmail = email.trim();
+    final emailError = _emailPattern.hasMatch(trimmedEmail)
+        ? ''
+        : LocaleKeys.login_email_invalid.translate;
+    final passwordError = password.isEmpty
+        ? LocaleKeys.login_password_required.translate
+        : '';
+    if (emailError.isNotEmpty || passwordError.isNotEmpty) {
+      emit(
+        state.copyWith(
+          emailError: emailError,
+          passwordError: passwordError,
+          errorMessage: '',
+          isSuccess: false,
+        ),
+      );
+      return;
+    }
 
-    final result = await _authService.login(email: email, password: password);
+    emit(
+      state.copyWith(
+        isLoading: true,
+        errorMessage: '',
+        emailError: '',
+        passwordError: '',
+        isSuccess: false,
+      ),
+    );
+
+    final result = await _authService.login(
+      email: trimmedEmail,
+      password: password,
+    );
 
     LoginResponseModel? successResponse;
     String? failureMessage;
@@ -50,13 +89,14 @@ final class LoginCubit extends Cubit<LoginState> {
         userId: response.user.id,
       );
       await _logSuccessfulLogin(response);
+      // setSession triggers the router redirect, which may already have
+      // disposed this page (and closed the cubit).
+      if (isClosed) return;
       emit(state.copyWith(isLoading: false, isSuccess: true));
     } else {
       emit(
         state.copyWith(
           isLoading: false,
-
-          ///TODO: Localization
           errorMessage: failureMessage ?? LocaleKeys.login_failed.translate,
         ),
       );

@@ -1,0 +1,37 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-05T19:40:00Z"},
+  "title": "Flight Booking — Redesign Kit",
+  "launch": {"view": "canvas"},
+  "pages": [
+    {"id": "ds", "name": "0 · Design system"},
+    {"id": "scr", "name": "1–6 · Screens"},
+    {"id": "hnd", "name": "7 · States & handoff"}
+  ],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1600, "h": 3200, "title": "0a · Foundations", "page": "ds"},
+    "Components.dc.html": {"x": 1680, "y": 0, "w": 1600, "h": 3400, "title": "0b · Base components", "page": "ds"},
+    "Splash.dc.html": {"x": 0, "y": 3520, "w": 940, "h": 2260, "title": "1 · Splash", "page": "scr"},
+    "Login.dc.html": {"x": 1020, "y": 3520, "w": 2230, "h": 2260, "title": "2 · Login", "page": "scr"},
+    "Flights.dc.html": {"x": 3330, "y": 3520, "w": 2660, "h": 2260, "title": "3 · Flights (home)", "page": "scr"},
+    "Detail.dc.html": {"x": 0, "y": 5900, "w": 1370, "h": 2260, "title": "4 · Flight detail", "page": "scr"},
+    "Profile.dc.html": {"x": 1450, "y": 5900, "w": 1370, "h": 2260, "title": "6 · Profile", "page": "scr"},
+    "Cart.dc.html": {"x": 2900, "y": 5900, "w": 1800, "h": 4100, "title": "5 · My cart", "page": "scr"},
+    "States.dc.html": {"x": 0, "y": 10120, "w": 1600, "h": 4300, "title": "7 · Component states", "page": "hnd"},
+    "Handoff.dc.html": {"x": 1680, "y": 10120, "w": 1600, "h": 6200, "title": "Handoff notes", "page": "hnd"}
+  },
+  "order": [
+    "Main.dc.html",
+    "Components.dc.html",
+    "Splash.dc.html",
+    "Login.dc.html",
+    "Flights.dc.html",
+    "Detail.dc.html",
+    "Profile.dc.html",
+    "Cart.dc.html",
+    "States.dc.html",
+    "Handoff.dc.html"
+  ],
+  "notes": {},
+  "designSystems": []
+}

@@ -1,0 +1,22 @@
+name: ui_kit
+description: "Flight Booking design system — tokens, theme and base widgets (from the Claude Design kit in docs/design/claude_design)."
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # LoadingState skeleton
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.0.0
+
+flutter:
