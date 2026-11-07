@@ -6,7 +6,10 @@
       "detail": "LocaleKeys + assets/fonts + models + routes",
       "type": "shell",
       "command": "./scripts/generate.sh",
-      "group": { "kind": "build", "isDefault": true },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "problemMatcher": []
     },
     {
@@ -30,6 +33,39 @@
       "type": "shell",
       "command": "./scripts/generate.sh --clean",
       "problemMatcher": []
+    },
+    {
+      "label": "Backend: free port",
+      "detail": "Kill whatever still listens on 8080 (old server) before a new one starts",
+      "type": "shell",
+      "command": "./start_backend.sh 8080 --free-only",
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Backend: start",
+      "detail": "Free port 8080, then run the Dart backend in a terminal",
+      "type": "shell",
+      "command": "./start_backend.sh 8080",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": {
+        "owner": "dart-backend",
+        "pattern": {
+          "regexp": "^__never_matches__$"
+        },
+        "background": {
+          "activeBegins": true,
+          "beginsPattern": "Backend Server'ı başlatılıyor",
+          "endsPattern": "Server started on"
+        }
+      }
     }
   ]
 }

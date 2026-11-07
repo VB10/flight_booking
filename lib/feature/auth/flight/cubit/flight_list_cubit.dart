@@ -5,13 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class FlightListCubit extends Cubit<FlightListState> {
   FlightListCubit(this._flightService)
-      : super(const FlightListState(isLoading: true));
+    : super(const FlightListState(isLoading: true));
 
   final IFlightService _flightService;
 
   Future<void> loadFlights() async {
     emit(state.copyWith(isLoading: true, errorMessage: ''));
     final result = await _flightService.getFlights();
+    if (isClosed) return;
     result.fold(
       onSuccess: (FlightsResponseModel response) {
         if (response.success) {
@@ -35,10 +36,27 @@ final class FlightListCubit extends Cubit<FlightListState> {
         emit(
           state.copyWith(
             isLoading: false,
-            errorMessage: error.description ?? 'Bağlantı hatası',
+            // The page shows the localized `flight_error_message`; this is
+            // only the "has error" flag plus the technical detail.
+            errorMessage: error.description ?? 'network_error',
           ),
         );
       },
     );
   }
+
+  void setQuery(String query) => emit(state.copyWith(query: query));
+
+  /// Selecting the active date again clears the filter.
+  void toggleDate(String date) => emit(
+    state.selectedDate == date
+        ? state.copyWith(clearSelectedDate: true)
+        : state.copyWith(selectedDate: date),
+  );
+
+  void cycleSort() => emit(state.copyWith(sort: state.sort.next));
+
+  void clearFilters() => emit(
+    state.copyWith(query: '', clearSelectedDate: true, sort: FlightSort.none),
+  );
 }

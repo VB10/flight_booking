@@ -16,12 +16,14 @@
     "show_test_account": "Show test account",
     "hide_test_account": "Hide test account",
     "test_account_info": "Test account: {email} / {password}",
-    "failed": "Login failed"
+    "failed": "Login failed",
+    "title": "Welcome back",
+    "subtitle": "Sign in to book your next flight.",
+    "email_invalid": "Enter a valid email address",
+    "password_required": "Password is required"
   },
   "flight": {
     "list_title": "Flights",
-    "theme_tooltip": "Theme",
-    "language_tooltip": "Language",
     "logout": "Log Out",
     "logout_confirm": "Are you sure you want to log out?",
     "added_to_cart": {
@@ -31,11 +33,34 @@
     "details": "Details",
     "add_to_cart": "Add to Cart",
     "duration": "Duration: {}",
-    "date": "Date: {}",
     "price": "{} ₺",
     "update_required_title": "Update Required",
     "update_required_message": "A new version is available! Please update the app.",
-    "update": "Update"
+    "update": "Update",
+    "profile_tooltip": "Profile",
+    "cart_tooltip": "Cart",
+    "search_hint": "Search city or airline",
+    "search_clear": "Clear search",
+    "sort_none": "Sort",
+    "sort_price": "Sort: Price",
+    "sort_departure": "Sort: Departure",
+    "empty_title": "No flights found",
+    "empty_message": "Try another date or route to see more flights.",
+    "clear_filters": "Clear filters",
+    "error_title": "Couldn't load flights",
+    "error_message": "Check your connection and try again.",
+    "detail_title": "Flight details",
+    "detail_back": "Back",
+    "detail_departure": "Departure",
+    "detail_arrival": "Arrival",
+    "detail_duration": "Duration",
+    "detail_date": "Date",
+    "detail_price": "Price",
+    "detail_tile_flight": "Flight",
+    "detail_tile_aircraft": "Aircraft",
+    "detail_tile_class": "Class",
+    "detail_tile_baggage": "Baggage",
+    "detail_error_title": "Couldn't load this flight"
   },
   "cart": {
     "title": "My Cart",
@@ -43,11 +68,43 @@
     "removed_snackbar": "Ticket removed from cart!",
     "checkout_empty_warning": "Your cart is empty!",
     "checkout_confirm_title": "Payment Confirmation",
-    "checkout_confirm_message": "Are you sure you want to pay a total of {} ₺?",
+    "checkout_confirm_message": "Are you sure you want to pay a total of {}?",
     "confirm": "Confirm",
     "processing_payment": "Processing payment...",
     "total_label": "Total:",
     "pay_button": "Pay",
-    "connection_error": "Connection error"
+    "connection_error": "Connection error",
+    "remove_tooltip": "Remove from cart",
+    "empty_message": "Find a flight and add it to your cart.",
+    "browse_flights": "Browse Flights",
+    "undo": "Undo",
+    "error_message": "Check your connection and try again.",
+    "success_title": "Payment successful",
+    "success_message": {
+      "one": "Your 1 ticket is booked.",
+      "other": "Your {} tickets are booked."
+    },
+    "booking_reference": "Booking reference",
+    "confirmed": "Confirmed",
+    "total_paid": "Total paid",
+    "back_to_flights": "Back to Flights"
+  },
+  "splash": {
+    "loading": "Loading"
+  },
+  "profile": {
+    "title": "Profile",
+    "refresh_tooltip": "Refresh",
+    "error_title": "Couldn't load your profile",
+    "error_message": "Check your connection and try again.",
+    "total_bookings": "Total bookings",
+    "member_since": "Member since",
+    "account_id": "Account ID",
+    "email": "Email",
+    "joined": "Joined",
+    "membership": "Membership",
+    "settings": "Settings",
+    "dark_theme": "Dark theme",
+    "language": "Language"
   }
 }

@@ -12,11 +12,11 @@ final class AuthState extends Equatable {
   });
 
   const AuthState.unauthenticated()
-      : isLoggedIn = false,
-        token = null,
-        email = null,
-        name = null,
-        userId = null;
+    : isLoggedIn = false,
+      token = null,
+      email = null,
+      name = null,
+      userId = null;
 
   final bool isLoggedIn;
   final String? token;

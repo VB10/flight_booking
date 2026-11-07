@@ -7,49 +7,109 @@ import 'package:shelf_cors_headers/shelf_cors_headers.dart';
 
 // Hard coded data - kötü praktik!
 List<Map<String, dynamic>> flights = [
+  // Fictional airlines only (v13 design kit). fromCode, toCode, flightNumber,
+  // aircraftType, seatClass and baggageAllowance are the design's NEW DATA.
   {
     'id': 1,
-    'airline': 'Turkish Airlines',
+    'airline': 'Skyline Air',
     'from': 'Istanbul',
+    'fromCode': 'IST',
     'to': 'Ankara',
-    'departureTime': '08:00',
-    'arrivalTime': '09:30',
-    'price': 299,
-    'duration': '1h 30m',
-    'date': '2024-01-15',
+    'toCode': 'ESB',
+    'departureTime': '08:30',
+    'arrivalTime': '09:45',
+    'price': 650,
+    'duration': '1h 15m',
+    'date': '2026-12-12',
+    'flightNumber': 'SK 1042',
+    'aircraftType': 'Airbus A321neo',
+    'seatClass': 'Economy',
+    'baggageAllowance': '20 kg',
   },
   {
     'id': 2,
-    'airline': 'Pegasus',
+    'airline': 'Nordwind',
     'from': 'Istanbul',
+    'fromCode': 'SAW',
     'to': 'Izmir',
+    'toCode': 'ADB',
     'departureTime': '10:30',
     'arrivalTime': '11:45',
-    'price': 199,
+    'price': 499,
     'duration': '1h 15m',
-    'date': '2024-01-15',
+    'date': '2026-12-12',
+    'flightNumber': 'NW 318',
+    'aircraftType': 'Boeing 737-800',
+    'seatClass': 'Economy',
+    'baggageAllowance': '15 kg',
   },
   {
     'id': 3,
-    'airline': 'AnadoluJet',
+    'airline': 'Azure Jet',
     'from': 'Ankara',
+    'fromCode': 'ESB',
     'to': 'Antalya',
+    'toCode': 'AYT',
     'departureTime': '14:00',
-    'arrivalTime': '15:30',
-    'price': 349,
-    'duration': '1h 30m',
-    'date': '2024-01-16',
+    'arrivalTime': '15:20',
+    'price': 720,
+    'duration': '1h 20m',
+    'date': '2026-12-13',
+    'flightNumber': 'AZ 77',
+    'aircraftType': 'Airbus A320',
+    'seatClass': 'Economy',
+    'baggageAllowance': '20 kg',
   },
   {
     'id': 4,
-    'airline': 'Turkish Airlines',
+    'airline': 'Skyline Air',
     'from': 'Istanbul',
+    'fromCode': 'IST',
     'to': 'Trabzon',
+    'toCode': 'TZX',
     'departureTime': '16:45',
     'arrivalTime': '18:15',
-    'price': 399,
+    'price': 890,
     'duration': '1h 30m',
-    'date': '2024-01-16',
+    'date': '2026-12-13',
+    'flightNumber': 'SK 2210',
+    'aircraftType': 'Airbus A321neo',
+    'seatClass': 'Business',
+    'baggageAllowance': '30 kg',
+  },
+  {
+    'id': 5,
+    'airline': 'Nordwind',
+    'from': 'Izmir',
+    'fromCode': 'ADB',
+    'to': 'Istanbul',
+    'toCode': 'IST',
+    'departureTime': '19:10',
+    'arrivalTime': '20:25',
+    'price': 560,
+    'duration': '1h 15m',
+    'date': '2026-12-14',
+    'flightNumber': 'NW 905',
+    'aircraftType': 'Boeing 737 MAX 8',
+    'seatClass': 'Economy',
+    'baggageAllowance': '15 kg',
+  },
+  {
+    'id': 6,
+    'airline': 'Azure Jet',
+    'from': 'Antalya',
+    'fromCode': 'AYT',
+    'to': 'Ankara',
+    'toCode': 'ESB',
+    'departureTime': '07:15',
+    'arrivalTime': '08:35',
+    'price': 610,
+    'duration': '1h 20m',
+    'date': '2026-12-14',
+    'flightNumber': 'AZ 12',
+    'aircraftType': 'Airbus A320',
+    'seatClass': 'Economy',
+    'baggageAllowance': '20 kg',
   },
 ];
 
@@ -174,8 +234,11 @@ class FlightServer {
       }
 
       // Fake order oluştur
+      final orderId = orders.length + 1;
       Map<String, dynamic> order = {
-        'id': orders.length + 1,
+        'id': orderId,
+        // NEW DATA (v13): human-readable booking reference, e.g. FB-7K2M9Q.
+        'bookingReference': _bookingReference(orderId),
         'userEmail': userEmail,
         'items': cartItems,
         'totalPrice': totalPrice,
@@ -194,6 +257,7 @@ class FlightServer {
           'message':
               'Ödeme başarılı! Biletleriniz e-posta adresinize gönderildi.',
           'orderId': order['id'],
+          'bookingReference': order['bookingReference'],
           'totalPrice': totalPrice,
         }),
         headers: _jsonHeaders,
@@ -249,4 +313,16 @@ void main(List<String> args) async {
   print('POST http://localhost:${httpServer.port}/checkout');
   print('GET  http://localhost:${httpServer.port}/profile');
   print('GET  http://localhost:${httpServer.port}/health');
+}
+
+/// Deterministic-looking reference: "FB-" + 6 chars from the order id and time.
+String _bookingReference(int orderId) {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var seed = DateTime.now().millisecondsSinceEpoch ^ (orderId * 7919);
+  final buffer = StringBuffer('FB-');
+  for (var i = 0; i < 6; i++) {
+    buffer.write(alphabet[seed % alphabet.length]);
+    seed = seed ~/ alphabet.length + orderId * 31 + i;
+  }
+  return buffer.toString();
 }

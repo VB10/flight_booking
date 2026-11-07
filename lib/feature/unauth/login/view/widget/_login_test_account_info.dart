@@ -8,20 +8,17 @@ abstract final class _TestAccount {
   static const String password = '123456';
 }
 
-/// Test account info widget
+/// Test account info banner.
 final class _LoginTestAccountInfo extends StatelessWidget {
   const _LoginTestAccountInfo();
 
   @override
   Widget build(BuildContext context) {
-    return SelectableText(
-      LocaleKeys.login_test_account_info.translateNamed({
+    return InfoBanner(
+      message: LocaleKeys.login_test_account_info.translateNamed({
         'email': _TestAccount.email,
         'password': _TestAccount.password,
       }),
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: context.colorScheme.onSurface,
-          ),
     );
   }
 }

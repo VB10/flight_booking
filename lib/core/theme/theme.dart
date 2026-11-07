@@ -1,9 +1,8 @@
-export 'package:flight_booking/core/theme/app_color_scheme.dart';
-export 'package:flight_booking/core/theme/app_colors.dart';
-export 'package:flight_booking/core/theme/app_page_padding.dart';
-export 'package:flight_booking/core/theme/app_radius.dart';
-export 'package:flight_booking/core/theme/app_sizes.dart';
-export 'package:flight_booking/core/theme/app_text_styles.dart';
+/// Single theme import for the app.
+///
+/// Tokens, theme builder and kit widgets live in `module/ui_kit`; this file
+/// re-exports them and adds the app-owned `AppTheme` (it knows the font).
+library;
+
 export 'package:flight_booking/core/theme/app_theme.dart';
-export 'package:flight_booking/core/theme/app_theme_extension.dart';
-export 'package:flight_booking/core/theme/product_text.dart';
+export 'package:ui_kit/ui_kit.dart';

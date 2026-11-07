@@ -82,6 +82,19 @@ violation report `file:line`, the rule, and **which skill fixes it**.
 - Cache models are JSON DTOs implementing `CacheModel`; no Hive adapter/typeId.
   Fix: `/masterflutter-cache-add-model`.
 
+### 8. Design kit (v13)
+- No raw Material where the kit has a widget: `ElevatedButton`, `OutlinedButton`,
+  `TextField`/`TextFormField`, `AlertDialog`/`showDialog`, `SnackBar`/`showSnackBar`,
+  `Card`, `Shimmer`, `AppBar`, page-level `CircularProgressIndicator` → the kit
+  widget from [docs/design/kit_mapping.md](../../docs/design/kit_mapping.md)
+  (`AppButton`, `AppTextField`, `AppDialog.show`, `AppSnackbar.show`, `AppCard`,
+  `LoadingState`, `AppTopBar`). Fix: `/masterflutter-design-screen`.
+- Price and date are never formatted by hand → `ProductFormat.price / date`.
+- Shared state (cart, theme, locale, session) comes from the app-level cubits in
+  `ProductContainer`, never a page-local copy.
+- A visual the kit cannot express is a KIT GAP for `/masterflutter-design-system-setup`,
+  not a one-off style in a feature.
+
 ## Verification before reporting
 
 Run these and include the result — a review that does not compile is not a

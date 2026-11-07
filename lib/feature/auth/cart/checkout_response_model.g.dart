@@ -13,6 +13,7 @@ CheckoutResponseModel _$CheckoutResponseModelFromJson(
   message: json['message'] as String,
   orderId: (json['orderId'] as num).toInt(),
   totalPrice: (json['totalPrice'] as num).toInt(),
+  bookingReference: json['bookingReference'] as String?,
 );
 
 Map<String, dynamic> _$CheckoutResponseModelToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$CheckoutResponseModelToJson(
   'message': instance.message,
   'orderId': instance.orderId,
   'totalPrice': instance.totalPrice,
+  'bookingReference': ?instance.bookingReference,
 };

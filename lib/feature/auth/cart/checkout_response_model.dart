@@ -12,6 +12,7 @@ final class CheckoutResponseModel extends Equatable
     required this.message,
     required this.orderId,
     required this.totalPrice,
+    this.bookingReference,
   });
 
   factory CheckoutResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -22,6 +23,9 @@ final class CheckoutResponseModel extends Equatable
   final int orderId;
   final int totalPrice;
 
+  /// NEW DATA (v13 design): e.g. "FB-7K2M9Q", shown on the confirmation.
+  final String? bookingReference;
+
   @override
   CheckoutResponseModel fromJson(Map<String, dynamic> json) =>
       CheckoutResponseModel.fromJson(json);
@@ -30,5 +34,11 @@ final class CheckoutResponseModel extends Equatable
   Map<String, dynamic> toJson() => _$CheckoutResponseModelToJson(this);
 
   @override
-  List<Object?> get props => [success, message, orderId, totalPrice];
+  List<Object?> get props => [
+    success,
+    message,
+    orderId,
+    totalPrice,
+    bookingReference,
+  ];
 }

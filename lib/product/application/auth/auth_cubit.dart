@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 final class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._network, this._cache, this._fallback)
-      : super(const AuthState.unauthenticated());
+    : super(const AuthState.unauthenticated());
 
   final IProductNetworkManager _network;
   final ICacheManager _cache;

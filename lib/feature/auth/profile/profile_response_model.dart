@@ -54,19 +54,18 @@ final class ProfileData extends Equatable
   final String membershipLevel;
 
   @override
-  ProfileData fromJson(Map<String, dynamic> json) =>
-      ProfileData.fromJson(json);
+  ProfileData fromJson(Map<String, dynamic> json) => ProfileData.fromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ProfileDataToJson(this);
 
   @override
   List<Object?> get props => [
-        id,
-        email,
-        name,
-        joinDate,
-        totalBookings,
-        membershipLevel,
-      ];
+    id,
+    email,
+    name,
+    joinDate,
+    totalBookings,
+    membershipLevel,
+  ];
 }

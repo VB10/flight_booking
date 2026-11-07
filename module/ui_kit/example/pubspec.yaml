@@ -1,0 +1,19 @@
+name: ui_kit_example
+description: "ui_kit gallery — every kit component in every state, light + dark. Run: flutter run -d chrome"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ui_kit:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

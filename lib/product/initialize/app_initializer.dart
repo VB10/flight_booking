@@ -6,6 +6,7 @@ import 'package:flight_booking/product/localization/product_localization.dart';
 import 'package:flight_booking/product/package/firebase/firebase_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 final class AppInitializer {
   AppInitializer() {
@@ -25,6 +26,7 @@ final class AppInitializer {
       platformInitializer.prepare(),
       ProductCache.instance.init(),
       ProductLocalization.init(),
+      initializeDateFormatting(),
       Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),

@@ -28,17 +28,22 @@ final class _LoginPageState extends State<LoginPage> with LoginPageMixin {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => loginCubit,
-      child: Scaffold(
-        backgroundColor: context.colorScheme.surface,
-        appBar: AppBar(
-          title: ProductText.h3(context, LocaleKeys.general_app_name.translate),
-          centerTitle: true,
-          backgroundColor: context.colorScheme.primary,
+      child: BlocListener<LoginCubit, LoginState>(
+        listenWhen: (p, c) =>
+            p.errorMessage != c.errorMessage && c.errorMessage.isNotEmpty,
+        listener: (context, state) => AppSnackbar.show(
+          context,
+          message: state.errorMessage,
+          tone: AppTone.error,
         ),
-        body: _LoginPageBody(
-          emailController: emailController,
-          passwordController: passwordController,
-          onLogin: () => onLoginPressed(context),
+        child: Scaffold(
+          backgroundColor: context.colorScheme.surface,
+          body: _LoginPageBody(
+            emailController: emailController,
+            passwordController: passwordController,
+            onLogin: () => onLoginPressed(context),
+            onShowTestAccount: onShowTestAccount,
+          ),
         ),
       ),
     );

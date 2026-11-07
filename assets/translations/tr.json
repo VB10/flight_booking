@@ -16,12 +16,14 @@
     "show_test_account": "Test hesabını göster",
     "hide_test_account": "Test bilgisini gizle",
     "test_account_info": "Test hesabı: {email} / {password}",
-    "failed": "Giriş başarısız"
+    "failed": "Giriş başarısız",
+    "title": "Tekrar hoş geldin",
+    "subtitle": "Bir sonraki uçuşunu ayırtmak için giriş yap.",
+    "email_invalid": "Geçerli bir e-posta adresi gir",
+    "password_required": "Şifre gerekli"
   },
   "flight": {
     "list_title": "Uçak Biletleri",
-    "theme_tooltip": "Tema",
-    "language_tooltip": "Dil",
     "logout": "Çıkış Yap",
     "logout_confirm": "Çıkış yapmak istediğinizden emin misiniz?",
     "added_to_cart": {
@@ -31,11 +33,34 @@
     "details": "Detaylar",
     "add_to_cart": "Sepete Ekle",
     "duration": "Süre: {}",
-    "date": "Tarih: {}",
     "price": "{} ₺",
     "update_required_title": "Güncelleme Gerekli",
     "update_required_message": "Yeni versiyon mevcut! Lütfen uygulamayı güncelleyin.",
-    "update": "Güncelle"
+    "update": "Güncelle",
+    "profile_tooltip": "Profil",
+    "cart_tooltip": "Sepet",
+    "search_hint": "Şehir veya havayolu ara",
+    "search_clear": "Aramayı temizle",
+    "sort_none": "Sırala",
+    "sort_price": "Sırala: Fiyat",
+    "sort_departure": "Sırala: Kalkış",
+    "empty_title": "Uçuş bulunamadı",
+    "empty_message": "Daha fazla uçuş görmek için başka bir tarih veya rota deneyin.",
+    "clear_filters": "Filtreleri temizle",
+    "error_title": "Uçuşlar yüklenemedi",
+    "error_message": "Bağlantınızı kontrol edip tekrar deneyin.",
+    "detail_title": "Uçuş detayı",
+    "detail_back": "Geri",
+    "detail_departure": "Kalkış",
+    "detail_arrival": "Varış",
+    "detail_duration": "Süre",
+    "detail_date": "Tarih",
+    "detail_price": "Fiyat",
+    "detail_tile_flight": "Uçuş",
+    "detail_tile_aircraft": "Uçak",
+    "detail_tile_class": "Sınıf",
+    "detail_tile_baggage": "Bagaj",
+    "detail_error_title": "Bu uçuş yüklenemedi"
   },
   "cart": {
     "title": "Sepetim",
@@ -43,11 +68,43 @@
     "removed_snackbar": "Bilet sepetten çıkarıldı!",
     "checkout_empty_warning": "Sepetiniz boş!",
     "checkout_confirm_title": "Ödeme Onayı",
-    "checkout_confirm_message": "Toplam {} ₺ ödeme yapmak istediğinizden emin misiniz?",
+    "checkout_confirm_message": "Toplam {} ödeme yapmak istediğinizden emin misiniz?",
     "confirm": "Onayla",
     "processing_payment": "Ödeme işlemi yapılıyor...",
     "total_label": "Toplam:",
     "pay_button": "Ödeme Yap",
-    "connection_error": "Bağlantı hatası"
+    "connection_error": "Bağlantı hatası",
+    "remove_tooltip": "Sepetten çıkar",
+    "empty_message": "Bir uçuş bulun ve sepetinize ekleyin.",
+    "browse_flights": "Uçuşlara Göz At",
+    "undo": "Geri Al",
+    "error_message": "Bağlantınızı kontrol edip tekrar deneyin.",
+    "success_title": "Ödeme başarılı",
+    "success_message": {
+      "one": "1 biletiniz rezerve edildi.",
+      "other": "{} biletiniz rezerve edildi."
+    },
+    "booking_reference": "Rezervasyon kodu",
+    "confirmed": "Onaylandı",
+    "total_paid": "Ödenen toplam",
+    "back_to_flights": "Uçuşlara Dön"
+  },
+  "splash": {
+    "loading": "Yükleniyor"
+  },
+  "profile": {
+    "title": "Profil",
+    "refresh_tooltip": "Yenile",
+    "error_title": "Profilin yüklenemedi",
+    "error_message": "Bağlantını kontrol edip tekrar dene.",
+    "total_bookings": "Toplam rezervasyon",
+    "member_since": "Üyelik tarihi",
+    "account_id": "Hesap No",
+    "email": "E-posta",
+    "joined": "Katılım",
+    "membership": "Üyelik",
+    "settings": "Ayarlar",
+    "dark_theme": "Koyu tema",
+    "language": "Dil"
   }
 }

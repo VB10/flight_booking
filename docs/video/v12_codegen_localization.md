@@ -7,7 +7,7 @@
 
 ## 📌 Başlık (Title)
 
-**Flutter Refactoring Masterclass: 12- Asset & Localization — flutter_gen + easy_localization (Prompt & AI Skills)**
+**Flutter Refactoring Masterclass: 12- Asset & Localization (flutter_gen + easy_localization)**
 
 Alternatifler:
 - `12- String'e Elveda: flutter_gen + easy_localization ile Type-Safe Asset ve Çeviri`
@@ -29,175 +29,88 @@ AI Skill.
 
 ## 📄 Uzun Açıklama (YouTube Description)
 
-Refactoring Masterclass serimizin bu bölümünde projedeki en sinsi hata kaynağını
-temizliyoruz: **string'ler.** Bir asset yolunu yanlış yazarsanız derleyici susar,
-ekran boş gelir; UI metinleri koda gömülüyse uygulamanız asla ikinci bir dile
-açılamaz.
+> Video süresi 14:58. Düz metin (YouTube markdown göstermez), 5000 karakter sınırının altında.
+> Olduğu gibi kopyala-yapıştır.
 
-flutter_gen, easy_localization, facade pattern ve tek bir codegen giriş noktasıyla;
-asset'i de metni de derleme zamanında garanti altına alınmış, çok dilli ve tekrar
-üretilebilir bir yapıya taşıyoruz.
+```
+Refactoring Masterclass serimizin bu bölümünde projedeki en sinsi hata kaynağını temizliyoruz: string'ler. Bir asset yolunu yanlış yazarsanız derleyici susar, ekran boş gelir; UI metinleri koda gömülüyse uygulamanız asla ikinci bir dile açılamaz.
+
+flutter_gen, easy_localization, facade pattern ve tek bir codegen giriş noktasıyla; asset'i de metni de derleme zamanında garanti altına alınmış, çok dilli ve tekrar üretilebilir bir yapıya taşıyoruz.
 
 🛠 Bu Bölümde Neler İnşa Ettik?
 
-Type-Safe Asset & Font Erişimi (flutter_gen): `SvgPicture.asset('assets/...')`
-çağrılarını tarihe gömdük. Klasör yapısı doğrudan API'ye dönüşüyor:
-`Assets.icon.svg.icAircraft`, `Assets.animation.lottie.lottieLoading`. Projede
-sessizce kırık olan 3 SVG yolunu da bu sayede yakaladık — biri isim değişmiş,
-dosya duruyor ama ekran boştu.
+✅ Type-Safe Asset & Font (flutter_gen): SvgPicture.asset('assets/...') çağrıları tarihe karıştı. Klasör yapısı doğrudan API oluyor: Assets.icon.svg.icAircraft. Bu sayede projede sessizce kırık olan 3 SVG'yi yakaladık. 18 Roboto varyantının tamamı pubspec'te, tema artık FontFamily.roboto kullanıyor.
 
-Eksiksiz Font Ailesi: `assets/fonts/` altındaki 18 Roboto varyantının sadece 6'sı
-pubspec'te tanımlıydı. Hepsini `weight` + `style` ile kaydettik; tema artık
-`'Roboto'` string'i değil `FontFamily.roboto` kullanıyor.
+✅ Facade Arkasında easy_localization: v11'de Hive'ı nasıl gizlediysek burada da aynısını yapıyoruz. Paket sadece lib/product/localization/ içinde import ediliyor; sayfalar yalnızca LocaleKeys.login_submit.translate görüyor.
 
-Facade Arkasında easy_localization: v11'de Hive'ı package'a gömmüştük; burada da
-aynısını yapıyoruz. `package:easy_localization` **sadece**
-`lib/product/localization/` içinde import ediliyor. Uygulamanın geri kalanı
-`LocaleKeys.flight_add_to_cart.translate` görüyor — `MaterialApp.router` bile
-paketi görmüyor, `context.productDelegates` üzerinden besleniyor.
+✅ Dil Kalıcılığı Bizim Elimizde: saveLocale: false. Seçilen dil v11'deki ICacheManager ile saklanıyor, açılışta geri yükleniyor. Tek bir source of truth.
 
-Dil Kalıcılığı Uygulamanın Elinde: Pakete `saveLocale: false` diyoruz; seçilen dil
-v11'de kurduğumuz `ICacheManager` ile `ProductCacheKeys.locale` anahtarına yazılıyor
-ve açılışta `startLocale` olarak geri veriliyor. Cache katmanımız ilk gerçek
-tüketicisini kazanıyor, tek bir "source of truth" kalıyor.
+✅ Parametre & Çoğul: translateArgs, translateNamed, translatePlural ve üç kural: sayıyı cümleye elle yapıştırma, veriyi çeviri dosyasına gömme, çeviriyi MaterialApp'in altında oku (onGenerateTitle). Hepsi testle sabitlendi.
 
-Parametrik ve Çoğullu Çeviri: `translate`, `translateArgs`, `translateNamed`,
-`translatePlural`. Sayıyı cümleye elle yapıştırmanın neden bug olduğunu, test
-hesabı gibi **verinin** neden çeviri dosyasına girmemesi gerektiğini ve çevirinin
-neden `MaterialApp`'in altında okunması gerektiğini (`title:` değil
-`onGenerateTitle:`) tek tek konuşuyoruz. Üçü de testle sabitlendi.
+✅ Tek Codegen Girişi: İki script yerine tek ./scripts/generate.sh; --watch, --clean, --localization, --assets flag'leriyle.
 
-Tek Codegen Girişi: `build_runner.sh` + `generate_models.sh` ikilisini tek bir
-`./scripts/generate.sh`'a indirdik. `--watch`, `--clean`, `--localization`, `--assets`
-flag'leri var; LocaleKeys bir build_runner builder'ı olmadığı için easy_localization
-CLI'ı da aynı script içinden sırayla çalışıyor.
+✅ Bağımlılık Çatışması: flutter_gen eklerken archive v3/v4 çatışmasını canlı okuyup lottie'yi 3.x'e çıkarıyoruz.
 
-AI-Native Geliştirme: `/masterflutter-codegen-setup` ile tüm bu altyapıyı,
-`/masterflutter-asset-add` ile yeni bir ikonu, `/masterflutter-localization-add-key` ile
-yeni bir çeviri anahtarını (ya da komple yeni bir dili) saniyeler içinde
-kurabiliyorsunuz. Tüm skill'ler bu bölümde `masterflutter-` prefix'ine taşındı.
+✅ AI Katmanı: /masterflutter-codegen-setup, /masterflutter-asset-add, /masterflutter-localization-add-key skill'leri. Command katmanını sildik (10 skill, 0 command). İki agent: masterflutter-reviewer (diff'i bu reponun kurallarına göre denetler) ve masterflutter-refactor-scout (bir sayfada ne kaldığını sırayla raporlar).
 
-Bağımlılık Çatışmasını Canlı Çözmek: `flutter_gen_runner` eklerken pub çözümü
-kilitlendi — `flutter_gen_core` → `image` → `archive ^4` isterken projedeki
-`lottie 2.x` `archive ^3`'e bağlıydı. Hata mesajını birlikte okuyup lottie'yi
-3.x'e çıkarıyoruz; bu tür bir çatışmayı okumak tek başına bir ders.
-
-Tek Kaynak: Command Katmanını Sildik: Bu bölüme kadar her yetenek iki dosyaydı —
-`.claude/commands/x.md` ve `.claude/skills/x/SKILL.md`. Command'ın yaptığı tek iş
-"şu skill'i oku" demekti; içindeki özet ise skill'den bağımsız eskiyordu. Command
-katmanını tamamen kaldırdık: **10 skill, 0 command**. Skill'ler hem
-`/masterflutter-...` ile elle çağrılıyor, hem de iş tarif edilince kendiliğinden
-tetikleniyor.
-
-İki Agent: `masterflutter-reviewer` diff'i **bu reponun kendi kurallarına** göre
-denetliyor (ham asset string'i, feature'da easy_localization import'u, theme
-token'ı yerine hardcoded renk, `Navigator.push`, doğrudan `SharedPreferences`) ve
-her bulguda hangi skill'in düzelteceğini söylüyor. `masterflutter-refactor-scout`
-ise bir sayfayı tarayıp ne kaldığını **sırayla** raporluyor: önce yapı, sonra
-state, en son localization/asset.
-
-Tek Komutla Ortam: `./scripts/setup.sh` — araç kontrolü, bağımlılıklar, kod
-üretimi, VS Code eklentileri (`.vscode/extensions.json`) ve Claude Code
-plugin'leri. `claude-mem` ile `i-have-adhd` artık `.claude/settings.json` ile
-repo'ya bağlı; repoyu klonlayan tek komutla çalışır hâle geliyor.
-
-🧩 İzleyeceğiniz Teknik Detaylar:
-
-flutter_gen: pubspec `flutter_gen:` bloğu, çıktının `lib/product/gen/` altına
-alınması, klasör → API dönüşümü.
-
-Facade Pattern: `ProductLocalization`, `Locales` enum'u, `localization_extension`
-ve paketin tek klasöre hapsedilmesi.
-
-Cache Entegrasyonu: `saveLocale: false` + `ICacheManager` + `ApplicationCubit`
-ile dil state'i ve kalıcılığı.
-
-Çoğul & Parametre: `{}`, `{named}` ve `one/other` dallarının doğru kullanımı.
-
-Bootstrap Sırası: `main.dart`, `AppInitializer`, `MainApp` — çeviri asset'leri ne
-zaman hazır olur?
-
-Log Gürültüsü: `EasyLocalization.logger.enableLevels` ile DEBUG'ı kısıp sinyali
-bırakmak.
-
-Test: Facade'ın üç davranışının widget test ile sabitlenmesi.
+✅ Tek Komutla Ortam: ./scripts/setup.sh — araç kontrolü, bağımlılıklar, codegen, VS Code eklentileri ve Claude Code plugin'leri.
 
 ⏱ Bölümler:
+00:00 Giriş & bu bölümde ne yapacağız?
+00:45 Problem: kırık asset'ler, koda gömülü metinler, dağınık codegen
+01:50 flutter_gen kurulumu & archive/lottie bağımlılık çatışması
+03:00 Assets.* ile kırık SVG'leri yakalamak & FontFamily.roboto
+04:10 easy_localization neden facade arkasına alınıyor?
+05:00 ProductLocalization + Locales enum + translate extension
+06:10 LocaleKeys üretimi: neden build_runner değil?
+06:50 Dil kalıcılığı: saveLocale false + ICacheManager + ApplicationCubit
+08:00 Parametre & çoğul + üç kural
+09:15 Test: facade davranışını sabitlemek
+09:50 scripts/generate.sh: tek giriş, dört flag
+10:35 AI Skills: codegen-setup, asset-add, localization-add-key
+11:30 Command katmanını silmek: 10 skill, 0 command
+12:15 Agent'lar: reviewer & refactor-scout
+13:10 setup.sh: klonla, tek komutla çalıştır
+14:10 Özet & sıradaki bölüm: v13 Custom Package & Widget Library
 
-00:00 - Giriş & Bu bölümde ne yapacağız?
-01:20 - Problem: sessizce kırık asset'ler ve koda gömülü metinler
-03:00 - flutter_gen kurulumu: pubspec bloğu & klasör düzeni
-05:00 - Assets.* ile kırık SVG'leri yakalamak
-06:45 - Font ailesi: 18 varyant, FontFamily.roboto
-08:15 - easy_localization neden doğrudan kullanılmaz? Facade kararı
-10:00 - ProductLocalization + Locales enum + translate extension
-12:00 - LocaleKeys üretimi: easy_localization CLI neden build_runner değil?
-13:30 - Dil kalıcılığı: saveLocale false + ICacheManager (v11 bağlantısı)
-15:15 - ApplicationCubit ile dil değiştirme
-16:45 - Parametre & çoğul: translateArgs, translateNamed, translatePlural
-19:00 - Üç kural: sayıyı yapıştırma, veriyi gömme, MaterialApp'in altında oku
-21:00 - Test: facade davranışını sabitlemek
-22:30 - scripts/generate.sh: tek giriş, dört flag
-24:00 - AI Skills: /masterflutter-codegen-setup, -asset-add, -localization-add-key
-26:00 - Command katmanını silmek: neden tek kaynak (skill) yeterli
-27:30 - Agent'lar: reviewer (kural denetimi) + refactor-scout (ne kaldı?)
-29:00 - setup.sh: klonla, tek komutla çalışır hâle getir
-30:30 - Özet & bir sonraki bölüm: v13 Custom Package & Widget Library
-
-📂 Proje Linkleri ve Kaynaklar:
-Videoda bahsettiğim tüm mimari dökümanlara ve AI promptlarına GitHub reposu
-üzerinden ulaşabilirsiniz.
+📂 Kaynaklar:
 🔗 Kaynak kod: https://github.com/VB10/flight_booking
 🔗 Issue #17 (asset + localization + codegen): https://github.com/VB10/flight_booking/issues/17
-🔗 Issue #18 (AI katmanı: prefix, agent'lar, setup): https://github.com/VB10/flight_booking/issues/18
-🔗 Mimari doküman: docs/codegen_and_localization.md
-🔗 Önceki bölüm (v11 Cache): docs/cache_architecture.md
+🔗 Issue #18 (AI katmanı): https://github.com/VB10/flight_booking/issues/18
+🔗 Mimari doküman: https://github.com/VB10/flight_booking/blob/main/docs/codegen_and_localization.md
 🔗 Tüm Playlist: https://www.youtube.com/playlist?list=PL1k5oWAuBhgUh7_hMrTDxZHsGOPGSP9La
 
-Projenizde hâlâ `Text('Sepete Ekle')` yazan bir satır varsa bu bölüm tam size göre.
-Sorularınızı yorumlarda bekliyorum!
+Projenizde hâlâ Text('Sepete Ekle') yazan bir satır varsa bu bölüm tam size göre. Sorularınızı yorumlarda bekliyorum!
 
 Kendinize çok iyi bakın, bir sonraki içerikte görüşmek üzere!
 
-#flutter #localization #i18n #fluttergen #easylocalization #codegen #dart #refactoring #cleanarchitecture #flutterdev
+#flutter #localization #fluttergen #easylocalization #codegen #dart #refactoring #flutterdev
+```
 
 ---
 
 ## ⏱️ Bölümler (Chapters / Timestamps)
 
-> Süreleri kayıt sonrası doldur; sıra ve içerik hazır.
+> 14:58 süreye göre dağıtıldı. Kurgudaki gerçek geçişlere göre ±10 sn kaydırman gerekebilir;
+> YouTube için ilk satır 00:00 olmalı ve her bölüm en az 10 sn sürmeli.
 
 ```
-00:00  Giriş — bu bölümde ne yapacağız
-00:00  Problem 1: sessizce kırık asset (kod bir yolu, dosya başka yerde)
-00:00  Problem 2: karışık dil — 'Sepete Ekle' ve 'Login' aynı ekranda
-00:00  Problem 3: belirsiz codegen — iki script neredeyse aynı işi yapıyor
-00:00  flutter_gen: pubspec bloğu, çıktı lib/product/gen altına
-00:00  Bağımlılık çatışması: archive v3 vs v4 — lottie'yi 3.x'e çıkarmak
-00:00  Klasör yapısı API oluyor: Assets.icon.svg.icAircraft
-00:00  Kırık 3 SVG'yi generated referansla değiştirmek
-00:00  Font: 18 varyantın tamamı pubspec'e, tema FontFamily.roboto'ya
-00:00  Karar: easy_localization neden facade arkasına alınıyor (v11 felsefesi)
-00:00  ProductLocalization + Locales enum — dil kaydının tek yeri
-00:00  translate extension: sayfalar paketi görmüyor
-00:00  MaterialApp.router: context.productDelegates / productLocale
-00:00  LocaleKeys üretimi: easy_localization CLI, build_runner değil
-00:00  saveLocale: false — dili ICacheManager'a biz yazıyoruz
-00:00  ApplicationCubit: locale state + changeLocale + app bar butonu
-00:00  translateArgs / translateNamed / translatePlural
-00:00  Kural 1: sayıyı elle cümleye yapıştırma (çoğul dili ilgilendirir)
-00:00  Kural 2: veriyi çeviri dosyasına gömme (test hesabı örneği)
-00:00  Kural 3: çeviriyi MaterialApp'in altında oku (onGenerateTitle)
-00:00  Log seviyesi: DEBUG gürültüsünü kısmak
-00:00  Test: facade'ın üç davranışını sabitlemek
-00:00  scripts/generate.sh: tek giriş noktası, --watch/--clean/--localization/--assets
-00:00  AI Skills: codegen-setup, asset-add, localization-add-key (+ masterflutter- prefix)
-00:00  Command katmanını silmek: aynı bilgi iki dosyada durmasın (10 skill, 0 command)
-00:00  Agent'lar: masterflutter-reviewer & masterflutter-refactor-scout
-00:00  Plugin'leri repo'ya bağlamak: .claude/settings.json (claude-mem, i-have-adhd)
-00:00  setup.sh: araç kontrolü → bağımlılık → codegen → eklenti → doğrulama
-00:00  Pilot migrasyon nerede durdu, kalan ekranlar nasıl taşınacak
-00:00  Kapanış & sıradaki bölüm (v13 Custom Package & Widget Library)
+00:00 Giriş & bu bölümde ne yapacağız?
+00:45 Problem: kırık asset'ler, koda gömülü metinler, dağınık codegen
+01:50 flutter_gen kurulumu & archive/lottie bağımlılık çatışması
+03:00 Assets.* ile kırık SVG'leri yakalamak & FontFamily.roboto
+04:10 easy_localization neden facade arkasına alınıyor?
+05:00 ProductLocalization + Locales enum + translate extension
+06:10 LocaleKeys üretimi: neden build_runner değil?
+06:50 Dil kalıcılığı: saveLocale false + ICacheManager + ApplicationCubit
+08:00 Parametre & çoğul + üç kural
+09:15 Test: facade davranışını sabitlemek
+09:50 scripts/generate.sh: tek giriş, dört flag
+10:35 AI Skills: codegen-setup, asset-add, localization-add-key
+11:30 Command katmanını silmek: 10 skill, 0 command
+12:15 Agent'lar: reviewer & refactor-scout
+13:10 setup.sh: klonla, tek komutla çalıştır
+14:10 Özet & sıradaki bölüm: v13 Custom Package & Widget Library
 ```
 
 ### Opsiyonel bonus bölüm

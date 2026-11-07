@@ -23,6 +23,10 @@ dependencies:
   cache_manager:
     path: module/cache_manager
 
+  # Design system (local module: tokens, theme, base widgets — v13)
+  ui_kit:
+    path: module/ui_kit
+
   # firebase
   flutter_svg: ^2.0.9
   firebase_core: ^2.24.2
@@ -30,7 +34,6 @@ dependencies:
   firebase_analytics: ^10.7.4
 
   # view-util
-  shimmer: ^3.0.0
   lottie: ^3.3.1
 
   # native-plugin
@@ -47,8 +50,11 @@ dependencies:
 
   # Localization (wrapped by ProductLocalization — pages never import it)
   easy_localization: ^3.0.8
+  # Date / number formatting (ProductFormat) — locale data loaded in AppInitializer
+  intl: ^0.20.2
   easy_logger: ^0.0.2
 
+  vector_graphics: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>3 Flights</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+.light,.dark{--f:Roboto,system-ui,sans-serif;font-family:var(--f);color:var(--onSurface)}
+.light{--canvas:#E9ECF2;--primary:#1565C0;--onPrimary:#FFFFFF;--primaryContainer:#D6E4FF;--onPrimaryContainer:#001B3E;--secondaryContainer:#CCE8FF;--onSecondaryContainer:#001E31;--tertiaryContainer:#C8F0CB;--onTertiaryContainer:#002106;--error:#BA1A1A;--onError:#FFFFFF;--errorContainer:#FFDAD6;--onErrorContainer:#410002;--surface:#F8FAFF;--onSurface:#191C20;--surfaceContainerHighest:#E1E2E9;--onSurfaceVariant:#43474E;--outline:#73777F;--outlineVariant:#C3C6CF;--successContainer:#C8F0CB;--onSuccessContainer:#002106;--warningContainer:#FFE0C2;--onWarningContainer:#3A1800;--infoContainer:#C6E7FF;--onInfoContainer:#001E2E;--cardBackground:#FFFFFF;--divider:#DDE0E8;--shimmerBase:#E3E6EC;--shimmerHighlight:#F4F6FA;--scrim:rgba(0,0,0,.5)}
+.dark{--canvas:#0A0D11;--primary:#A9C7FF;--onPrimary:#002F65;--primaryContainer:#00468C;--onPrimaryContainer:#D6E4FF;--secondaryContainer:#004B71;--onSecondaryContainer:#CCE8FF;--tertiaryContainer:#1B5120;--onTertiaryContainer:#A9F5AA;--error:#FFB4AB;--onError:#690005;--errorContainer:#93000A;--onErrorContainer:#FFDAD6;--surface:#101418;--onSurface:#E1E2E8;--surfaceContainerHighest:#32353A;--onSurfaceVariant:#C3C6CF;--outline:#8D9199;--outlineVariant:#43474E;--successContainer:#1B5120;--onSuccessContainer:#A9F5AA;--warningContainer:#6A3600;--onWarningContainer:#FFDCC0;--infoContainer:#004C6B;--onInfoContainer:#C6E7FF;--cardBackground:#1B1F25;--divider:#2F343B;--shimmerBase:#262B32;--shimmerHighlight:#343A43;--scrim:rgba(0,0,0,.6)}
+.hm{font:400 28px/36px var(--f)}.hs{font:400 24px/32px var(--f)}.tl{font:400 22px/28px var(--f)}.tm{font:500 16px/24px var(--f);letter-spacing:.15px}
+.bl{font:400 16px/24px var(--f);letter-spacing:.5px}.bm{font:400 14px/20px var(--f);letter-spacing:.25px}.bs{font:400 12px/16px var(--f);letter-spacing:.4px}
+.lm{font:500 12px/16px var(--f);letter-spacing:.5px}.ls{font:500 11px/16px var(--f);letter-spacing:.5px}
+.w5{font-weight:500}.ov{color:var(--onSurfaceVariant)}.upper{text-transform:uppercase;letter-spacing:1px}
+.row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.f1{flex:1;min-width:0}
+.g8{gap:8px}.g10{gap:10px}.g16{gap:16px}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.cd{background:var(--cardBackground);border:1px solid var(--outlineVariant);border-radius:12px;padding:16px}
+.ph{width:390px;height:844px;border-radius:32px;overflow:hidden;position:relative;display:flex;flex-direction:column;background:var(--surface);color:var(--onSurface);border:1px solid var(--outlineVariant);flex:none}
+.pg{flex:1;min-height:0;overflow:hidden;padding:8px 20px 0;display:flex;flex-direction:column;gap:16px}
+.bar{display:flex;align-items:center;height:64px;padding:0 4px 0 20px;flex:none;background:var(--surface);color:var(--onSurface)}.bar .ti{flex:1;min-width:0;margin:0}
+.ib{width:48px;height:48px;border-radius:50%;border:0;background:none;color:var(--onSurfaceVariant);display:grid;place-items:center;position:relative;padding:0;flex:none}
+.bdg{position:absolute;top:6px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--error);color:var(--onError);font:500 11px/16px var(--f);text-align:center}
+.btn{height:48px;padding:0 24px;border-radius:12px;border:0;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.btn .i{width:20px;height:20px}.btn.hf{flex:1;min-width:0;padding:0 8px}
+.b-p{background:var(--primary);color:var(--onPrimary)}.b-s{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}.b-t{background:none;color:var(--primary);padding:0 16px}
+.tf{position:relative;height:56px;border:1px solid var(--outline);border-radius:12px;display:flex;align-items:center;gap:12px;padding:0 8px 0 16px;color:var(--onSurfaceVariant);flex:none}
+.tf .lb{position:absolute;left:52px;top:15px;font:400 16px/24px var(--f);letter-spacing:.5px;color:var(--onSurfaceVariant)}
+.vl{flex:1;min-width:0;font:400 16px/24px var(--f);letter-spacing:.5px;color:var(--onSurface)}
+.chip{height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--outline);background:none;color:var(--onSurfaceVariant);display:inline-flex;align-items:center;gap:8px;font:500 14px/20px var(--f);letter-spacing:.1px;white-space:nowrap;flex:none}
+.chip.on{background:var(--secondaryContainer);color:var(--onSecondaryContainer);border-color:transparent}.chip .i{width:18px;height:18px}
+.ic{width:40px;height:40px;border-radius:50%;background:var(--primaryContainer);color:var(--onPrimaryContainer);display:grid;place-items:center;flex:none}.ic .i{width:20px;height:20px}
+.pt{font:700 22px/28px var(--f);color:var(--primary);white-space:nowrap}
+.rt{display:flex;align-items:center;width:100%;color:var(--primary)}.rt .ln{flex:1;height:2px;background:var(--outlineVariant);border-radius:1px}.rt .dt{width:8px;height:8px;border-radius:50%;border:2px solid var(--outline);flex:none}.rt .i{width:20px;height:20px;transform:rotate(45deg);margin:0 4px}
+.scrim{position:absolute;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:0 32px;z-index:5}
+.dlg{width:100%;background:var(--surfaceContainerHighest);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:16px;color:var(--onSurface)}.dlg .ft{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.snk{position:absolute;left:20px;right:20px;bottom:24px;min-height:48px;padding:12px 16px;border-radius:8px;display:flex;align-items:center;gap:12px;font:400 14px/20px var(--f);letter-spacing:.25px;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:4}
+.snk .i{width:20px;height:20px}.snk .tx{flex:1}.k-ok{background:var(--successContainer);color:var(--onSuccessContainer)}
+.stt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 32px}
+.big{width:96px;height:96px;border-radius:50%;display:grid;place-items:center}.big .i{width:40px;height:40px}
+.bg-sec{background:var(--secondaryContainer);color:var(--onSecondaryContainer)}.bg-er{background:var(--errorContainer);color:var(--onErrorContainer)}
+.sh{display:block;background:linear-gradient(90deg,var(--shimmerBase) 25%,var(--shimmerHighlight) 50%,var(--shimmerBase) 75%);background-size:200% 100%;animation:shm 1.4s linear infinite;border-radius:8px}
+@keyframes shm{from{background-position:200% 0}to{background-position:-200% 0}}
+.an{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;font:500 12px/16px var(--f);letter-spacing:.3px}
+.an-e{background:var(--surfaceContainerHighest);color:var(--onSurfaceVariant)}.an-d{background:var(--infoContainer);color:var(--onInfoContainer)}.an-f{background:var(--tertiaryContainer);color:var(--onTertiaryContainer)}.an-m{background:var(--warningContainer);color:var(--onWarningContainer)}
+</style>
+</helmet>
+<div style="width:2660px;min-height:2260px;display:flex;flex-direction:column">
+
+<header class="light" style="background:var(--canvas);padding:60px 60px 40px;display:flex;flex-direction:column;gap:12px">
+<span class="lm upper" style="color:var(--primary)">Screen 3</span>
+<h1 class="hm" style="margin:0">Flights (home)</h1>
+<p class="bl ov" style="margin:0;max-width:1100px">List of FlightCard with Details (secondary) and Add to Cart (primary). The cart BadgeIconButton sits in AppTopBar rather than a floating button: it is always visible while scrolling and never covers a card’s action row.</p>
+<div class="row g8" style="flex-wrap:wrap">
+<span class="an an-e">Existing data: id · airline · from · to · departureTime · arrivalTime · duration · date · price</span>
+<span class="an an-e">Existing actions: open details · add to cart · open cart (badge) · open profile · log out</span>
+<span class="an an-f">NEW FEATURE: search field (AppSearchField) — city or airline</span>
+<span class="an an-f">NEW FEATURE: date-range filter chip (AppChip)</span>
+<span class="an an-f">NEW FEATURE: sort chip (AppChip) — price / departure</span>
+<span class="an an-f">NEW FEATURE: “Clear filters” action in EmptyState</span>
+<span class="an an-m">MOVED: theme toggle + language switch → Profile › Settings</span>
+</div>
+</header>
+
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="2">
+<section class="{{t.cls}}" style="background:var(--canvas);padding:40px 60px;display:flex;flex-direction:column;gap:16px">
+<span class="tl">{{t.name}}</span>
+<div style="display:flex;gap:40px">
+<sc-for list="{{states}}" as="s" hint-placeholder-count="6">
+<div class="col g8">
+<span class="lm ov upper">{{s.name}}</span>
+<div class="ph">
+<div class="bar"><h2 class="ti tl">Flights</h2>
+<button class="ib" aria-label="Cart, 2 tickets"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21a1 1 0 100-2 1 1 0 000 2zM20 21a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg><span class="bdg">2</span></button>
+<button class="ib" aria-label="Profile"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg></button>
+<button class="ib" aria-label="Log out"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></button></div>
+<div class="pg">
+<sc-if value="{{s.filters}}" hint-placeholder-val="{{ true }}">
+<div class="tf"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3"/></svg><span class="lb">Search city or airline</span><span class="vl"></span></div>
+<div class="row g8" style="overflow:hidden;flex:none"><button class="chip on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18a1 1 0 011 1v16a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1zM16 2v4M8 2v4M2 10h20"/></svg>12–14 Dec</button><button class="chip"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>Sort: Price</button><button class="chip">Airline</button></div>
+</sc-if>
+<sc-if value="{{s.content}}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{flights}}" as="f" hint-placeholder-count="3">
+<div class="cd col g16" style="flex:none">
+<div class="row g10"><span class="ic"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.8.2 1.1L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.3.8.4 1.2.2l.5-.2c.4-.3.6-.7.5-1.1z"/></svg></span><div class="f1 col"><span class="tm">{{f.airline}}</span><span class="bs ov">{{f.date}}</span></div><span class="pt">{{f.price}}</span></div>
+<div class="row g10"><div class="col"><span class="tl w5">{{f.dep}}</span><span class="bm ov">{{f.from}}</span></div><div class="f1 col" style="align-items:center;gap:2px"><span class="ls ov">{{f.dur}}</span><div class="rt"><i class="dt"></i><i class="ln"></i><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.8.2 1.1L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.3.8.4 1.2.2l.5-.2c.4-.3.6-.7.5-1.1z"/></svg><i class="ln"></i><i class="dt"></i></div></div><div class="col" style="align-items:flex-end"><span class="tl w5">{{f.arr}}</span><span class="bm ov">{{f.to}}</span></div></div>
+<div class="row g8"><button class="btn b-s hf">Details</button><button class="btn b-p hf">Add to Cart</button></div>
+</div>
+</sc-for>
+</sc-if>
+<sc-if value="{{s.loading}}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{skeletons}}" as="k" hint-placeholder-count="3">
+<div class="cd col g16" style="flex:none" aria-hidden="true"><div class="row g10"><span class="sh" style="width:40px;height:40px;border-radius:50%"></span><div class="f1 col g8"><span class="sh" style="width:50%;height:14px"></span><span class="sh" style="width:30%;height:12px"></span></div><span class="sh" style="width:64px;height:24px"></span></div><div class="row g10"><span class="sh" style="width:56px;height:36px"></span><span class="sh f1" style="height:8px"></span><span class="sh" style="width:56px;height:36px"></span></div><div class="row g8"><span class="sh f1" style="height:48px;border-radius:12px"></span><span class="sh f1" style="height:48px;border-radius:12px"></span></div></div>
+</sc-for>
+</sc-if>
+<sc-if value="{{s.empty}}" hint-placeholder-val="{{ false }}">
+<div class="stt"><span class="big bg-sec"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3"/></svg></span><div class="col g8"><span class="tm">No flights found</span><span class="bm ov">Try another date or route to see more flights.</span></div><button class="btn b-s">Clear filters</button></div>
+</sc-if>
+<sc-if value="{{s.error}}" hint-placeholder-val="{{ false }}">
+<div class="stt"><span class="big bg-er"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 1l22 22M16.7 11.1A11 11 0 0121 14M5 12.6a11 11 0 015.2-2.9M10.7 5.1A16 16 0 0122.6 9M1.4 9a16 16 0 013.2-2.2M8.5 16.1a6 6 0 013.5-1.1M12 20h.01"/></svg></span><div class="col g8"><span class="tm">Couldn’t load flights</span><span class="bm ov">Check your connection and try again.</span></div><button class="btn b-p"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0114.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0020.5 15"/></svg>Try Again</button></div>
+</sc-if>
+</div>
+<sc-if value="{{s.snack}}" hint-placeholder-val="{{ false }}"><div class="snk k-ok" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 11.1V12a10 10 0 11-5.9-9.1M22 4L12 14l-3-3"/></svg><span class="tx">Ticket added. You have 2 tickets in your cart.</span></div></sc-if>
+<sc-if value="{{s.dialog}}" hint-placeholder-val="{{ false }}"><div class="scrim"><div class="dlg" role="alertdialog" aria-label="Log Out"><span class="hs">Log Out</span><span class="bm ov">Are you sure you want to log out?</span><div class="ft"><button class="btn b-t">Cancel</button><button class="btn b-p">Log Out</button></div></div></div></sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2660,"height":2260}}'>
+class Component extends DCLogic {
+renderVals() {
+const st = (name, o) => Object.assign({ name: name, filters: true, content: false, loading: false, empty: false, error: false, snack: false, dialog: false }, o);
+return {
+themes: [{ cls: 'light', name: 'Light' }, { cls: 'dark', name: 'Dark' }],
+skeletons: [1, 2, 3],
+flights: [
+{ airline: 'Skyline Air', date: '12 Dec 2026', price: '650 ₺', dep: '08:30', arr: '09:45', from: 'Istanbul', to: 'Ankara', dur: '1h 15m' },
+{ airline: 'Nordwind', date: '12 Dec 2026', price: '980 ₺', dep: '11:10', arr: '12:20', from: 'Istanbul', to: 'Izmir', dur: '1h 10m' },
+{ airline: 'Azure Jet', date: '13 Dec 2026', price: '600 ₺', dep: '14:45', arr: '16:05', from: 'Ankara', to: 'Antalya', dur: '1h 20m' }
+],
+states: [
+st('Content', { content: true }),
+st('LoadingState · shimmer', { loading: true }),
+st('EmptyState', { empty: true }),
+st('ErrorState', { error: true, filters: false }),
+st('Add to cart · AppSnackbar success', { content: true, snack: true }),
+st('Log out · AppDialog', { content: true, dialog: true })
+]
+};
+}
+}
+</script>
+</body>
+</html>
