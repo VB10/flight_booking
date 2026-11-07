@@ -16,10 +16,10 @@ class MasterflutterSkill < Formula
   # degisiklige karsi kanit olur (git kaynakli formula'da sha256'nin karsiligi).
   url "https://github.com/VB10/flight_booking.git",
       using:    :git,
-      tag:      "skills-v0.1.0",
-      revision: "b7f3c685e55e9498789de790f360e542f600411c"
+      tag:      "skills-v0.2.0",
+      revision: "8abbe0f8e5faaee0e5cb270f22f610609260f466"
   # Tag 'skills-v' prefix'li oldugu icin surum acikca belirtilir.
-  version "0.1.0"
+  version "0.2.0"
 
   head "https://github.com/VB10/flight_booking.git", branch: "main"
 
