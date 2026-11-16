@@ -4,6 +4,8 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:shelf_cors_headers/shelf_cors_headers.dart';
+import 'package:flight_booking_server/model/checkout_request.dart';
+import 'package:flight_booking_server/model/login_request.dart';
 
 import 'debug_page.dart';
 
@@ -224,19 +226,18 @@ class FlightServer {
   Future<Response> _loginHandler(Request request) async {
     try {
       final bodyString = await request.readAsString();
-      final Map<String, dynamic> body = jsonDecode(bodyString);
-
-      String email = body['email'] ?? '';
-      String password = body['password'] ?? '';
+      final login = LoginRequest.fromJson(
+        jsonDecode(bodyString) as Map<String, dynamic>,
+      );
 
       // Hard coded credentials - kötü praktik!
-      if (email == 'user@test.com' && password == '123456') {
+      if (login.email == 'user@test.com' && login.password == '123456') {
         return Response.ok(
           jsonEncode({
             'success': true,
             'message': 'Login successful',
             'token': 'fake_token_12345', // Fake token
-            'user': {'id': 1, 'email': email, 'name': 'Test User'},
+            'user': {'id': 1, 'email': login.email, 'name': 'Test User'},
           }),
           headers: _jsonHeaders,
         );
@@ -276,7 +277,7 @@ class FlightServer {
   Future<Response> _checkoutHandler(Request request) async {
     try {
       final bodyString = await request.readAsString();
-      final Map<String, dynamic> body = jsonDecode(bodyString);
+      final body = jsonDecode(bodyString) as Map<String, dynamic>;
 
       final idempotencyKey = request.headers['idempotency-key'];
       if (idempotencyKey != null) {
@@ -289,14 +290,7 @@ class FlightServer {
         }
       }
 
-      List<dynamic> cartItems = body['cartItems'] ?? [];
-      String userEmail = body['userEmail'] ?? 'unknown@test.com';
-
-      // Basit toplam hesaplama
-      int totalPrice = 0;
-      for (var item in cartItems) {
-        totalPrice += (item['price'] as int);
-      }
+      final checkout = CheckoutRequest.fromJson(body);
 
       // Fake order oluştur
       final orderId = orders.length + 1;
@@ -304,9 +298,9 @@ class FlightServer {
         'id': orderId,
         // NEW DATA (v13): human-readable booking reference, e.g. FB-7K2M9Q.
         'bookingReference': _bookingReference(orderId),
-        'userEmail': userEmail,
-        'items': cartItems,
-        'totalPrice': totalPrice,
+        'userEmail': checkout.userEmail,
+        'items': checkout.cartItems,
+        'totalPrice': checkout.totalPrice,
         'orderDate': DateTime.now().toIso8601String(),
         'status': 'confirmed',
         if (idempotencyKey != null) 'idempotencyKey': idempotencyKey,
