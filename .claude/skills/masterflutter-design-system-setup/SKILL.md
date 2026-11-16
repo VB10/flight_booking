@@ -96,7 +96,7 @@ Verify: `dart analyze lib` clean · `flutter test` green · `flutter build web` 
 ## 3 · Data contracts the screens share
 
 Decide these yourself — screens must not invent them in parallel:
-- **NEW DATA**: nullable fields on the models (+ regenerate json_serializable) and, when the
+- **NEW DATA**: nullable fields on the models in `module/gen` (+ `./scripts/generate.sh --models`) and, when the
   backend is ours, the backend mock/endpoint. Verify by running the backend and curling.
 - **Shared state**: anything two screens read/write (cart, selection, settings) becomes an
   app-level cubit in `lib/product/application/<name>/`, registered in `ProductContainer`, with a

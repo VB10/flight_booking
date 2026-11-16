@@ -3,7 +3,7 @@ name: masterflutter-view-refactor
 description: >-
   Refactors an existing single-file Flutter page into the project's view
   structure: page + body as part files, a view mixin, an Equatable state with
-  copyWith, plus model/ and view_model/ folders. Use when the user runs
+  copyWith, plus a view_model/ folder (response models live in module/gen). Use when the user runs
   /masterflutter-view-refactor or asks to split/refactor a page into the standard
   structure.
 ---
@@ -27,11 +27,11 @@ lib/feature/{path}/{page_name}/
 ├── view/
 │   ├── {page_name}_page_mixin.dart # View mixin (part of)
 │   └── {page_name}_page_state.dart # State class (Equatable + copyWith)
-├── model/
-│   └── {page_name}_response_model.dart
 └── view_model/
     └── {page_name}_view_model.dart
 ```
+
+Response modelleri feature içinde değil, `module/gen/lib/src/model/response/{page_name}_response_model.dart` altında tutulur (freezed, `package:gen/gen.dart` ile import edilir).
 
 ## Kurallar
 
@@ -60,12 +60,14 @@ lib/feature/{path}/{page_name}/
 ### ViewModel (view_model/{page_name}_view_model.dart)
 - Ayrı dosya (part of DEĞİL)
 - `final class`
-- Model import: `import '../model/{page_name}_response_model.dart';`
+- Model import: `import 'package:gen/gen.dart';`
 - API, cache, analytics
 
-### Model (model/{page_name}_response_model.dart)
-- Ayrı dosya
-- Response/Request modelleri
+### Model (module/gen/lib/src/model/response/{page_name}_response_model.dart)
+- `module/gen` paketinde, freezed + json_serializable (`abstract class` + `const factory`, Equatable YOK)
+- `part` ile `.freezed.dart` ve `.g.dart`; `module/gen/lib/gen.dart` içinden export edilir
+- Üretim: `./scripts/generate.sh --models`
+- Request modelleri de aynı paket altında (`src/model/request/`)
 
 ## State Class Şablonu
 

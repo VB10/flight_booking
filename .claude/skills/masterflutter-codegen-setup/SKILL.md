@@ -122,12 +122,17 @@ placeholders are `{}` → `.translateArgs([value])`.
 
 ### 6. Generation entry point
 
-- `build.yaml` → keep `json_serializable` / `go_router_builder` `generate_for`
-  blocks, add `flutter_gen_runner: { enabled: true }`, and note that LocaleKeys
-  is a **CLI**, not a builder.
+- Root `build.yaml` → keep the `go_router_builder` `generate_for` block, add
+  `flutter_gen_runner: { enabled: true }`, and note that LocaleKeys is a **CLI**,
+  not a builder. Data models do **not** go here.
+- Models live in the local `module/gen` package, which has its own `build.yaml`
+  (freezed + json_serializable, `generate_for: lib/src/model/**.dart`,
+  `explicit_to_json: true`). The root pubspec carries no json_annotation /
+  json_serializable; only `module/gen` does.
 - `scripts/generate.sh` (chmod +x) with `--watch`, `--clean`, `--localization`,
-  `--assets`; LocaleKeys first, then `dart run build_runner build`. Delete older
-  overlapping scripts (`build_runner.sh`, `generate_models.sh`).
+  `--assets`, `--models` (`--models` runs build_runner inside `module/gen`);
+  `all` runs LocaleKeys first, then the models build, then the app build_runner.
+  Delete older overlapping scripts (`build_runner.sh`, `generate_models.sh`).
 - `.vscode/tasks.json` → "Codegen: all / watch / localization only / clean".
 
 ### 7. Migrate call sites + verify

@@ -16,8 +16,6 @@ lib/feature/{path}/{page_name}/
 ├── view/
 │   ├── {page_name}_page_mixin.dart # View mixin (part of)
 │   └── {page_name}_page_state.dart # State class (Equatable + copyWith)
-├── model/
-│   └── {page_name}_response_model.dart
 └── view_model/
     └── {page_name}_view_model.dart
 
@@ -297,7 +295,7 @@ final class _{PageName}Button extends StatelessWidget {
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../model/{page_name}_response_model.dart';
+import 'package:gen/gen.dart';
 
 final class {PageName}ViewModel {
   {PageName}ViewModel();
@@ -322,21 +320,24 @@ final class {PageName}ViewModel {
 }
 ```
 
-### 6. Model (model/{page_name}_response_model.dart)
+### 6. Model (module/gen/lib/src/model/response/{page_name}_response_model.dart)
 
-**AYRI DOSYA**
+**module/gen PAKETİNDE** — feature içinde model klasörü açılmaz. Freezed + json_serializable; `package:gen/gen.dart` ile import edilir. Üretim: `./scripts/generate.sh --models`.
 
 ```dart
-class {PageName}ResponseModel {
-  // Response fields
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory {PageName}ResponseModel.fromJson(Map<String, dynamic> json) {
-    // ...
-  }
+part '{page_name}_response_model.freezed.dart';
+part '{page_name}_response_model.g.dart';
 
-  Map<String, dynamic> toJson() {
-    // ...
-  }
+@freezed
+abstract class {PageName}ResponseModel with _${PageName}ResponseModel {
+  const factory {PageName}ResponseModel({
+    // Response fields
+  }) = _{PageName}ResponseModel;
+
+  factory {PageName}ResponseModel.fromJson(Map<String, dynamic> json) =>
+      _${PageName}ResponseModelFromJson(json);
 }
 ```
 
@@ -392,14 +393,12 @@ lib/feature/{path}/{page_name}/
 ├── view/
 │   ├── {page_name}_page_mixin.dart # View mixin (part of)
 │   └── {page_name}_page_state.dart # State class (AYRI DOSYA)
-├── model/
-│   └── {page_name}_response_model.dart  # Response model (AYRI DOSYA)
 └── view_model/
     └── {page_name}_view_model.dart      # ViewModel (AYRI DOSYA)
 ```
 
 **Notlar:**
 - `part of` sadece mixin ve body için kullanılır
-- State class, ViewModel ve Model ayrı dosyalardır (import ile kullanılır)
+- State class ve ViewModel ayrı dosyalardır (import ile kullanılır); response model `module/gen` paketinde (freezed) yaşar ve `package:gen/gen.dart` ile import edilir
 - Mixin path: `part of '../{page_name}_page.dart';`
 - Body path: `part of '{page_name}_page.dart';`
