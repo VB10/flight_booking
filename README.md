@@ -23,6 +23,10 @@ Repo, her bölümde kurulan mimariyi tekrar uygulayabilen yetenekleri kendi içi
 | **3 agent** (`.claude/agents/`) | `masterflutter-reviewer` — diff'i bu reponun kurallarına göre denetler · `masterflutter-refactor-scout` — bir sayfada ne kaldığını, hangi sırayla yapılacağını raporlar · `masterflutter-screen-binder` — Claude Design board'unu tek ekran olarak koda bağlar (Sonnet) |
 | **Plugin'ler** (`.claude/settings.json`) | `claude-mem`, `i-have-adhd` — repo ile birlikte gelir, `./scripts/setup.sh` kurar |
 
+## 🛡️ Güvenli Checkout (v14)
+
+Ödeme retry'ı çift sipariş oluşturmaz: sepete bağlı `Idempotency-Key` ile sunucu ilk siparişi tekrar eder. Anlatım: [docs/video/v14_checkout_idempotency.md](docs/video/v14_checkout_idempotency.md) · Backend testi: `cd backend && dart test`.
+
 ## 🚀 Hızlı Başlangıç
 
 ### 0. Ortamı Kur (tek komut)
