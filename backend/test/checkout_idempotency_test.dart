@@ -16,9 +16,11 @@ const _body = {
 void main() {
   late Handler handler;
 
-  setUp(() {
-    orders.clear();
+  setUp(() async {
     handler = FlightServer(checkoutDelay: Duration.zero).handler;
+    // Clears the global orders AND the key -> order map, so keys never leak
+    // between tests.
+    await handler(Request('POST', Uri.parse('http://localhost/debug/reset')));
   });
 
   Future<Response> checkout({String? key, bool drop = false}) async {
@@ -43,7 +45,8 @@ void main() {
     test('a retry creates a SECOND order', () async {
       final dropped = await checkout(drop: true);
       expect(dropped.statusCode, 503);
-      expect(orders, hasLength(1)); // committed although the client saw an error
+      expect(
+          orders, hasLength(1)); // committed although the client saw an error
 
       await checkout(); // user taps retry
       expect(orders, hasLength(2)); // double booking
@@ -93,26 +96,24 @@ void main() {
     }
 
     Future<Map<String, dynamic>> state() async => json(
-      await handler(Request('GET', Uri.parse('http://localhost/debug/state'))),
-    );
+          await handler(
+              Request('GET', Uri.parse('http://localhost/debug/state'))),
+        );
 
-    test('idempotency OFF: the same key creates two orders', () async {
-      await post('/debug/idempotency', {'enabled': false});
-      await checkout(key: 'same');
-      await checkout(key: 'same');
-      expect(orders, hasLength(2));
-
-      final s = await state();
-      expect(s['idempotencyEnabled'], false);
-      final list = (s['orders'] as List).cast<Map<String, dynamic>>();
-      expect(list.map((o) => o['duplicate']), [false, true]);
-    });
-
-    test('idempotency ON (default): the same key creates one order', () async {
+    test('the same key twice creates one order', () async {
       await checkout(key: 'same');
       await checkout(key: 'same');
       expect(orders, hasLength(1));
-      expect((await state())['idempotencyEnabled'], true);
+    });
+
+    test('there is no idempotency switch: the key is always honoured',
+        () async {
+      final r = await post('/debug/idempotency', {'enabled': false});
+      expect(r.statusCode, 404);
+      expect((await state()).containsKey('idempotencyEnabled'), isFalse);
+      await checkout(key: 'same');
+      await checkout(key: 'same');
+      expect(orders, hasLength(1));
     });
 
     test('drop-next arms ONE dropped checkout and shows in state', () async {
@@ -133,17 +134,15 @@ void main() {
       expect(events.last['replayed'], false);
     });
 
-    test('reset clears orders, keys and events but keeps the switch', () async {
-      await post('/debug/idempotency', {'enabled': false});
+    test('reset clears orders, keys and events', () async {
       await checkout(key: 'k');
       await post('/debug/reset');
       final s = await state();
       expect(s['orders'], isEmpty);
       expect(s['events'], isEmpty);
-      expect(s['idempotencyEnabled'], false);
-      await post('/debug/idempotency', {'enabled': true});
       await checkout(key: 'k'); // key was forgotten by reset: a fresh order
       expect(orders, hasLength(1));
+      expect((await state())['events'].first['replayed'], false);
     });
 
     test('GET /debug serves the panel page', () async {

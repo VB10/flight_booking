@@ -135,10 +135,6 @@ class FlightServer {
   /// then answers 503, like a connection that died after the server committed.
   bool _dropNextCheckout = false;
 
-  /// Demo switch (`POST /debug/idempotency`): OFF ignores the key, so the same
-  /// app shows the double booking first and the fix second.
-  bool _idempotencyEnabled = true;
-
   /// Newest-first log of /checkout calls for the debug panel (max 20).
   final List<Map<String, dynamic>> _events = [];
 
@@ -154,8 +150,7 @@ class FlightServer {
     if (_events.length > 20) _events.removeLast();
   }
 
-  static String _clock() =>
-      DateTime.now().toIso8601String().substring(11, 19);
+  static String _clock() => DateTime.now().toIso8601String().substring(11, 19);
 
   FlightServer({this.checkoutDelay = const Duration(seconds: 1)}) {
     _setupRoutes();
@@ -205,16 +200,7 @@ class FlightServer {
       );
     });
     _router.get('/debug/state', _debugStateHandler);
-    _router.post('/debug/idempotency', (Request request) async {
-      final body = jsonDecode(await request.readAsString());
-      _idempotencyEnabled = body['enabled'] == true;
-      return Response.ok(
-        jsonEncode({'success': true, 'enabled': _idempotencyEnabled}),
-        headers: _jsonHeaders,
-      );
-    });
     _router.post('/debug/reset', (Request request) {
-      // Keeps the idempotency switch: the demo flips it on purpose.
       orders.clear();
       _ordersByIdempotencyKey.clear();
       _events.clear();
@@ -293,7 +279,7 @@ class FlightServer {
       final Map<String, dynamic> body = jsonDecode(bodyString);
 
       final idempotencyKey = request.headers['idempotency-key'];
-      if (idempotencyKey != null && _idempotencyEnabled) {
+      if (idempotencyKey != null) {
         final committed = _ordersByIdempotencyKey[idempotencyKey];
         if (committed != null) {
           // Same payment intent: replay the first order, create nothing.
@@ -327,7 +313,7 @@ class FlightServer {
       };
 
       orders.add(order);
-      if (idempotencyKey != null && _idempotencyEnabled) {
+      if (idempotencyKey != null) {
         _ordersByIdempotencyKey[idempotencyKey] = order;
       }
 
@@ -354,23 +340,18 @@ class FlightServer {
   }
 
   Response _debugStateHandler(Request request) {
-    final seenKeys = <String>{};
     final orderRows = orders.map((o) {
       final key = o['idempotencyKey'] as String?;
-      // The same key booked again = what idempotency exists to prevent.
-      final duplicate = key != null && !seenKeys.add(key);
       return {
         'id': o['id'],
         'bookingReference': o['bookingReference'],
         'totalPrice': o['totalPrice'],
         'idempotencyKey': key,
         'time': (o['orderDate'] as String).substring(11, 19),
-        'duplicate': duplicate,
       };
     }).toList();
     return Response.ok(
       jsonEncode({
-        'idempotencyEnabled': _idempotencyEnabled,
         'dropArmed': _dropNextCheckout,
         'orders': orderRows,
         'events': _events,

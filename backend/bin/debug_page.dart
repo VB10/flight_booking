@@ -1,5 +1,5 @@
 /// Single-file demo panel served at `GET /debug` (v14). No packages, no build:
-/// it polls `/debug/state` and drives the switches over plain `fetch`.
+/// it polls `/debug/state` and drives the buttons over plain `fetch`.
 const debugPageHtml = r'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -21,10 +21,6 @@ const debugPageHtml = r'''<!doctype html>
   button { font:inherit; font-weight:600; color:var(--text); background:transparent; cursor:pointer;
            border:1px solid var(--line); border-radius:10px; padding:8px 14px }
   button:hover { border-color:var(--acc) }
-  .sw { display:inline-flex; border:1px solid var(--line); border-radius:10px; overflow:hidden }
-  .sw button { border:0; border-radius:0; color:var(--mut) }
-  .sw button.on-active { background:var(--ok); color:#06281c }
-  .sw button.off-active { background:var(--bad); color:#2b0a0a }
   .pill { border-radius:999px; padding:3px 10px; font-size:13px; font-weight:600 }
   .armed { background:rgba(245,158,11,.18); color:var(--warn) }
   .idle { background:rgba(138,155,184,.15); color:var(--mut) }
@@ -32,22 +28,13 @@ const debugPageHtml = r'''<!doctype html>
   th { text-align:left; color:var(--mut); font-weight:600; font-size:12px; padding:0 8px 6px 0 }
   td { padding:7px 8px 7px 0; border-top:1px solid var(--line); vertical-align:top }
   td.num { font-variant-numeric:tabular-nums }
-  tr.dup td { color:var(--bad) }
-  .tag { font-size:12px; font-weight:700; color:var(--bad) }
   .s200 { color:var(--ok) } .s503 { color:var(--bad) }
   .empty { color:var(--mut); padding:6px 0 }
   code { font-family:ui-monospace,Menlo,monospace; font-size:13px }
 </style></head>
 <body><main>
   <div><h1>Flight Booking Server · Debug</h1>
-  <div style="color:var(--mut)">v14 · checkout idempotency demo</div></div>
-
-  <section class="card"><div class="row">
-    <div><h2 style="margin:0">Idempotency (server side)</h2>
-      <div id="idemHint" style="color:var(--mut)"></div></div>
-    <div class="sw" role="group" aria-label="Idempotency">
-      <button id="off">OFF</button><button id="on">ON</button></div>
-  </div></section>
+  <div style="color:var(--mut)">v14 · checkout idempotency demo · the server always honours <code>Idempotency-Key</code></div></div>
 
   <section class="card"><div class="row">
     <div><h2 style="margin:0">Connection drop</h2>
@@ -71,8 +58,6 @@ const debugPageHtml = r'''<!doctype html>
   const $ = (id) => document.getElementById(id);
   const post = (path, body) => fetch(path, { method: 'POST',
     headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : '' }).then(refresh);
-  $('on').onclick = () => post('/debug/idempotency', { enabled: true });
-  $('off').onclick = () => post('/debug/idempotency', { enabled: false });
   $('drop').onclick = () => post('/debug/drop-next');
   $('reset').onclick = () => post('/debug/reset');
 
@@ -85,19 +70,12 @@ const debugPageHtml = r'''<!doctype html>
   }
   async function refresh() {
     let s; try { s = await (await fetch('/debug/state')).json(); } catch (_) { return; }
-    $('on').className = s.idempotencyEnabled ? 'on-active' : '';
-    $('off').className = s.idempotencyEnabled ? '' : 'off-active';
-    $('idemHint').textContent = s.idempotencyEnabled
-      ? 'ON: a retry with the same key replays the first order.'
-      : 'OFF: the key is ignored, so a retry books twice.';
     $('armed').textContent = s.dropArmed ? 'armed' : 'idle';
     $('armed').className = 'pill ' + (s.dropArmed ? 'armed' : 'idle');
     $('noOrders').hidden = s.orders.length > 0;
     fill($('orders'), s.orders, (o) => {
-      const tr = document.createElement('tr'); if (o.duplicate) tr.className = 'dup';
-      cell(tr, '#' + o.id, 'num'); const ref = cell(tr, o.bookingReference);
-      if (o.duplicate) { const t = document.createElement('span');
-        t.className = 'tag'; t.textContent = '  DOUBLE BOOKING'; ref.appendChild(t); }
+      const tr = document.createElement('tr');
+      cell(tr, '#' + o.id, 'num'); cell(tr, o.bookingReference);
       cell(tr, '₺' + o.totalPrice, 'num');
       cell(tr, o.idempotencyKey ? o.idempotencyKey.slice(0, 8) + '…' : '—');
       cell(tr, o.time, 'num'); return tr;
