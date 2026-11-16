@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flight_booking/feature/auth/profile/profile_response_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gen/gen.dart';
 
 enum ProfileStatus { loading, success, failure }
 

@@ -6,9 +6,9 @@ part of 'checkout_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CheckoutResponseModel _$CheckoutResponseModelFromJson(
+_CheckoutResponseModel _$CheckoutResponseModelFromJson(
   Map<String, dynamic> json,
-) => CheckoutResponseModel(
+) => _CheckoutResponseModel(
   success: json['success'] as bool,
   message: json['message'] as String,
   orderId: (json['orderId'] as num).toInt(),
@@ -17,7 +17,7 @@ CheckoutResponseModel _$CheckoutResponseModelFromJson(
 );
 
 Map<String, dynamic> _$CheckoutResponseModelToJson(
-  CheckoutResponseModel instance,
+  _CheckoutResponseModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'message': instance.message,

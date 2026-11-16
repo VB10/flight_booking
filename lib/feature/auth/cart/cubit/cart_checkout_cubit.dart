@@ -3,6 +3,7 @@ import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/application/cart/cart_cubit.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 /// Owns the payment of the app-wide cart: idle → processing → success / error.
 final class CartCheckoutCubit extends Cubit<CartCheckoutState> {
@@ -25,8 +26,10 @@ final class CartCheckoutCubit extends Cubit<CartCheckoutState> {
       ),
     );
     final result = await _flightService.checkout(
-      cartItems: items,
-      userEmail: _authCubit.state.email ?? '',
+      CheckoutRequestModel(
+        cartItems: items,
+        userEmail: _authCubit.state.email ?? '',
+      ),
       idempotencyKey: _cartCubit.ensureCheckoutKey(),
     );
     // The order exists on the server once checkout succeeds: clear the

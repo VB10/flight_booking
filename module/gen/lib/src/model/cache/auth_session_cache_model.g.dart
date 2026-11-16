@@ -6,9 +6,9 @@ part of 'auth_session_cache_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthSessionCacheModel _$AuthSessionCacheModelFromJson(
+_AuthSessionCacheModel _$AuthSessionCacheModelFromJson(
   Map<String, dynamic> json,
-) => AuthSessionCacheModel(
+) => _AuthSessionCacheModel(
   token: json['token'] as String,
   email: json['email'] as String,
   name: json['name'] as String,
@@ -16,7 +16,7 @@ AuthSessionCacheModel _$AuthSessionCacheModelFromJson(
 );
 
 Map<String, dynamic> _$AuthSessionCacheModelToJson(
-  AuthSessionCacheModel instance,
+  _AuthSessionCacheModel instance,
 ) => <String, dynamic>{
   'token': instance.token,
   'email': instance.email,

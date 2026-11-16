@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flight_booking/core/theme/theme.dart';
 import 'package:flight_booking/feature/auth/flight/cubit/flight_list_cubit.dart';
 import 'package:flight_booking/feature/auth/flight/cubit/flight_list_state.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/application/cart/cart_cubit.dart';
 import 'package:flight_booking/product/application/cart/cart_state.dart';
@@ -18,6 +17,7 @@ import 'package:flight_booking/product/widget/flight/flight_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 part 'view/flight_list_page_mixin.dart';
 part 'view/widget/_flight_list_filters.dart';

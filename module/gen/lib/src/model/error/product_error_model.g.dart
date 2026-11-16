@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'error_model.dart';
+part of 'product_error_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ProductErrorModel _$ProductErrorModelFromJson(Map<String, dynamic> json) =>
-    ProductErrorModel(
+_ProductErrorModel _$ProductErrorModelFromJson(Map<String, dynamic> json) =>
+    _ProductErrorModel(
       success: json['success'] as bool? ?? false,
       message: json['message'] as String?,
       errorCode: json['errorCode'] as String?,
       details: json['details'] as Map<String, dynamic>?,
     );
 
-Map<String, dynamic> _$ProductErrorModelToJson(ProductErrorModel instance) =>
+Map<String, dynamic> _$ProductErrorModelToJson(_ProductErrorModel instance) =>
     <String, dynamic>{
       'success': instance.success,
       'message': ?instance.message,

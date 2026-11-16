@@ -6,23 +6,23 @@ part of 'profile_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ProfileResponseModel _$ProfileResponseModelFromJson(
+_ProfileResponseModel _$ProfileResponseModelFromJson(
   Map<String, dynamic> json,
-) => ProfileResponseModel(
+) => _ProfileResponseModel(
   success: json['success'] as bool,
   data: ProfileData.fromJson(json['data'] as Map<String, dynamic>),
   message: json['message'] as String,
 );
 
 Map<String, dynamic> _$ProfileResponseModelToJson(
-  ProfileResponseModel instance,
+  _ProfileResponseModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'data': instance.data.toJson(),
   'message': instance.message,
 };
 
-ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(
+_ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => _ProfileData(
   id: (json['id'] as num).toInt(),
   email: json['email'] as String,
   name: json['name'] as String,
@@ -31,7 +31,7 @@ ProfileData _$ProfileDataFromJson(Map<String, dynamic> json) => ProfileData(
   membershipLevel: json['membershipLevel'] as String,
 );
 
-Map<String, dynamic> _$ProfileDataToJson(ProfileData instance) =>
+Map<String, dynamic> _$ProfileDataToJson(_ProfileData instance) =>
     <String, dynamic>{
       'id': instance.id,
       'email': instance.email,

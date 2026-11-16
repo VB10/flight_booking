@@ -1,8 +1,7 @@
-import 'dart:math';
-
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/application/cart/cart_state.dart';
+import 'package:flight_booking/product/util/idempotency/idempotency_key_generator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 /// App-wide cart (v13). One instance in `ProductContainer`, shared by
 /// Flights (badge + add), Flight detail (add), Cart (remove / undo / pay)
@@ -10,9 +9,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///
 /// Lives in memory only: the design has no "saved cart" requirement.
 final class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(const CartState());
+  CartCubit([IIdempotencyKeyGenerator? keyGenerator])
+    : _keyGenerator = keyGenerator ?? SecureIdempotencyKeyGenerator(),
+      super(const CartState());
 
-  static final Random _random = Random.secure();
+  final IIdempotencyKeyGenerator _keyGenerator;
 
   /// Idempotency key of the payment attempt for the CURRENT cart content.
   /// Deliberately NOT in [CartState]: it is Equatable, so a lazy set would be
@@ -22,12 +23,7 @@ final class CartCubit extends Cubit<CartState> {
   /// The same key for every try of the same cart (retry, reopened page); a new
   /// one as soon as the cart changes. The server uses it to replay the first
   /// order instead of creating a second one.
-  String ensureCheckoutKey() => _checkoutKey ??= _newKey();
-
-  static String _newKey() => List.generate(
-    16,
-    (_) => _random.nextInt(256).toRadixString(16).padLeft(2, '0'),
-  ).join();
+  String ensureCheckoutKey() => _checkoutKey ??= _keyGenerator.generate();
 
   @override
   void emit(CartState state) {

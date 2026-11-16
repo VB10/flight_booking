@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:flight_booking/product/network/error_model.dart';
 import 'package:flight_booking/product/network/network_constants.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
+import 'package:gen/gen.dart';
 import 'package:vexana/vexana.dart';
 
 /// Concrete implementation of network manager using Vexana

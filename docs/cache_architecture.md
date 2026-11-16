@@ -110,7 +110,7 @@ sequenceDiagram
 | Fallback (bağımsız) | `.../src/fallback/i_fallback_store.dart` + `shared_prefs_fallback_store.dart` |
 | App holder | `lib/product/cache/product_cache.dart` (Hive import yok) |
 | Keyler | `lib/product/cache/product_cache_keys.dart` |
-| DTO | `lib/product/cache/model/auth_session_cache_model.dart` (+ `.g.dart`) |
+| DTO | `module/gen/lib/src/model/cache/auth_session_cache_model.dart` (freezed, v14'ten beri `package:gen`) |
 | DI | `lib/product/container/product_container.dart` |
 | Bootstrap | `lib/product/initialize/app_initializer.dart` |
 | Codegen script | `scripts/generate_models.sh` |

@@ -2,6 +2,11 @@
 
 Bu prompt'u kullanarak projene vexana tabanlı network ve service katmanı ekleyebilirsin.
 
+> **Bu repoda (v14'ten beri):** modeller artık feature klasörlerinde ve `lib/product/network/error_model.dart`'ta değil.
+> Tüm request/response/error/cache modelleri freezed ile `module/gen` paketinde yaşar
+> (`package:gen/gen.dart`). Ayrıntı: [codegen_and_localization.md](../codegen_and_localization.md).
+> Aşağıdaki prompt v8'deki ilk kurulumu anlatır, yolları ona göre oku.
+
 ---
 
 ## PROMPT

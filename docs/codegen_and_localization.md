@@ -130,8 +130,51 @@ Yeni anahtar / yeni dil: **`/masterflutter-localization-add-key`**
 
 `./scripts/generate.sh` sırasıyla easy_localization CLI'ını (LocaleKeys bir
 build_runner builder'ı **değildir**) ve `build_runner build`'i çalıştırır.
-Flag'ler: `--watch`, `--clean`, `--localization`, `--assets`. `.vscode/tasks.json`
+Flag'ler: `--watch`, `--clean`, `--localization`, `--assets`, `--models`. `.vscode/tasks.json`
 içinden de aynı script çağrılır.
+
+### 4. Veri modelleri — `module/gen` (freezed + json_serializable)
+
+Request/response/cache DTO'ları uygulamanın içinde değil, yerel
+`module/gen` paketinde durur. Uygulama tek bir import görür:
+
+```dart
+import 'package:gen/gen.dart';   // FlightModel, LoginResponseModel, ProductErrorModel, ...
+```
+
+```
+module/gen/
+  build.yaml                         # freezed + json_serializable ayarları
+  lib/gen.dart                       # barrel — tek public giriş
+  lib/src/model/response/            # *_response_model.dart (vexana INetworkModel)
+  lib/src/model/error/               # ProductErrorModel + ErrorCodes
+  lib/src/model/cache/               # AuthSessionCacheModel (cache_manager CacheModel)
+  lib/src/model/request/             # request body modelleri (sonraki adım, henüz yok)
+  test/model_round_trip_test.dart    # fromJson -> toJson -> fromJson eşitliği
+```
+
+Her model aynı kalıbı izler:
+
+```dart
+@freezed
+abstract class FlightModel with _$FlightModel implements INetworkModel<FlightModel> {
+  const factory FlightModel({required int id, String? fromCode, ...}) = _FlightModel;
+  const FlightModel._();
+  factory FlightModel.fromJson(Map<String, dynamic> json) => _$FlightModelFromJson(json);
+  @override
+  FlightModel fromJson(Map<String, dynamic> json) => FlightModel.fromJson(json);
+}
+```
+
+- `==`/`hashCode`/`copyWith`/`toString` freezed'den gelir — Equatable yok.
+- `build.yaml`: `explicit_to_json: true` (iç içe modeller map'e döner),
+  `include_if_null: false` (null alanlar JSON'a yazılmaz).
+- Üretim: `./scripts/generate.sh` (veya sadece `--models`) paketin içinde
+  `build_runner build` çalıştırır; `*.freezed.dart` / `*.g.dart` elle
+  düzenlenmez.
+- **Cubit state'leri buraya girmez** — state UI'a aittir, cubit'in yanında
+  kalır. `lib/product/gen/` ise sadece asset/font/locale çıktısıdır; model
+  oraya da konmaz.
 
 ## Bu bölümde değişen call site'lar
 

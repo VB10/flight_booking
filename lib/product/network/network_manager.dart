@@ -1,4 +1,4 @@
-import 'package:flight_booking/product/network/error_model.dart';
+import 'package:gen/gen.dart';
 import 'package:vexana/vexana.dart';
 
 /// Abstract interface for network operations

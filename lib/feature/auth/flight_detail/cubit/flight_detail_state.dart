@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
+import 'package:gen/gen.dart';
 
 enum FlightDetailStatus { loading, content, error }
 

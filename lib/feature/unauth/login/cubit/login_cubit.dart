@@ -1,5 +1,4 @@
 import 'package:flight_booking/feature/unauth/login/cubit/login_state.dart';
-import 'package:flight_booking/feature/unauth/login/model/login_response_model.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/gen/locale_keys.g.dart';
 import 'package:flight_booking/product/initialize/firebase/custom_remote_config.dart';
@@ -7,6 +6,7 @@ import 'package:flight_booking/product/localization/localization_extension.dart'
 import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 final class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this._authService, this._authCubit) : super(const LoginState());
@@ -57,8 +57,7 @@ final class LoginCubit extends Cubit<LoginState> {
     );
 
     final result = await _authService.login(
-      email: trimmedEmail,
-      password: password,
+      LoginRequestModel(email: trimmedEmail, password: password),
     );
 
     LoginResponseModel? successResponse;

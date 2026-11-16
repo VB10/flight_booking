@@ -1,8 +1,8 @@
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/network/product_network_manager.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flight_booking/product/service/impl/flight_service_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gen/gen.dart';
 
 /// Integration tests for FlightService
 ///
@@ -51,9 +51,11 @@ void main() {
       ];
 
       final result = await flightService.checkout(
-        cartItems: cartItems,
-        userEmail: 'user@test.com',
-        idempotencyKey: 'test-key-1',
+        CheckoutRequestModel(
+          cartItems: cartItems,
+          userEmail: 'user@test.com',
+        ),
+        idempotencyKey: 'it-1-${DateTime.now().microsecondsSinceEpoch}',
       );
 
       result.fold(
@@ -96,9 +98,11 @@ void main() {
       ];
 
       final result = await flightService.checkout(
-        cartItems: cartItems,
-        userEmail: 'user@test.com',
-        idempotencyKey: 'test-key-1',
+        CheckoutRequestModel(
+          cartItems: cartItems,
+          userEmail: 'user@test.com',
+        ),
+        idempotencyKey: 'it-2-${DateTime.now().microsecondsSinceEpoch}',
       );
 
       result.fold(

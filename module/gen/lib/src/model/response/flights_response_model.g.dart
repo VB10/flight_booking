@@ -6,9 +6,9 @@ part of 'flights_response_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FlightsResponseModel _$FlightsResponseModelFromJson(
+_FlightsResponseModel _$FlightsResponseModelFromJson(
   Map<String, dynamic> json,
-) => FlightsResponseModel(
+) => _FlightsResponseModel(
   success: json['success'] as bool,
   data: (json['data'] as List<dynamic>)
       .map((e) => FlightModel.fromJson(e as Map<String, dynamic>))
@@ -17,14 +17,14 @@ FlightsResponseModel _$FlightsResponseModelFromJson(
 );
 
 Map<String, dynamic> _$FlightsResponseModelToJson(
-  FlightsResponseModel instance,
+  _FlightsResponseModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'message': instance.message,
 };
 
-FlightModel _$FlightModelFromJson(Map<String, dynamic> json) => FlightModel(
+_FlightModel _$FlightModelFromJson(Map<String, dynamic> json) => _FlightModel(
   id: (json['id'] as num).toInt(),
   airline: json['airline'] as String,
   from: json['from'] as String,
@@ -42,7 +42,7 @@ FlightModel _$FlightModelFromJson(Map<String, dynamic> json) => FlightModel(
   baggageAllowance: json['baggageAllowance'] as String?,
 );
 
-Map<String, dynamic> _$FlightModelToJson(FlightModel instance) =>
+Map<String, dynamic> _$FlightModelToJson(_FlightModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'airline': instance.airline,

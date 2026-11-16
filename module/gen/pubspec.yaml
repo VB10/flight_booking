@@ -1,0 +1,33 @@
+name: gen
+description: "Data models (request/response/cache DTOs) for the flight_booking app, generated with freezed + json_serializable."
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Immutable models + JSON
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
+
+  # INetworkModel contract (same version as the app)
+  vexana: ^5.0.3
+
+  # CacheModel contract
+  cache_manager:
+    path: ../cache_manager
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.0.0
+  build_runner: ^2.9.0
+  freezed: ^3.2.5
+  json_serializable: ^6.9.0
+
+flutter:
