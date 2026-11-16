@@ -53,6 +53,7 @@ void main() {
       final result = await flightService.checkout(
         cartItems: cartItems,
         userEmail: 'user@test.com',
+        idempotencyKey: 'test-key-1',
       );
 
       result.fold(
@@ -97,6 +98,7 @@ void main() {
       final result = await flightService.checkout(
         cartItems: cartItems,
         userEmail: 'user@test.com',
+        idempotencyKey: 'test-key-1',
       );
 
       result.fold(

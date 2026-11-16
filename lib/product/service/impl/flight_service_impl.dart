@@ -32,6 +32,7 @@ final class FlightServiceImpl implements IFlightService {
   Future<NetworkResult<CheckoutResponseModel, ProductErrorModel>> checkout({
     required List<FlightModel> cartItems,
     required String userEmail,
+    required String idempotencyKey,
   }) {
     return _networkManager
         .sendRequest<CheckoutResponseModel, CheckoutResponseModel>(
@@ -43,8 +44,7 @@ final class FlightServiceImpl implements IFlightService {
             totalPrice: 0,
           ),
           method: RequestType.POST,
-
-          /// TODO: Request paramater
+          headers: {NetworkConstants.idempotencyKeyHeader: idempotencyKey},
           body: {
             'cartItems': cartItems.map((item) => item.toJson()).toList(),
             'userEmail': userEmail,

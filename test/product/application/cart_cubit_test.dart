@@ -51,4 +51,32 @@ void main() {
       ..clear();
     expect(cubit.state.isEmpty, isTrue);
   });
+
+  group('checkout key', () {
+    test('is stable until the cart changes', () {
+      cubit.add(_flight(1, 650));
+      final key = cubit.ensureCheckoutKey();
+      expect(key, hasLength(32));
+      expect(cubit.ensureCheckoutKey(), key);
+    });
+
+    test('add, removeAt, restore and clear reset it', () {
+      cubit.add(_flight(1, 650));
+      var key = cubit.ensureCheckoutKey();
+      cubit.add(_flight(2, 499));
+      expect(cubit.ensureCheckoutKey(), isNot(key));
+
+      key = cubit.ensureCheckoutKey();
+      final removed = cubit.removeAt(0)!;
+      expect(cubit.ensureCheckoutKey(), isNot(key));
+
+      key = cubit.ensureCheckoutKey();
+      cubit.restore(0, removed);
+      expect(cubit.ensureCheckoutKey(), isNot(key));
+
+      key = cubit.ensureCheckoutKey();
+      cubit.clear();
+      expect(cubit.ensureCheckoutKey(), isNot(key));
+    });
+  });
 }

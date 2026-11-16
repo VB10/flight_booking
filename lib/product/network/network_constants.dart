@@ -14,6 +14,9 @@ final class NetworkConstants {
 
   /// Send timeout duration
   static const Duration sendTimeout = Duration(seconds: 30);
+
+  /// Header that makes a checkout retry safe (server replays the first order).
+  static const String idempotencyKeyHeader = 'Idempotency-Key';
 }
 
 /// API endpoint paths

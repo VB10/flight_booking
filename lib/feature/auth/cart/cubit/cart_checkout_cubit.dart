@@ -27,6 +27,7 @@ final class CartCheckoutCubit extends Cubit<CartCheckoutState> {
     final result = await _flightService.checkout(
       cartItems: items,
       userEmail: _authCubit.state.email ?? '',
+      idempotencyKey: _cartCubit.ensureCheckoutKey(),
     );
     // The order exists on the server once checkout succeeds: clear the
     // app-wide cart first, even if this page (and cubit) is already gone,
