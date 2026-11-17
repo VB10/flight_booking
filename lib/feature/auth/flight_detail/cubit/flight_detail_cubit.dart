@@ -1,7 +1,7 @@
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/feature/auth/flight_detail/cubit/flight_detail_state.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 /// Shows content at once when the flight came with the route, otherwise
 /// fetches the list and picks [flightId].

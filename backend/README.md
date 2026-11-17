@@ -38,7 +38,11 @@ Server varsayılan olarak `http://localhost:8080` adresinde çalışır.
 |--------|----------|----------|
 | POST | `/login` | Kullanıcı girişi |
 | GET | `/flights` | Uçak biletleri listesi |
-| POST | `/checkout` | Sepet onaylama |
+| POST | `/checkout` | Sepet onaylama. `Idempotency-Key` header'ı ile aynı key tekrar gelirse ilk sipariş döner (`Idempotent-Replayed: true`) |
+| GET | `/debug` | Demo paneli (v14): canlı sipariş listesi, son istekler, "sonraki ödemeyi düşür" ve sıfırlama düğmeleri. Sunucu `Idempotency-Key`'i her zaman uygular; kapatma anahtarı yok |
+| GET | `/debug/state` | Panelin okuduğu JSON (siparişler, son 20 istek, `dropArmed`) |
+| POST | `/debug/drop-next` | Demo: bir sonraki checkout siparişi kaydeder ama 503 döner |
+| POST | `/debug/reset` | Siparişleri, key'leri, istek kaydını ve kurulu "drop"u temizler |
 | GET | `/profile` | Kullanıcı profili (fake) |
 | GET | `/health` | Server durum kontrolü |
 

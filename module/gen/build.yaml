@@ -1,0 +1,22 @@
+# Code generation config for the models package. Run: ./scripts/generate.sh
+#
+# - freezed           : *.freezed.dart (==, hashCode, copyWith, toString)
+# - json_serializable : *.g.dart (fromJson / toJson)
+#
+# Options mirror the app's previous json_serializable setup so the JSON shape
+# on the wire and in the cache does not change.
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          include:
+            - lib/src/model/**.dart
+      json_serializable:
+        generate_for:
+          include:
+            - lib/src/model/**.dart
+        options:
+          explicit_to_json: true
+          include_if_null: false
+          field_rename: none

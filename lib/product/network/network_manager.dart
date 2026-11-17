@@ -1,4 +1,4 @@
-import 'package:flight_booking/product/network/error_model.dart';
+import 'package:gen/gen.dart';
 import 'package:vexana/vexana.dart';
 
 /// Abstract interface for network operations
@@ -12,12 +12,15 @@ abstract interface class IProductNetworkManager {
   /// - [parseModel] is instance of the model for JSON parsing
   /// - [method] is HTTP method (GET, POST, PUT, DELETE, etc.)
   /// - [body] is optional request body (for POST/PUT)
-  Future<NetworkResult<R, ProductErrorModel>> sendRequest<
-      T extends INetworkModel<T>, R>(
+  /// - [headers] are sent with THIS request only (never the shared base
+  ///   headers, which would race with other requests on the singleton)
+  Future<NetworkResult<R, ProductErrorModel>>
+  sendRequest<T extends INetworkModel<T>, R>(
     String path, {
     required T parseModel,
     required RequestType method,
     dynamic body,
+    Map<String, String>? headers,
   });
 
   /// Set authentication token for all subsequent requests

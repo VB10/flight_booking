@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flight_booking/core/theme/theme.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/feature/auth/flight_detail/cubit/flight_detail_cubit.dart';
 import 'package:flight_booking/feature/auth/flight_detail/cubit/flight_detail_state.dart';
 import 'package:flight_booking/product/application/cart/cart_cubit.dart';
@@ -15,6 +14,7 @@ import 'package:flight_booking/product/widget/flight/airline_mark.dart';
 import 'package:flight_booking/product/widget/flight/route_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 import 'package:go_router/go_router.dart';
 
 part 'view/flight_detail_page_mixin.dart';

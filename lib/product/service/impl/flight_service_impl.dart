@@ -1,10 +1,8 @@
-import 'package:flight_booking/feature/auth/cart/checkout_response_model.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
-import 'package:flight_booking/product/network/error_model.dart';
 import 'package:flight_booking/product/network/network_constants.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
 import 'package:flight_booking/product/network/product_network_manager.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
+import 'package:gen/gen.dart';
 import 'package:vexana/vexana.dart';
 
 /// Concrete implementation of flight service
@@ -29,9 +27,9 @@ final class FlightServiceImpl implements IFlightService {
   }
 
   @override
-  Future<NetworkResult<CheckoutResponseModel, ProductErrorModel>> checkout({
-    required List<FlightModel> cartItems,
-    required String userEmail,
+  Future<NetworkResult<CheckoutResponseModel, ProductErrorModel>> checkout(
+    CheckoutRequestModel request, {
+    required String idempotencyKey,
   }) {
     return _networkManager
         .sendRequest<CheckoutResponseModel, CheckoutResponseModel>(
@@ -43,12 +41,8 @@ final class FlightServiceImpl implements IFlightService {
             totalPrice: 0,
           ),
           method: RequestType.POST,
-
-          /// TODO: Request paramater
-          body: {
-            'cartItems': cartItems.map((item) => item.toJson()).toList(),
-            'userEmail': userEmail,
-          },
+          headers: {NetworkConstants.idempotencyKeyHeader: idempotencyKey},
+          body: request.toJson(),
         );
   }
 }

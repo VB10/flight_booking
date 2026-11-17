@@ -1,16 +1,14 @@
 import 'dart:async';
 
 import 'package:cache_manager/cache_manager.dart';
-import 'package:flight_booking/feature/auth/cart/checkout_response_model.dart';
 import 'package:flight_booking/feature/auth/cart/cubit/cart_checkout_cubit.dart';
 import 'package:flight_booking/feature/auth/cart/cubit/cart_checkout_state.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/application/auth/auth_cubit.dart';
 import 'package:flight_booking/product/application/cart/cart_cubit.dart';
-import 'package:flight_booking/product/network/error_model.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gen/gen.dart';
 import 'package:vexana/vexana.dart';
 
 FlightModel _flight(int id, int price) => FlightModel(
@@ -30,13 +28,15 @@ final class _FakeFlightService implements IFlightService {
   final Completer<NetworkResult<CheckoutResponseModel, ProductErrorModel>>
   gate = Completer();
   int checkoutCalls = 0;
+  final List<String> keys = [];
 
   @override
-  Future<NetworkResult<CheckoutResponseModel, ProductErrorModel>> checkout({
-    required List<FlightModel> cartItems,
-    required String userEmail,
+  Future<NetworkResult<CheckoutResponseModel, ProductErrorModel>> checkout(
+    CheckoutRequestModel request, {
+    required String idempotencyKey,
   }) {
     checkoutCalls++;
+    keys.add(idempotencyKey);
     return gate.future;
   }
 
@@ -129,4 +129,48 @@ void main() {
       expect(cart.state.count, 2);
     },
   );
+
+  group('idempotency key', () {
+    // Transport error first (server may have committed), then success.
+    Future<void> failThenRetry(CartCheckoutCubit cubit) async {
+      final first = cubit.pay();
+      service.gate.complete(
+        const NetworkErrorResult(ErrorModel(description: 'timeout')),
+      );
+      await first;
+    }
+
+    test('retry after an error sends the SAME key', () async {
+      final cubit = CartCheckoutCubit(service, cart, auth);
+      await failThenRetry(cubit);
+      await cubit.pay(); // the error state IS the retry button
+      expect(service.keys, hasLength(2));
+      expect(service.keys.first, isNotEmpty);
+      expect(service.keys[1], service.keys.first);
+    });
+
+    test('a reopened page (new cubit, same cart) reuses the key', () async {
+      final first = CartCheckoutCubit(service, cart, auth);
+      await failThenRetry(first);
+      final second = CartCheckoutCubit(service, cart, auth);
+      final retry = second.pay();
+      await retry;
+      expect(service.keys, hasLength(2));
+      expect(service.keys.first, isNotEmpty);
+      expect(service.keys[1], service.keys.first);
+    });
+
+    test(
+      'success clears the cart, so the next payment gets a new key',
+      () async {
+        final cubit = CartCheckoutCubit(service, cart, auth);
+        final paying = cubit.pay();
+        service.gate.complete(const NetworkSuccessResult(_ok));
+        await paying;
+        final used = service.keys.single;
+        cart.add(_flight(3, 720));
+        expect(cart.ensureCheckoutKey(), isNot(used));
+      },
+    );
+  });
 }

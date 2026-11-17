@@ -34,7 +34,7 @@ violation report `file:line`, the rule, and **which skill fixes it**.
   literal path. The only legitimate raw path is the translations **directory**
   in `product_localization.dart`.
 - No `'Roboto'` literal → `FontFamily.roboto`.
-- No hand edits under `lib/product/gen/` or in `*.g.dart`.
+- No hand edits under `lib/product/gen/` or in `*.g.dart` / `*.freezed.dart`.
 
 ### 2. Localization (v12)
 - `package:easy_localization` imported **only** inside
@@ -79,8 +79,8 @@ violation report `file:line`, the rule, and **which skill fixes it**.
 ### 7. Cache (v11)
 - No `package:hive*` or `SharedPreferences` import in the app → `ICacheManager`
   (or `IFallbackStore` for a critical token). Fix: `/masterflutter-cache-setup`.
-- Cache models are JSON DTOs implementing `CacheModel`; no Hive adapter/typeId.
-  Fix: `/masterflutter-cache-add-model`.
+- Cache models are freezed JSON DTOs in `module/gen` implementing `CacheModel`;
+  no Hive adapter/typeId. Fix: `/masterflutter-cache-add-model`.
 
 ### 8. Design kit (v13)
 - No raw Material where the kit has a widget: `ElevatedButton`, `OutlinedButton`,
@@ -94,6 +94,20 @@ violation report `file:line`, the rule, and **which skill fixes it**.
   `ProductContainer`, never a page-local copy.
 - A visual the kit cannot express is a KIT GAP for `/masterflutter-design-system-setup`,
   not a one-off style in a feature.
+
+### 9. Models & services (module/gen)
+- Data models (request, response, error, cache DTOs) exist only in
+  `module/gen/lib/src/model/` as `@freezed` classes, exported through
+  `module/gen/lib/gen.dart`. A model class under `lib/feature/` or `lib/product/`
+  is a violation → move it to `module/gen` and run `./scripts/generate.sh --models`.
+- Cubit and page **states** are not models: they stay next to their cubit with
+  Equatable + `copyWith` (rule 4).
+- Services take request models and send `request.toJson()`. A raw `body: {...}`
+  map in a service is a violation.
+- No `package:flight_booking/feature/...` import inside `lib/product/`, except
+  `lib/product/navigation/app_routes.dart`.
+- A side-effect POST (checkout, payment, booking) carries an `Idempotency-Key`
+  header. Fix: `/masterflutter-network-generator`.
 
 ## Verification before reporting
 

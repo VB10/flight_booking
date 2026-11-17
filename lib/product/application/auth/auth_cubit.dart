@@ -1,9 +1,9 @@
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flight_booking/product/application/auth/auth_state.dart';
-import 'package:flight_booking/product/cache/model/auth_session_cache_model.dart';
 import 'package:flight_booking/product/cache/product_cache_keys.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 final class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this._network, this._cache, this._fallback)

@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:flight_booking/feature/auth/cart/checkout_response_model.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gen/gen.dart';
 
 enum CartCheckoutStatus { idle, processing, success, error }
 

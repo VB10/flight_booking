@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:flight_booking/product/network/error_model.dart';
 import 'package:flight_booking/product/network/network_constants.dart';
 import 'package:flight_booking/product/network/network_manager.dart';
+import 'package:gen/gen.dart';
 import 'package:vexana/vexana.dart';
 
 /// Concrete implementation of network manager using Vexana
@@ -14,20 +14,20 @@ import 'package:vexana/vexana.dart';
 /// - Static singleton instance for easy access
 final class ProductNetworkManager implements IProductNetworkManager {
   ProductNetworkManager._({String? baseUrl})
-      : _networkManager = NetworkManager<ProductErrorModel>(
-          isEnableLogger: true,
-          errorModel: const ProductErrorModel(),
-          options: BaseOptions(
-            baseUrl: baseUrl ?? NetworkConstants.baseUrl,
-            connectTimeout: NetworkConstants.connectTimeout,
-            receiveTimeout: NetworkConstants.receiveTimeout,
-            sendTimeout: NetworkConstants.sendTimeout,
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-          ),
-        );
+    : _networkManager = NetworkManager<ProductErrorModel>(
+        isEnableLogger: true,
+        errorModel: const ProductErrorModel(),
+        options: BaseOptions(
+          baseUrl: baseUrl ?? NetworkConstants.baseUrl,
+          connectTimeout: NetworkConstants.connectTimeout,
+          receiveTimeout: NetworkConstants.receiveTimeout,
+          sendTimeout: NetworkConstants.sendTimeout,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
 
   static ProductNetworkManager? _instance;
 
@@ -57,18 +57,20 @@ final class ProductNetworkManager implements IProductNetworkManager {
   final INetworkManager<ProductErrorModel> _networkManager;
 
   @override
-  Future<NetworkResult<R, ProductErrorModel>> sendRequest<
-      T extends INetworkModel<T>, R>(
+  Future<NetworkResult<R, ProductErrorModel>>
+  sendRequest<T extends INetworkModel<T>, R>(
     String path, {
     required T parseModel,
     required RequestType method,
     dynamic body,
+    Map<String, String>? headers,
   }) async {
     return _networkManager.sendRequest<T, R>(
       path,
       parseModel: parseModel,
       method: method,
       data: body,
+      options: headers == null ? null : Options(headers: headers),
     );
   }
 

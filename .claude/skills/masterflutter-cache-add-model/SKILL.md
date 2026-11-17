@@ -1,8 +1,8 @@
 ---
 name: masterflutter-cache-add-model
 description: >-
-  Adds a new model to the cache as a pure DTO — a json_serializable + Equatable
-  class that implements CacheModel (toJson) and provides a fromJson factory. No
+  Adds a new model to the cache as a pure DTO — a freezed class in module/gen
+  that implements CacheModel (toJson) and provides a fromJson factory. No
   Hive annotations, no typeId, no adapters (Hive is encapsulated in the
   cache_manager package and stores models as JSON). Store/read via
   ICacheManager.writeModel / readModel(fromJson). Use when the user runs
@@ -26,7 +26,9 @@ description: >-
   is a factory (can't be forced by an interface), so **pass it to `readModel`**.
 - Cache models are **DTOs**: keep the app's domain/state (e.g. AuthState) free of
   persistence concerns; map DTO ↔ domain at the call site.
-- Every model must be **Equatable + immutable** (project convention).
+- Every data model is a **freezed** class (immutable + value equality) living in
+  the `module/gen` package. Cubit/page states are not models: they stay next to
+  their cubit with Equatable + `copyWith`.
 
 ## Required information
 
@@ -39,43 +41,47 @@ description: >-
 
 ### 1. Create the DTO
 
-`lib/product/cache/model/<snake_name>.dart`:
+`module/gen/lib/src/model/cache/<snake_name>.dart`:
 ```dart
 import 'package:cache_manager/cache_manager.dart';
-import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'search_history.freezed.dart';
 part 'search_history.g.dart';
 
-@JsonSerializable()
-final class SearchHistory extends Equatable implements CacheModel {
-  const SearchHistory({required this.query, required this.at});
+@freezed
+abstract class SearchHistory with _$SearchHistory implements CacheModel {
+  const factory SearchHistory({
+    required String query,
+    required int at,
+  }) = _SearchHistory;
 
   factory SearchHistory.fromJson(Map<String, dynamic> json) =>
       _$SearchHistoryFromJson(json);
-
-  final String query;
-  final int at;
-
-  @override
-  Map<String, dynamic> toJson() => _$SearchHistoryToJson(this);
-
-  @override
-  List<Object?> get props => [query, at];
 }
 ```
-- `implements CacheModel` (the `toJson` contract).
-- `extends Equatable`, all fields `final`, `const` constructor.
+- `implements CacheModel` (the `toJson` contract; freezed generates `toJson`).
+- No Equatable, no `@JsonSerializable`. Fields are `required` in the `const factory`.
 - Nested models must themselves be JSON-encodable (`explicit_to_json: true` is
-  set in `build.yaml`).
+  set in `module/gen/build.yaml`).
+- Export it from `module/gen/lib/gen.dart`; the app imports it via
+  `package:gen/gen.dart`.
 
-### 2. Codegen (json_serializable)
+### 2. Codegen (freezed + json_serializable)
 
-`build.yaml` already includes `lib/product/cache/model/*.dart`. Run:
+`module/gen/build.yaml` already includes `lib/src/model/**.dart`. Run from the
+repo root:
 ```bash
-./scripts/generate_models.sh      # or: flutter pub run build_runner build --delete-conflicting-outputs
+./scripts/generate.sh --models
 ```
-Generates `<snake_name>.g.dart`. No Hive registrar step.
+Generates `<snake_name>.freezed.dart` and `<snake_name>.g.dart`. No Hive
+registrar step. Add a round-trip test in `module/gen/test/`:
+```dart
+test('SearchHistory round-trips through JSON', () {
+  const model = SearchHistory(query: 'IST', at: 1);
+  expect(SearchHistory.fromJson(model.toJson()), model);
+});
+```
 
 ### 3. Add a key
 
@@ -109,11 +115,12 @@ flutter analyze lib/product/cache
 - Store a model in `IFallbackStore` (string-only). Critical *primitives* (token)
   go there; models go through `writeModel`.
 - Forget `fromJson` on `readModel` — it's required.
-- Edit `*.g.dart` by hand — regenerate with build_runner.
+- Edit `*.g.dart` or `*.freezed.dart` by hand — regenerate with `./scripts/generate.sh --models`.
+- Put a model under `lib/product/cache/model/` — data models live in `module/gen`.
 
 ## Reference code in this repo
 
-- Working example: `lib/product/cache/model/auth_session_cache_model.dart`
+- Working example: `module/gen/lib/src/model/cache/auth_session_cache_model.dart`
 - Contract: `CacheModel` (from `package:cache_manager/cache_manager.dart`)
 - Manager API: `ICacheManager.writeModel` / `readModel`
 - Cache holder: `lib/product/cache/product_cache.dart`

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
+import 'package:gen/gen.dart';
 
 /// Client-side ordering of the flight list.
 enum FlightSort {

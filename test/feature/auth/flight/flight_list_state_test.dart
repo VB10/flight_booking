@@ -1,6 +1,6 @@
 import 'package:flight_booking/feature/auth/flight/cubit/flight_list_state.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gen/gen.dart';
 
 FlightModel _f(
   int id,

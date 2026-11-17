@@ -1,7 +1,7 @@
 import 'package:flight_booking/feature/auth/flight/cubit/flight_list_state.dart';
-import 'package:flight_booking/feature/auth/flight/flights_response_model.dart';
 import 'package:flight_booking/product/service/flight_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gen/gen.dart';
 
 final class FlightListCubit extends Cubit<FlightListState> {
   FlightListCubit(this._flightService)

@@ -31,8 +31,9 @@ Three design pillars:
 2. **Fallback = standalone `IFallbackStore`** (SharedPreferences), **outside the
    strategy**. Holds only a few critical string keys (auth token) as a safety
    net if Hive is unavailable/cleared/corrupted. Intentionally dumb, string-only.
-3. **DTO pattern**: cache models are pure Dart (Equatable + immutable +
-   json_serializable) implementing `CacheModel`; the app's domain/state
+3. **DTO pattern**: cache models are pure Dart freezed classes (immutable +
+   value equality + JSON) implementing `CacheModel`. They live in the shared
+   `module/gen` package with all other data models; the app's domain/state
    (AuthState) stays decoupled from storage.
 
 ```
@@ -53,8 +54,10 @@ module/cache_manager/lib/
 lib/product/cache/
   product_cache.dart                  # holds manager + fallback (NO hive import)
   product_cache_keys.dart             # ProductCacheKeys (cache) + FallbackKeys (token)
-  model/auth_session_cache_model.dart # DTO: json_serializable + Equatable + CacheModel
 ```
+
+DTO: `module/gen/lib/src/model/cache/auth_session_cache_model.dart` (freezed +
+json, implements `CacheModel`). Models are not kept under `lib/product/cache/`.
 
 ## Implementation checklist
 
@@ -120,11 +123,13 @@ dev_dependencies:
 
 ### 6. Auth session as a DTO (uses `/masterflutter-cache-add-model`)
 
-- Create `AuthSessionCacheModel` — `@JsonSerializable`, `extends Equatable
-  implements CacheModel`, `part 'auth_session_cache_model.g.dart';`, fields
-  token/email/name/userId, `fromJson` factory + `toJson`. **No Hive.** Add
-  `lib/product/cache/model/*.dart` to json_serializable's `build.yaml` includes;
-  run build_runner.
+- Create `AuthSessionCacheModel` in
+  `module/gen/lib/src/model/cache/auth_session_cache_model.dart` — `@freezed
+  abstract class ... with _$X implements CacheModel`, `const factory` with fields
+  token/email/name/userId, `factory fromJson`. No Equatable, no `@JsonSerializable`.
+  **No Hive.** Export it from `module/gen/lib/gen.dart`, import it via
+  `package:gen/gen.dart`, and run `./scripts/generate.sh --models`. Round-trip
+  test goes in `module/gen/test/`.
 - `AuthCubit`:
   - `setSession` → `writeModel(session, AuthSessionCacheModel(...))` **and**
     `fallback.write(FallbackKeys.token, token)`.

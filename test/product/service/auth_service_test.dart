@@ -1,8 +1,8 @@
-import 'package:flight_booking/product/network/error_model.dart';
 import 'package:flight_booking/product/network/product_network_manager.dart';
 import 'package:flight_booking/product/service/auth_service.dart';
 import 'package:flight_booking/product/service/impl/auth_service_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gen/gen.dart';
 
 /// Integration tests for AuthService
 ///
@@ -22,8 +22,7 @@ void main() {
       expect(ProductNetworkManager.instance.isAuthenticated, isFalse);
 
       final result = await authService.login(
-        email: 'user@test.com',
-        password: '123456',
+        LoginRequestModel(email: 'user@test.com', password: '123456'),
       );
 
       result.fold(
@@ -49,8 +48,7 @@ void main() {
       'login with invalid credentials should fail with ProductErrorModel',
       () async {
         final result = await authService.login(
-          email: 'wrong@test.com',
-          password: 'wrongpassword',
+          LoginRequestModel(email: 'wrong@test.com', password: 'wrongpassword'),
         );
 
         result.fold(
@@ -73,8 +71,7 @@ void main() {
 
     test('login with empty credentials should fail', () async {
       final result = await authService.login(
-        email: '',
-        password: '',
+        LoginRequestModel(email: '', password: ''),
       );
 
       result.fold(
